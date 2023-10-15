@@ -5,22 +5,50 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
+    private enum mode {LIGHT, DARK}
+
+    public mode getCurrentMode() {
+        return currentMode;
+    }
+
+    private mode currentMode;
     private ArrayList<Player> players;
+
+    private int position;
     private HashMap<Player, Integer> scores;
 
     private ArrayList<Card> cardDeck;
+    private Card topCard;
     private ArrayList<Card> playingDeck;
+    private Player currentPlayer;
+    private boolean quit;
 
     public Game(){
         this. players = new ArrayList<>();
         this.scores = new HashMap<Player, Integer>();
         this.cardDeck = new ArrayList<>();
         this.playingDeck = new ArrayList<>();
+        this.currentPlayer = null;
+        this.position = 0;
+        this.quit = false;
+        currentMode = mode.LIGHT;
         this.init();
     }
 
     private void init() {
         //initialize card deck
+        Random rand = new Random();
+        for (int i=0; i<15; i++){
+            int lightInt = rand.nextInt(10);
+            int lightColor = rand.nextInt(4);
+            int darkInt = rand.nextInt(10);
+            int darkColour = rand.nextInt(4);
+
+            cardDeck.add(new Card(lightInt, Colors.LIGHTCOLORS.values()[lightColor], darkInt, Colors.DARKCOLORS.values()[darkColour]));
+        }
+//        System.out.println(cardDeck.toString());
+        playingDeck.add(cardDeck.get(cardDeck.size()-1));
+        cardDeck.remove(cardDeck.get(cardDeck.size()-1));
 
     }
 
@@ -65,11 +93,12 @@ public class Game {
     public void play(){
         Scanner input = new Scanner(System.in);
         System.out.println("Welcome to the game of UNO Flip!");
-        System.out.println("How many players will be playing this round? Enter an integer, for example: 2");
+        System.out.print("Enter number of Players(for example 2): ");
         int numberOfPlayers = input.nextInt();
 
         while(numberOfPlayers < 2){
             System.out.println("You need at least 2 players to play this game");
+            System.out.print("Enter number of Players(for example 2): ");
             numberOfPlayers = input.nextInt();
         }
 
@@ -77,7 +106,7 @@ public class Game {
         Scanner newInput = new Scanner(System.in);
 
         for (int i=0; i<numberOfPlayers; i++){
-            System.out.println("Enter your name Player " + count + ": ");
+            System.out.print("Enter name for Player " + count + ": ");
             String player = newInput.nextLine();
             this.players.add(new Player(player));
             count++;
@@ -85,6 +114,85 @@ public class Game {
 
         distributeToAll(6);
 
+        //Game starts
+        while(!quit){
+            currentPlayer = players.get(this.position);
+            System.out.println("\n---------------------------------------------------------");
+            System.out.println(currentPlayer.getName() + "'s turn");
+
+            executeChoice(displayOptionsAndGetChoice()); //executes a game play based on the choice of a player
+
+            this.position = this.position + 1;
+            this.position = this.position%(numberOfPlayers); //position of the next player
+//            break;
+        }
+
+    }
+
+    private void executeChoice(int i) {
+        switch (i){
+            case 1:
+                Scanner input = new  Scanner(System.in);
+                ArrayList<Card> currentPlayerCards = currentPlayer.getCards();
+                System.out.print("What card would you like to place? ");
+                int choice = input.nextInt();
+
+                while (choice > currentPlayerCards.size()){
+                    System.out.println("You dont have this card in your deck, pick something in your deck");
+                    choice = input.nextInt();
+                }
+
+                while(currentPlayerCards.get(choice).getLightNumber() != playingDeck.get(playingDeck.size() - 1).getLightNumber() && !(currentPlayerCards.get(choice).getLightColor().toString()).equals(playingDeck.get(playingDeck.size() - 1).getLightColor().toString())){
+                    System.out.println("Invalid choice; Color or numbers don't match");
+                    displayOptionsAndGetChoice();
+                }
+
+                playingDeck.add(currentPlayerCards.get(choice));
+                currentPlayerCards.remove(currentPlayerCards.get(choice));
+
+                if(currentMode == mode.LIGHT) {
+                    System.out.println("Played: " + currentPlayerCards.get(choice).getLightCharacteristics());
+                }else{
+                    System.out.println("Played: " + currentPlayerCards.get(choice).getDarkCharacteristics());
+                }
+
+            case 2:
+                break;
+
+            case 3:
+                break;
+
+            case 4:
+                break;
+        }
+    }
+
+    private int displayOptionsAndGetChoice() {
+        System.out.println("Your available cards:");
+        ArrayList<Card> currentPlayerCards = currentPlayer.getCards();
+        if (currentMode == mode.LIGHT){
+            for(int i=0; i<currentPlayer.getCards().size(); i++){
+                System.out.println(i + ": " + currentPlayerCards.get(i).getLightCharacteristics());
+            }
+        }
+        if (currentMode == mode.DARK){
+            for(int i=0; i<currentPlayer.getCards().size(); i++){
+                System.out.println(i + ": " + currentPlayerCards.get(i).getDarkCharacteristics());
+            }
+        }
+        System.out.println("Current Mode : " + currentMode.toString());
+        if (this.getCurrentMode() == mode.LIGHT) {
+            System.out.println("Top Card: " + playingDeck.get(playingDeck.size() - 1).getLightCharacteristics());
+        }
+        else {
+            System.out.println("Top Card: " + playingDeck.get(playingDeck.size() - 1).getDarkCharacteristics());
+        }
+
+        System.out.println("You can perform one of the following options: ");
+        System.out.println("1. Place Card");
+        System.out.println("2. Get a card from the deck");
+        Scanner input = new Scanner(System.in);
+        return input.nextInt();
     }
 
 

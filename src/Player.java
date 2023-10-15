@@ -24,6 +24,14 @@ public class Player {
         return cards;
     }
 
+    public String showCards(){
+        String cardsToReturn = "";
+        for (Card card: cards){
+            cardsToReturn += card.getLightCharacteristics() + " ";
+        }
+        return cardsToReturn;
+    }
+
     public void addCard(Card card) {
         this.cards.add(card);
     }
