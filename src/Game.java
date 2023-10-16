@@ -38,7 +38,7 @@ public class Game {
     private void init() {
         //initialize card deck
         Random rand = new Random();
-        for (int i=0; i<15; i++){
+        for (int i=0; i<100; i++){
             int lightInt = rand.nextInt(10);
             int lightColor = rand.nextInt(4);
             int darkInt = rand.nextInt(10);
@@ -49,6 +49,7 @@ public class Game {
 //        System.out.println(cardDeck.toString());
         playingDeck.add(cardDeck.get(cardDeck.size()-1));
         cardDeck.remove(cardDeck.get(cardDeck.size()-1));
+        System.out.println(cardDeck.size());
 
     }
 
@@ -148,16 +149,17 @@ public class Game {
                 }
 
                 playingDeck.add(currentPlayerCards.get(choice));
-                currentPlayerCards.remove(currentPlayerCards.get(choice));
 
                 if(currentMode == mode.LIGHT) {
                     System.out.println("Played: " + currentPlayerCards.get(choice).getLightCharacteristics());
                 }else{
                     System.out.println("Played: " + currentPlayerCards.get(choice).getDarkCharacteristics());
                 }
+                currentPlayerCards.remove(currentPlayerCards.get(choice));
 
             case 2:
-                break;
+                currentPlayer.getCards().add(cardDeck.get(cardDeck.size()-1));
+                cardDeck.remove(cardDeck.size()-1);
 
             case 3:
                 break;
