@@ -190,9 +190,7 @@ public class Game {
             System.out.println("Top Card: " + playingDeck.get(playingDeck.size() - 1).getDarkCharacteristics());
         }
 
-        System.out.println("You can perform one of the following options: ");
-        System.out.println("1. Place Card");
-        System.out.println("2. Get a card from the deck");
+        System.out.print("1 to place card and 2 to get from deck: ");
         Scanner input = new Scanner(System.in);
         return input.nextInt();
     }
