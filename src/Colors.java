@@ -21,13 +21,6 @@ public class Colors {
 
         }
 
-//        for(Card card: playingDeck){
-//            System.out.print("{");
-//            System.out.print(card.getLightCharacteristics() + ", ");
-//            System.out.print(card.getDarkCharacteristics());
-//            System.out.print("} ");
-//        }
-
         Player player = new Player("Osas");
         for (int i=0; i<7; i++){
             int lightInt = rand.nextInt(10);

@@ -1,4 +1,3 @@
-import javax.sound.midi.Soundbank;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -46,7 +45,6 @@ public class Game {
 
             cardDeck.add(new Card(lightInt, Colors.LIGHTCOLORS.values()[lightColor], darkInt, Colors.DARKCOLORS.values()[darkColour]));
         }
-//        System.out.println(cardDeck.toString());
         playingDeck.add(cardDeck.get(cardDeck.size()-1));
         cardDeck.remove(cardDeck.get(cardDeck.size()-1));
         System.out.println(cardDeck.size());
@@ -113,7 +111,7 @@ public class Game {
             count++;
         }
 
-        distributeToAll(6);
+        distributeToAll(7);
 
         //Game starts
         while(!quit){
@@ -121,65 +119,24 @@ public class Game {
             System.out.println("\n---------------------------------------------------------");
             System.out.println(currentPlayer.getName() + "'s turn");
 
-            executeChoice(displayOptionsAndGetChoice()); //executes a game play based on the choice of a player
-
+            implementCurrentPlayerTurn();
             this.position = this.position + 1;
             this.position = this.position%(numberOfPlayers); //position of the next player
-//            break;
         }
 
     }
 
-    private void executeChoice(int i) {
-        switch (i){
-            case 1:
-                Scanner input = new  Scanner(System.in);
-                ArrayList<Card> currentPlayerCards = currentPlayer.getCards();
-                System.out.print("What card would you like to place? ");
-                int choice = input.nextInt();
-
-                while (choice > currentPlayerCards.size()){
-                    System.out.println("You dont have this card in your deck, pick something in your deck");
-                    choice = input.nextInt();
-                }
-
-                while(currentPlayerCards.get(choice).getLightNumber() != playingDeck.get(playingDeck.size() - 1).getLightNumber() && !(currentPlayerCards.get(choice).getLightColor().toString()).equals(playingDeck.get(playingDeck.size() - 1).getLightColor().toString())){
-                    System.out.println("Invalid choice; Color or numbers don't match");
-                    displayOptionsAndGetChoice();
-                }
-
-                playingDeck.add(currentPlayerCards.get(choice));
-
-                if(currentMode == mode.LIGHT) {
-                    System.out.println("Played: " + currentPlayerCards.get(choice).getLightCharacteristics());
-                }else{
-                    System.out.println("Played: " + currentPlayerCards.get(choice).getDarkCharacteristics());
-                }
-                currentPlayerCards.remove(currentPlayerCards.get(choice));
-
-            case 2:
-                currentPlayer.getCards().add(cardDeck.get(cardDeck.size()-1));
-                cardDeck.remove(cardDeck.size()-1);
-
-            case 3:
-                break;
-
-            case 4:
-                break;
-        }
-    }
-
-    private int displayOptionsAndGetChoice() {
+    private void implementCurrentPlayerTurn() {
         System.out.println("Your available cards:");
         ArrayList<Card> currentPlayerCards = currentPlayer.getCards();
         if (currentMode == mode.LIGHT){
             for(int i=0; i<currentPlayer.getCards().size(); i++){
-                System.out.println(i + ": " + currentPlayerCards.get(i).getLightCharacteristics());
+                System.out.println(i+1 + ": " + currentPlayerCards.get(i).getLightCharacteristics());
             }
         }
         if (currentMode == mode.DARK){
             for(int i=0; i<currentPlayer.getCards().size(); i++){
-                System.out.println(i + ": " + currentPlayerCards.get(i).getDarkCharacteristics());
+                System.out.println(i+1 + ": " + currentPlayerCards.get(i).getDarkCharacteristics());
             }
         }
         System.out.println("Current Mode : " + currentMode.toString());
@@ -190,9 +147,31 @@ public class Game {
             System.out.println("Top Card: " + playingDeck.get(playingDeck.size() - 1).getDarkCharacteristics());
         }
 
-        System.out.print("1 to place card and 2 to get from deck: ");
+        System.out.print("Pick an index of the card to place or 0 to draw from the bank: ");
         Scanner input = new Scanner(System.in);
-        return input.nextInt();
+        int chosen = input.nextInt();
+
+        if(chosen == 0){
+            currentPlayer.getCards().add(cardDeck.get(cardDeck.size() - 1));
+            cardDeck.remove(cardDeck.size() - 1);
+            System.out.println(currentPlayer.getName() + "picked a card");
+        }else{
+            while ((chosen-1) > currentPlayerCards.size()) {
+                System.out.println("You dont have this card in your deck, pick something in your deck");
+                chosen = input.nextInt();
+            }
+            while (currentPlayerCards.get(chosen-1).getLightNumber() != playingDeck.get(playingDeck.size() - 1).getLightNumber() && !(currentPlayerCards.get(chosen-1).getLightColor().toString()).equals(playingDeck.get(playingDeck.size() - 1).getLightColor().toString())) {
+                System.out.print("Invalid choice; Color or numbers don't match\nPick a different option: ");
+                chosen = input.nextInt();
+            }
+            playingDeck.add(currentPlayerCards.get(chosen-1));
+            if (currentMode == mode.LIGHT) {
+                System.out.println("Played: " + currentPlayerCards.get(chosen-1).getLightCharacteristics());
+            } else {
+                System.out.println("Played: " + currentPlayerCards.get(chosen-1).getDarkCharacteristics());
+            }
+            currentPlayerCards.remove(currentPlayerCards.get(chosen-1));
+        }
     }
 
 
