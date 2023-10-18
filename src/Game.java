@@ -126,6 +126,12 @@ public class Game {
 
     }
 
+    public void getFromMarket(){
+        currentPlayer.getCards().add(cardDeck.get(cardDeck.size() - 1));
+        cardDeck.remove(cardDeck.size() - 1);
+        System.out.println(currentPlayer.getName() + " picked a card");
+    }
+
     private void implementCurrentPlayerTurn() {
         System.out.println("Your available cards:");
         ArrayList<Card> currentPlayerCards = currentPlayer.getCards();
@@ -152,9 +158,7 @@ public class Game {
         int chosen = input.nextInt();
 
         if(chosen == 0){
-            currentPlayer.getCards().add(cardDeck.get(cardDeck.size() - 1));
-            cardDeck.remove(cardDeck.size() - 1);
-            System.out.println(currentPlayer.getName() + "picked a card");
+            getFromMarket();
         }else{
             while ((chosen-1) > currentPlayerCards.size()) {
                 System.out.println("You dont have this card in your deck, pick something in your deck");
@@ -163,14 +167,21 @@ public class Game {
             while (currentPlayerCards.get(chosen-1).getLightNumber() != playingDeck.get(playingDeck.size() - 1).getLightNumber() && !(currentPlayerCards.get(chosen-1).getLightColor().toString()).equals(playingDeck.get(playingDeck.size() - 1).getLightColor().toString())) {
                 System.out.print("Invalid choice; Color or numbers don't match\nPick a different option: ");
                 chosen = input.nextInt();
+                if (chosen == 0){
+                    getFromMarket();
+                    break;
+                }
             }
-            playingDeck.add(currentPlayerCards.get(chosen-1));
-            if (currentMode == mode.LIGHT) {
-                System.out.println("Played: " + currentPlayerCards.get(chosen-1).getLightCharacteristics());
+            if (chosen == 0){
             } else {
-                System.out.println("Played: " + currentPlayerCards.get(chosen-1).getDarkCharacteristics());
+                playingDeck.add(currentPlayerCards.get(chosen - 1));
+                if (currentMode == mode.LIGHT) {
+                    System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getLightCharacteristics());
+                } else {
+                    System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getDarkCharacteristics());
+                }
+                currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
             }
-            currentPlayerCards.remove(currentPlayerCards.get(chosen-1));
         }
     }
 
