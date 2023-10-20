@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -6,7 +7,6 @@ import java.util.HashMap;
 public class Card {
     private int lightNumber;
     private Colors.LIGHTCOLORS lightColor;
-
     private int darkNumber;
 
     private Colors.DARKCOLORS darkColor;
@@ -46,6 +46,9 @@ public class Card {
      * @return the light characteristics
      */
     public String getLightCharacteristics(){
+        if(lightNumber == 0) {
+            return "SKIP " + this.lightColor.toString().charAt(0);
+        }
         return this.lightNumber + "" + this.lightColor.toString().charAt(0);
     }
 
@@ -54,6 +57,9 @@ public class Card {
      * @return the dark characteristics
      */
     public String getDarkCharacteristics(){
+        if(darkNumber == 0) {
+            return "SKIP " + this.darkColor.toString().charAt(0);
+        }
         return this.darkNumber + "" + this.darkColor.toString().charAt(0);
     }
 

@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * The Game class
@@ -13,6 +10,7 @@ public class Game {
     private int position;
     private HashMap<Player, Integer> scores;
     private ArrayList<Card> cardDeck;
+    private Card card;
     private Card topCard;
     private ArrayList<Card> playingDeck;
     private Player currentPlayer;
@@ -41,12 +39,19 @@ public class Game {
         //initialize card deck
         Random rand = new Random();
         for (int i=0; i<100; i++){
-            int lightInt = rand.nextInt(10);
+            int lightInt = rand.nextInt(9) + 1;
             int lightColor = rand.nextInt(4);
-            int darkInt = rand.nextInt(10);
+            int darkInt = rand.nextInt(9) + 1;
             int darkColour = rand.nextInt(4);
 
-            cardDeck.add(new Card(lightInt, Colors.LIGHTCOLORS.values()[lightColor], darkInt, Colors.DARKCOLORS.values()[darkColour]));
+            if (i % 10 == 0) {
+                card = new SkipCard(Colors.LIGHTCOLORS.values()[0], Colors.DARKCOLORS.values()[0]);
+            } else {
+                card = new Card(lightInt, Colors.LIGHTCOLORS.values()[lightColor], darkInt, Colors.DARKCOLORS.values()[darkColour]);
+
+            }
+
+            cardDeck.add(card);
         }
         playingDeck.add(cardDeck.get(cardDeck.size()-1));
         cardDeck.remove(cardDeck.get(cardDeck.size()-1));
@@ -138,14 +143,18 @@ public class Game {
             }
         }
         System.out.println("Current Mode : " + currentMode.toString());
+
         if (this.getCurrentMode() == mode.LIGHT) {
             System.out.println("Top Card: " + playingDeck.get(playingDeck.size() - 1).getLightCharacteristics());
+            System.out.println();
         }
         else {
             System.out.println("Top Card: " + playingDeck.get(playingDeck.size() - 1).getDarkCharacteristics());
+            System.out.println();
         }
 
         System.out.print("Pick an index of the card to place or 0 to draw from the bank: ");
+
         Scanner input = new Scanner(System.in);
         int chosen = input.nextInt();
 
@@ -153,7 +162,7 @@ public class Game {
             getCardFromBank();
         }else{
             while ((chosen-1) > currentPlayerCards.size()) {
-                System.out.println("You dont have this card in your deck, pick something in your deck");
+                System.out.println("You don't have this card in your deck, pick something in your deck");
                 chosen = input.nextInt();
             }
             while (currentPlayerCards.get(chosen-1).getLightNumber() != playingDeck.get(playingDeck.size() - 1).getLightNumber() && !(currentPlayerCards.get(chosen-1).getLightColor().toString()).equals(playingDeck.get(playingDeck.size() - 1).getLightColor().toString())) {
@@ -164,8 +173,29 @@ public class Game {
                     break;
                 }
             }
-            if (chosen == 0){
-            } else {
+//            if (chosen == 0){
+//            } else {
+//                playingDeck.add(currentPlayerCards.get(chosen - 1));
+//                if (currentMode == mode.LIGHT) {
+//                    System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getLightCharacteristics());
+//                    updateScore(currentPlayer, currentPlayerCards.get(chosen - 1).getLightNumber());
+//                } else {
+//                    System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getDarkCharacteristics());
+//                    updateScore(currentPlayer, currentPlayerCards.get(chosen - 1).getLightNumber());
+//                }
+//                currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
+//                System.out.print("Current player score: ");
+//                System.out.println(scores.get(currentPlayer));
+//            }
+
+            //currentPlayerCards.get(chosen - 1).isSkip()
+
+            if (currentPlayerCards.get(chosen - 1) instanceof SkipCard){
+                System.out.println("Played a skip card! Skipping the next player");
+                this.position = (this.position + 1) % players.size();
+            }
+
+            else {
                 playingDeck.add(currentPlayerCards.get(chosen - 1));
                 if (currentMode == mode.LIGHT) {
                     System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getLightCharacteristics());
