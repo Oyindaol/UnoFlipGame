@@ -46,7 +46,13 @@ public class Game {
 
             if (i % 10 == 0) {
                 card = new SkipCard(Colors.LIGHTCOLORS.values()[0], Colors.DARKCOLORS.values()[0]);
-            } else {
+            }
+            if (i % 10 == 0) {
+                card = new ReverseCard(Colors.LIGHTCOLORS.values()[0], Colors.DARKCOLORS.values()[0]);
+            }
+            if (i % 10 == 0) {
+                card = new WildPickTwoCard(Colors.LIGHTCOLORS.values()[0], Colors.DARKCOLORS.values()[0]);
+            }else {
                 card = new Card(lightInt, Colors.LIGHTCOLORS.values()[lightColor], darkInt, Colors.DARKCOLORS.values()[darkColour]);
 
             }
@@ -193,6 +199,11 @@ public class Game {
             if (currentPlayerCards.get(chosen - 1) instanceof SkipCard){
                 System.out.println("Played a skip card! Skipping the next player");
                 this.position = (this.position + 1) % players.size();
+            }
+
+            if (currentPlayerCards.get(chosen - 1) instanceof ReverseCard){
+                System.out.println("Played a reverse card! Reverse to the previous player");
+                this.position = (this.position - 1 ) % players.size();
             }
 
             else {

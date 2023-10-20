@@ -46,9 +46,18 @@ public class Card {
      * @return the light characteristics
      */
     public String getLightCharacteristics(){
-        if(lightNumber == 0) {
+        if (lightNumber == 0) {
             return "SKIP " + this.lightColor.toString().charAt(0);
         }
+
+        if (lightNumber == 10) {
+            return "REVERSE " + this.lightColor.toString().charAt(0);
+        }
+
+        if (lightNumber == 11) {
+            return "WILD DRAW TWO " + this.lightColor.toString().charAt(0);
+        }
+
         return this.lightNumber + "" + this.lightColor.toString().charAt(0);
     }
 
@@ -60,6 +69,15 @@ public class Card {
         if(darkNumber == 0) {
             return "SKIP " + this.darkColor.toString().charAt(0);
         }
+
+        if(darkNumber == 10) {
+            return "REVERSE " + this.darkColor.toString().charAt(0);
+        }
+
+        if (darkNumber == 11) {
+            return "WILD DRAW TWO " + this.lightColor.toString().charAt(0);
+        }
+
         return this.darkNumber + "" + this.darkColor.toString().charAt(0);
     }
 

@@ -10,6 +10,7 @@ public class SkipCard extends Card {
      */
     public SkipCard(Colors.LIGHTCOLORS lightColor, Colors.DARKCOLORS darkColor) {
         super(0, lightColor, 0, darkColor);
+        isSkip = true;
     }
 
     public boolean isSkip() {
