@@ -75,7 +75,7 @@ public class Card {
         }
 
         if (darkNumber == 11) {
-            return "WILD DRAW TWO " + this.lightColor.toString().charAt(0);
+            return "WILD DRAW TWO " + this.darkColor.toString().charAt(0);
         }
 
         return this.darkNumber + "" + this.darkColor.toString().charAt(0);

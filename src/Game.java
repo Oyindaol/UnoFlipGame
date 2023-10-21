@@ -15,6 +15,7 @@ public class Game {
     private ArrayList<Card> playingDeck;
     private Player currentPlayer;
     private boolean quit;
+    private boolean clockwise;
 
 
     /**
@@ -52,7 +53,8 @@ public class Game {
             }
             if (i % 10 == 0) {
                 card = new WildPickTwoCard(Colors.LIGHTCOLORS.values()[0], Colors.DARKCOLORS.values()[0]);
-            }else {
+            }
+            else {
                 card = new Card(lightInt, Colors.LIGHTCOLORS.values()[lightColor], darkInt, Colors.DARKCOLORS.values()[darkColour]);
 
             }
@@ -179,31 +181,22 @@ public class Game {
                     break;
                 }
             }
-//            if (chosen == 0){
-//            } else {
-//                playingDeck.add(currentPlayerCards.get(chosen - 1));
-//                if (currentMode == mode.LIGHT) {
-//                    System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getLightCharacteristics());
-//                    updateScore(currentPlayer, currentPlayerCards.get(chosen - 1).getLightNumber());
-//                } else {
-//                    System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getDarkCharacteristics());
-//                    updateScore(currentPlayer, currentPlayerCards.get(chosen - 1).getLightNumber());
-//                }
-//                currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-//                System.out.print("Current player score: ");
-//                System.out.println(scores.get(currentPlayer));
-//            }
-
-            //currentPlayerCards.get(chosen - 1).isSkip()
 
             if (currentPlayerCards.get(chosen - 1) instanceof SkipCard){
                 System.out.println("Played a skip card! Skipping the next player");
                 this.position = (this.position + 1) % players.size();
             }
-
             if (currentPlayerCards.get(chosen - 1) instanceof ReverseCard){
                 System.out.println("Played a reverse card! Reverse to the previous player");
-                this.position = (this.position - 1 ) % players.size();
+                this.clockwise = !this.clockwise;
+                playingDeck.add(currentPlayerCards.get(chosen - 1));
+                currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
+                System.out.println("\nGame order has been reversed");
+            }
+            if (currentPlayerCards.get(chosen - 1) instanceof WildPickTwoCard){
+                System.out.println("Played a pick 2 card! Next player picks 2");
+                players.get(position + 1).addCard(cardDeck.get(cardDeck.size() - 1));
+                players.get(position + 1).addCard(cardDeck.get(cardDeck.size() - 1));
             }
 
             else {

@@ -1,6 +1,7 @@
 public class WildPickTwoCard extends Card{
 
     private boolean isWildPickTwo;
+
     /**
      * Constructor of the card class
      *
