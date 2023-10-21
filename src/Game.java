@@ -42,9 +42,9 @@ public class Game {
 
         //Initialize the number cards
         for (int i=0; i<72; i++){
-            int lightInt = rand.nextInt(10);
+            int lightInt = rand.nextInt(9) + 1;
             int lightColor = rand.nextInt(4);
-            int darkInt = rand.nextInt(10);
+            int darkInt = rand.nextInt(9) + 1;
             int darkColour = rand.nextInt(4);
 
             cardDeck.add(new NumberCard(Card.type.REGULAR, lightInt, Colors.LIGHTCOLORS.values()[lightColor], darkInt, Colors.DARKCOLORS.values()[darkColour]));
@@ -55,9 +55,12 @@ public class Game {
             SpecialCard skip = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.SKIP, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.WILD, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
             SpecialCard wild_draw_two = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.WILD_DRAW_TWO, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.FLIP, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
             SpecialCard reverse = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.REVERSE, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.SKIP_EVERYONE, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
+            SpecialCard wild = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.WILD, null, Card.SPECIALCARDS.SKIP_EVERYONE, null);
+
             cardDeck.add(reverse);
             cardDeck.add(wild_draw_two);
             cardDeck.add(skip);
+            cardDeck.add(wild);
         }
 
         Collections.shuffle(cardDeck);
@@ -233,14 +236,39 @@ public class Game {
                             System.out.println("\nGame order has been reversed");
                             break;
 
-                        case "WILD_DRAW_TWO":
-                            for(int i=0; i<2; i++){
-                                players.get(position+1 % (players.size()-1)).addCard(cardDeck.get(cardDeck.size()-1));
+                        case "WILD":
+                            System.out.print("Choose a color (RED, GREEN, BLUE, YELLOW): ");
+                            String chosenColor = input.next().toUpperCase();
+
+                            // Validate the chosen color
+                            boolean validColor = false;
+                            for (Colors.LIGHTCOLORS color : Colors.LIGHTCOLORS.values()) {
+                                if (color.toString().equals(chosenColor)) {
+                                    validColor = true;
+                                    break;
+                                }
                             }
-                            this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
-                            playingDeck.add(currentPlayerCards.get(chosen - 1));
-                            currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-                            System.out.println(players.get((players.indexOf(currentPlayer) + 1)).getName() + " picked 2 and will be skipped");
+
+                            if (!validColor) {
+                                System.out.println("Invalid color choice. Please choose a valid color.");
+                            } else {
+                                // Set the chosen color for the Wild card
+                                currentPlayerCards.get(chosen - 1).setLightColor(Colors.LIGHTCOLORS.valueOf(chosenColor));
+                                currentPlayerCards.get(chosen - 1).setDarkColor(Colors.DARKCOLORS.valueOf(chosenColor));
+                                playingDeck.add(currentPlayerCards.get(chosen - 1));
+                                currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
+                                System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getLightCharacteristics());
+                            }
+                            break;
+
+                        case "WILD_DRAW_TWO":
+                        for(int i=0; i<2; i++){
+                            players.get(position+1 % (players.size()-1)).addCard(cardDeck.get(cardDeck.size()-1));
+                        }
+                        this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
+                        playingDeck.add(currentPlayerCards.get(chosen - 1));
+                        currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
+                        System.out.println(players.get((players.indexOf(currentPlayer) + 1)).getName() + " picked 2 and will be skipped");
 
                     }
                 }

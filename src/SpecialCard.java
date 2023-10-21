@@ -27,6 +27,30 @@ public class SpecialCard implements Card {
     }
 
     /**
+     * Set the light color for a special card. Should only be used for WILD Cards
+     * @param lightColor the light color specified
+     */
+    public void setLightColor(Colors.LIGHTCOLORS lightColor){
+        if (this.specialLight.toString().equals("WILD")) {
+            this.lightColor = lightColor;
+        }else{
+            System.out.println("You are not allowed to change the light color of a special card except the WILD card");
+        }
+    }
+
+    /**
+     * Set the dark color for a special card. Should only be used for WILD Cards
+     * @param darkColor the light color specified
+     */
+    public void setDarkColor(Colors.DARKCOLORS darkColor){
+        if (this.specialDark.toString().equals("WILD")) {
+            this.darkColor = darkColor;
+        }else{
+            System.out.println("You are not allowed to change the dark color of a special card except the WILD card");
+        }
+    }
+
+    /**
      * Get the type of the card
      * @return the type of the card
      */

@@ -2,13 +2,13 @@
  * The Card class
  */
 public class NumberCard implements Card{
-    private Card.type cardType;
-    private int lightNumber;
-    private Colors.LIGHTCOLORS lightColor;
+    private final Card.type cardType;
+    private final int lightNumber;
+    private final Colors.LIGHTCOLORS lightColor;
 
-    private int darkNumber;
+    private final int darkNumber;
 
-    private Colors.DARKCOLORS darkColor;
+    private final Colors.DARKCOLORS darkColor;
 
     /**
      * Constructor of the card class
@@ -80,5 +80,15 @@ public class NumberCard implements Card{
     @Override
     public type getType() {
         return cardType;
+    }
+
+    @Override
+    public void setLightColor(Colors.LIGHTCOLORS lightcolors) {
+        System.out.println("You are not allowed to set the light color for a number card");
+    }
+
+    @Override
+    public void setDarkColor(Colors.DARKCOLORS darkcolors) {
+        System.out.println("You are not allowed to set the dark color for a number card");
     }
 }

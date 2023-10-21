@@ -1,8 +1,13 @@
 public interface Card {
     public enum type {REGULAR, SPECIAL}
-    public enum SPECIALCARDS {DRAW_PLUS_ONE, SKIP, REVERSE, DRAW_PLUS_FIVE, FLIP, SKIP_EVERYONE, WILD, WILD_DRAW_TWO, WILD_DRAW_COLOR}
+    public enum SPECIALCARDS {SKIP, REVERSE, FLIP, SKIP_EVERYONE, WILD, WILD_DRAW_TWO}
 
     public Card.type getType();
+
+    void setLightColor(Colors.LIGHTCOLORS lightcolors);
+
+    void setDarkColor(Colors.DARKCOLORS darkcolors);
+
     public String getDarkCharacteristics();
 
     public String getLightCharacteristics();
