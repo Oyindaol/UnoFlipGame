@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class Player {
 
     private String name;
-    private int score;
     private ArrayList<Card> cards;
 
     /**
@@ -15,7 +14,6 @@ public class Player {
      */
     public Player(String name){
         this.name = name;
-        this.score = 0;
         this.cards = new ArrayList<>();
     }
 
@@ -27,13 +25,6 @@ public class Player {
         return name;
     }
 
-    /**
-     * A method to get the score of the player
-     * @return the score of the Player
-     */
-    public int getScore() {
-        return score;
-    }
 
     /**
      * A method to get the cards of a player
@@ -44,13 +35,25 @@ public class Player {
     }
 
     /**
-     * A method to show the cards of a Player
-     * @return the current cards of a player
+     * A method to show the light cards of a Player
+     * @return the current light cards of a player
      */
-    public String showCards(){
+    public String showCardsLight(){
         String cardsToReturn = "";
         for (Card card: cards){
             cardsToReturn += card.getLightCharacteristics() + " ";
+        }
+        return cardsToReturn;
+    }
+
+    /**
+     * A method to show the dark cards of a Player
+     * @return the current dark cards of a player
+     */
+    public String showCardsDark(){
+        String cardsToReturn = "";
+        for (Card card: cards){
+            cardsToReturn += card.getDarkCharacteristics() + " ";
         }
         return cardsToReturn;
     }
