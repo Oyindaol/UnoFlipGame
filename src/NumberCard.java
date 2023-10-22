@@ -1,13 +1,16 @@
 /**
- * The Card class
+ * The Number Card class.
+ * Implements the Card interface.
+ *
+ * @author Oyindamola Taiwo-Olupeka
+ * @author Osas Iyamu
  */
-public class NumberCard implements Card{
+public class NumberCard implements Card {
+
     private final Card.type cardType;
     private final int lightNumber;
     private final Colors.LIGHTCOLORS lightColor;
-
     private final int darkNumber;
-
     private final Colors.DARKCOLORS darkColor;
 
     /**
@@ -82,13 +85,22 @@ public class NumberCard implements Card{
         return cardType;
     }
 
+    /**
+     * Set the light color for the card
+     * @param lightcolors
+     */
     @Override
     public void setLightColor(Colors.LIGHTCOLORS lightcolors) {
         System.out.println("You are not allowed to set the light color for a number card");
     }
 
+    /**
+     * Set the dark color of the card
+     * @param darkcolors
+     */
     @Override
     public void setDarkColor(Colors.DARKCOLORS darkcolors) {
         System.out.println("You are not allowed to set the dark color for a number card");
     }
+
 }

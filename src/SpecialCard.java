@@ -1,12 +1,15 @@
 /**
- * The Special Card class
+ * The Special Card class.
+ * Implements the Card interface.
+ *
+ * @author Oyindamola Taiwo-Olupeka
+ * @author Osas Iyamu
  */
 public class SpecialCard implements Card {
 
     private Card.type cardType;
     private SPECIALCARDS specialDark;
     private SPECIALCARDS specialLight;
-
     private Colors.LIGHTCOLORS lightColor;
     private Colors.DARKCOLORS darkColor;
 
@@ -18,7 +21,8 @@ public class SpecialCard implements Card {
      * @param specialDark the special card for the dark mode
      * @param darkColor the color for the dark mode
      */
-    public SpecialCard(type cardType, SPECIALCARDS specialLight, Colors.LIGHTCOLORS lightColor, SPECIALCARDS specialDark, Colors.DARKCOLORS darkColor) {
+    public SpecialCard(type cardType, SPECIALCARDS specialLight, Colors.LIGHTCOLORS lightColor,
+                       SPECIALCARDS specialDark, Colors.DARKCOLORS darkColor) {
         this.cardType = cardType;
         this.specialLight = specialLight;
         this.specialDark = specialDark;
@@ -30,10 +34,10 @@ public class SpecialCard implements Card {
      * Set the light color for a special card. Should only be used for WILD Cards
      * @param lightColor the light color specified
      */
-    public void setLightColor(Colors.LIGHTCOLORS lightColor){
+    public void setLightColor(Colors.LIGHTCOLORS lightColor) {
         if (this.specialLight.toString().equals("WILD")) {
             this.lightColor = lightColor;
-        }else{
+        } else {
             System.out.println("You are not allowed to change the light color of a special card except the WILD card");
         }
     }
@@ -42,10 +46,10 @@ public class SpecialCard implements Card {
      * Set the dark color for a special card. Should only be used for WILD Cards
      * @param darkColor the light color specified
      */
-    public void setDarkColor(Colors.DARKCOLORS darkColor){
+    public void setDarkColor(Colors.DARKCOLORS darkColor) {
         if (this.specialDark.toString().equals("WILD")) {
             this.darkColor = darkColor;
-        }else{
+        } else {
             System.out.println("You are not allowed to change the dark color of a special card except the WILD card");
         }
     }
@@ -76,4 +80,5 @@ public class SpecialCard implements Card {
     public String getLightCharacteristics() {
         return specialLight.toString() + " " + lightColor;
     }
+
 }

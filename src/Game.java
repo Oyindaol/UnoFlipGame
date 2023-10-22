@@ -1,9 +1,15 @@
 import java.util.*;
 
 /**
- * The Game class
+ * The Game class.
+ * The Model of the game.
+ * Run the Main method to play the game.
+ *
+ * @author Osas Iyamu
+ * @author Oyindamola Taiwo-Olupeka
  */
 public class Game {
+
     private enum mode {LIGHT, DARK}
     private mode currentMode;
     private ArrayList<Player> players;
@@ -18,7 +24,8 @@ public class Game {
 
 
     /**
-     * Constructor of the class
+     * Constructor for the Game (Model) class
+     * Initializes the game
      */
     public Game(){
         this. players = new ArrayList<>();
@@ -37,11 +44,11 @@ public class Game {
      * A method to initialize the card deck
      */
     private void init() {
-        //initialize card deck
+        //Initialize card deck
         Random rand = new Random();
 
         //Initialize the number cards
-        for (int i=0; i<72; i++){
+        for (int i = 0; i < 72; i++) {
             int lightInt = rand.nextInt(9) + 1;
             int lightColor = rand.nextInt(4);
             int darkInt = rand.nextInt(9) + 1;
@@ -51,7 +58,7 @@ public class Game {
         }
 
         //Initialize the special cards
-        for(int i=0; i<12; i++){
+        for (int i = 0; i < 12; i++) {
             SpecialCard skip = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.SKIP, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.WILD, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
             SpecialCard wild_draw_two = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.WILD_DRAW_TWO, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.FLIP, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
             SpecialCard reverse = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.REVERSE, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.SKIP_EVERYONE, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
@@ -70,14 +77,13 @@ public class Game {
     }
 
     /**
-     * All methods unused will be used in the GUI milestone
+     * All methods unused will be used in the further milestones
      */
-
-    public ArrayList<Player> getPlayers(){
+    public ArrayList<Player> getPlayers() {
         return this.players;
     }
 
-    public void addPlayer(Player p){
+    public void addPlayer(Player p) {
         this.players.add(p);
     }
 
@@ -145,38 +151,40 @@ public class Game {
     }
 
     /**
-     * A method to implement the current
+     * A method to implement the current player's turn
      */
     private void implementCurrentPlayerTurn() {
         System.out.println("Your available cards:");
         ArrayList<Card> currentPlayerCards = currentPlayer.getCards();
         if (currentMode == mode.LIGHT){
-            for(int i=0; i<currentPlayer.getCards().size(); i++){
+            for (int i = 0; i < currentPlayer.getCards().size(); i++){
                 System.out.println(i+1 + ": " + currentPlayerCards.get(i).getLightCharacteristics());
             }
         }
         if (currentMode == mode.DARK){
-            for(int i=0; i<currentPlayer.getCards().size(); i++){
+            for (int i = 0; i < currentPlayer.getCards().size(); i++){
                 System.out.println(i+1 + ": " + currentPlayerCards.get(i).getDarkCharacteristics());
             }
         }
         System.out.println("Current Mode : " + currentMode.toString());
         if (this.getCurrentMode() == mode.LIGHT) {
             System.out.println("Top Card: " + playingDeck.get(playingDeck.size() - 1).getLightCharacteristics());
+            System.out.println("");
         }
         else {
             System.out.println("Top Card: " + playingDeck.get(playingDeck.size() - 1).getDarkCharacteristics());
+            System.out.println("");
         }
 
         System.out.print("Pick an index of the card to place or 0 to draw from the bank: ");
         Scanner input = new Scanner(System.in);
         int chosen = input.nextInt();
 
-        if(chosen == 0){
+        if (chosen == 0){
             getCardFromBank();
-        }else {
+        } else {
             while ((chosen - 1) > currentPlayerCards.size() - 1) {
-                System.out.print("You dont have this card in your deck, pick something in your deck: ");
+                System.out.print("You don't have this card in your deck, pick something in your deck: ");
                 chosen = input.nextInt();
             }
 
@@ -282,12 +290,12 @@ public class Game {
     public void play(){
         Scanner input = new Scanner(System.in);
         System.out.println("Welcome to the game of UNO Flip!");
-        System.out.print("Enter number of Players(for example 2): ");
+        System.out.print("Enter number of Players(minimum 2 players: ");
         int numberOfPlayers = input.nextInt();
 
         while(numberOfPlayers < 2){
             System.out.println("You need at least 2 players to play this game");
-            System.out.print("Enter number of Players(for example 2): ");
+            System.out.print("Enter number of Players(minimum 2 players): ");
             numberOfPlayers = input.nextInt();
         }
 
@@ -295,7 +303,7 @@ public class Game {
         Scanner newInput = new Scanner(System.in);
 
         for (int i=0; i<numberOfPlayers; i++){
-            System.out.print("Enter name for Player " + count + ": ");
+            System.out.print("Enter Player name " + count + ": ");
             String player = newInput.nextLine();
             this.players.add(new Player(player));
             count++;
@@ -312,7 +320,7 @@ public class Game {
             implementCurrentPlayerTurn();
             if(clockwise) {
                 this.position = this.position + 1;
-            }else{
+            } else {
                 this.position = this.position - 1;
             }
             this.position = ((this.position%(numberOfPlayers)) + numberOfPlayers) % numberOfPlayers; //position of the next player
@@ -324,4 +332,5 @@ public class Game {
         Game game = new Game();
         game.play();
     }
+
 }

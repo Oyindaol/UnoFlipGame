@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 
 /**
- * The Player class
+ * The Player class.
+ *
+ * @author Osas Iyamu
  */
 public class Player {
 
@@ -24,7 +26,6 @@ public class Player {
     public String getName() {
         return name;
     }
-
 
     /**
      * A method to get the cards of a player
@@ -65,4 +66,5 @@ public class Player {
     public void addCard(Card card) {
         this.cards.add(card);
     }
+
 }
