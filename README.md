@@ -26,10 +26,10 @@ A Text-based version of Uno Flip where players use a mouse and keyboard input to
 
 ## Known Issues
 - Issues with tallying the scores after playing any special card.
-- The wild special card still depends on colour for the logic to work.
 - Occasional Out-of-bounds Error when using the special cards after multiple rounds.
 
 ## Change Log
+First implementation. No changes so far.
 
 ## Milestone Roadmap
 ### M1 - October 22, 2023
