@@ -62,7 +62,7 @@ public class Game {
             SpecialCard wild_draw_two = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.WILD_DRAW_TWO, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.FLIP, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
             SpecialCard reverse = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.REVERSE, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.SKIP_EVERYONE, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
            // SpecialCard wild = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.WILD, NULL, Card.SPECIALCARDS.SKIP_EVERYONE, null);
-            SpecialCard wild = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.WILD, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.WILD, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
+            SpecialCard wild = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.WILD, Colors.LIGHTCOLORS.UNASSIGNED, Card.SPECIALCARDS.WILD, Colors.DARKCOLORS.UNASSIGNED);
 
             cardDeck.add(reverse);
             cardDeck.add(wild_draw_two);
@@ -156,22 +156,25 @@ public class Game {
     private void implementCurrentPlayerTurn() {
         System.out.println("Your available cards:");
         ArrayList<Card> currentPlayerCards = currentPlayer.getCards();
-        if (currentMode == mode.LIGHT){
-            for (int i = 0; i < currentPlayer.getCards().size(); i++){
-                System.out.println(i+1 + ": " + currentPlayerCards.get(i).getLightCharacteristics());
+        if (currentMode == mode.LIGHT) {
+            for (int i = 0; i < currentPlayer.getCards().size(); i++) {
+                if (currentPlayerCards.get(i).getLightCharacteristics().split(" ")[0].equals("WILD")) {
+                    System.out.println(i + 1 + ": " + currentPlayerCards.get(i).getLightCharacteristics().split(" ")[0]);
+                } else {
+                    System.out.println(i + 1 + ": " + currentPlayerCards.get(i).getLightCharacteristics());
+                }
             }
         }
-        if (currentMode == mode.DARK){
-            for (int i = 0; i < currentPlayer.getCards().size(); i++){
-                System.out.println(i+1 + ": " + currentPlayerCards.get(i).getDarkCharacteristics());
+        if (currentMode == mode.DARK) {
+            for (int i = 0; i < currentPlayer.getCards().size(); i++) {
+                System.out.println(i + 1 + ": " + currentPlayerCards.get(i).getDarkCharacteristics());
             }
         }
         System.out.println("Current Mode : " + currentMode.toString());
         if (this.getCurrentMode() == mode.LIGHT) {
             System.out.println("Top Card: " + playingDeck.get(playingDeck.size() - 1).getLightCharacteristics());
             System.out.println("");
-        }
-        else {
+        } else {
             System.out.println("Top Card: " + playingDeck.get(playingDeck.size() - 1).getDarkCharacteristics());
             System.out.println("");
         }
@@ -180,7 +183,7 @@ public class Game {
         Scanner input = new Scanner(System.in);
         int chosen = input.nextInt();
 
-        if (chosen == 0){
+        if (chosen == 0) {
             getCardFromBank();
         } else {
             while ((chosen - 1) > currentPlayerCards.size() - 1) {
@@ -234,7 +237,7 @@ public class Game {
                             this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
                             playingDeck.add(currentPlayerCards.get(chosen - 1));
                             currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-                            System.out.println(players.get((players.indexOf(currentPlayer) + 1)%players.size()).getName() + " has been skipped");
+                            System.out.println(players.get((players.indexOf(currentPlayer) + 1) % players.size()).getName() + " has been skipped");
                             break;
 
                         case "REVERSE":
@@ -300,17 +303,24 @@ public class Game {
                             break;
 
                         case "WILD_DRAW_TWO":
-                        for (int i = 0; i < 2; i++){
-                            players.get(position+1 % (players.size()-1)).addCard(cardDeck.get(cardDeck.size()-1));
-                        }
-                        this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
-                        playingDeck.add(currentPlayerCards.get(chosen - 1));
-                        currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-                        System.out.println(players.get((players.indexOf(currentPlayer) + 1)).getName() + " picked 2 and will be skipped");
+                            for (int i = 0; i < 2; i++) {
+                                players.get(position + 1 % (players.size() - 1)).addCard(cardDeck.get(cardDeck.size() - 1));
+                            }
+                            this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
+                            playingDeck.add(currentPlayerCards.get(chosen - 1));
+                            currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
+                            System.out.println(players.get((players.indexOf(currentPlayer) + 1)).getName() + " picked 2 and will be skipped");
 
                     }
                 }
             }
+        }
+        if (currentPlayer.getCards().isEmpty()) {
+            System.out.println("Winner: " + currentPlayer.getName());
+            System.out.println("In order of scores: ");
+            scores.entrySet().stream()
+                    .sorted(Map.Entry.<Player, Integer>comparingByValue())
+                    .forEach((player) -> System.out.println(player.getKey() + ": " + player.getValue()));
         }
     }
 
