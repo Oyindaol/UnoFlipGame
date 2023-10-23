@@ -196,7 +196,7 @@ public class Game {
             String playingDeckLightCharacter = playingDeck.get(playingDeck.size() - 1).getLightCharacteristics().split(" ")[0];
             String playingDeckLightColor = playingDeck.get(playingDeck.size() - 1).getLightCharacteristics().split(" ")[1];
 
-            while (!currentPlayerLightCharacter.equals(playingDeckLightCharacter) && !(currentPlayerLightColor).equals(playingDeckLightColor)) {
+            while (((!currentPlayerLightCharacter.equals(playingDeckLightCharacter) && !(currentPlayerLightCharacter.equals("WILD"))) && !(currentPlayerLightColor).equals(playingDeckLightColor))) {
                 System.out.print("Invalid choice; Color or numbers don't match\nPick a different option: ");
                 chosen = input.nextInt();
                 if (chosen == 0) {
@@ -248,58 +248,57 @@ public class Game {
                             break;
 
                         case "WILD":
-                            System.out.print("Choose a color (RED, GREEN, BLUE, YELLOW): ");
-                            String chosenColor = input.next().toUpperCase();
+                            if (currentMode == mode.LIGHT) {
+                                System.out.print("Choose a color (RED, GREEN, BLUE, YELLOW): ");
+                                String chosenColor = input.next().toUpperCase();
 
-                            // Validate the chosen color
-                            boolean validColor = false;
-                            for (Colors.LIGHTCOLORS color : Colors.LIGHTCOLORS.values()) {
-                                if (color.toString().equals(chosenColor)) {
-                                    validColor = true;
-                                    break;
+                                // Validate the chosen color
+                                boolean validColor = false;
+                                for (Colors.LIGHTCOLORS color : Colors.LIGHTCOLORS.values()) {
+                                    if (color.toString().equals(chosenColor)) {
+                                        validColor = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!validColor) {
+                                    System.out.println("Invalid color choice. Please choose a valid color.");
+                                } else {
+                                    // Set the chosen color for the Wild card
+
+                                    currentPlayerCards.get(chosen - 1).setLightColor(Colors.LIGHTCOLORS.valueOf(chosenColor));
+                                    //currentPlayerCards.get(chosen - 1).setDarkColor(Colors.DARKCOLORS.valueOf(chosenColor));
+                                    playingDeck.add(currentPlayerCards.get(chosen - 1));
+                                    System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getLightCharacteristics());
+                                    currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
                                 }
                             }
 
-                            if (!validColor) {
-                                System.out.println("Invalid color choice. Please choose a valid color.");
-                            } else {
-                                // Set the chosen color for the Wild card
+                            if (currentMode == mode.DARK) {
+                                System.out.print("Choose a color (PINK, TEAL, PURPLE, ORANGE): ");
+                                String chosenColor = input.next().toUpperCase();
 
-                                currentPlayerCards.get(chosen - 1).setLightColor(Colors.LIGHTCOLORS.valueOf(chosenColor));
-                                //currentPlayerCards.get(chosen - 1).setDarkColor(Colors.DARKCOLORS.valueOf(chosenColor));
-                                playingDeck.add(currentPlayerCards.get(chosen - 1));
-                                currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-                                System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getLightCharacteristics());
+                                // Validate the chosen color
+                                boolean validColor = false;
+                                for (Colors.DARKCOLORS color : Colors.DARKCOLORS.values()) {
+                                    if (color.toString().equals(chosenColor)) {
+                                        validColor = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!validColor) {
+                                    System.out.println("Invalid color choice. Please choose a valid color.");
+                                } else {
+                                    // Set the chosen color for the Wild card
+
+                                    //currentPlayerCards.get(chosen - 1).setLightColor(Colors.LIGHTCOLORS.valueOf(chosenColor));
+                                    currentPlayerCards.get(chosen - 1).setDarkColor(Colors.DARKCOLORS.valueOf(chosenColor));
+                                    playingDeck.add(currentPlayerCards.get(chosen - 1));
+                                    currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
+                                    System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getDarkCharacteristics());
+                                }
                             }
-
-
-                            //Using this code for Milestones 2-4
-
-//                            if (currentMode == mode.DARK) {
-//                                System.out.print("Choose a color (PINK, TEAL, PURPLE, ORANGE): ");
-//                                String chosenColor = input.next().toUpperCase();
-//
-//                                // Validate the chosen color
-//                                boolean validColor = false;
-//                                for (Colors.DARKCOLORS color : Colors.DARKCOLORS.values()) {
-//                                    if (color.toString().equals(chosenColor)) {
-//                                        validColor = true;
-//                                        break;
-//                                    }
-//                                }
-//
-//                                if (!validColor) {
-//                                    System.out.println("Invalid color choice. Please choose a valid color.");
-//                                } else {
-//                                    // Set the chosen color for the Wild card
-//
-//                                    //currentPlayerCards.get(chosen - 1).setLightColor(Colors.LIGHTCOLORS.valueOf(chosenColor));
-//                                    currentPlayerCards.get(chosen - 1).setDarkColor(Colors.DARKCOLORS.valueOf(chosenColor));
-//                                    playingDeck.add(currentPlayerCards.get(chosen - 1));
-//                                    currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-//                                    System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getDarkCharacteristics());
-//                                }
-//                            }
                             break;
 
                         case "WILD_DRAW_TWO":
