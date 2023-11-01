@@ -1,16 +1,16 @@
 import java.util.*;
 
 /**
- * The Game class.
+ * The GameModel class.
  * The Model of the game.
  * Run the Main method to play the game.
  *
  * @author Osas Iyamu
  * @author Oyindamola Taiwo-Olupeka
  */
-public class Game {
+public class GameModel {
 
-    private enum mode {LIGHT, DARK}
+    enum mode {LIGHT, DARK}
     private mode currentMode;
     private ArrayList<Player> players;
     private int position;
@@ -23,10 +23,10 @@ public class Game {
 
 
     /**
-     * Constructor for the Game (Model) class
+     * Constructor for the GameModel (Model) class
      * Initializes the game
      */
-    public Game(){
+    public GameModel(){
         this. players = new ArrayList<>();
         this.scores = new HashMap<Player, Integer>();
         this.cardDeck = new ArrayList<>();
@@ -61,7 +61,6 @@ public class Game {
             SpecialCard skip = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.SKIP, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.WILD, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
             SpecialCard wild_draw_two = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.WILD_DRAW_TWO, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.FLIP, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
             SpecialCard reverse = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.REVERSE, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.SKIP_EVERYONE, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
-           // SpecialCard wild = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.WILD, NULL, Card.SPECIALCARDS.SKIP_EVERYONE, null);
             SpecialCard wild = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.WILD, Colors.LIGHTCOLORS.UNASSIGNED, Card.SPECIALCARDS.WILD, Colors.DARKCOLORS.UNASSIGNED);
 
             cardDeck.add(reverse);
@@ -244,7 +243,7 @@ public class Game {
                             this.clockwise = !this.clockwise;
                             playingDeck.add(currentPlayerCards.get(chosen - 1));
                             currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-                            System.out.println("\nGame order has been reversed");
+                            System.out.println("\nGameModel order has been reversed");
                             break;
 
                         case "WILD":
@@ -350,7 +349,7 @@ public class Game {
 
         distributeToAll(7);
 
-        //Game starts
+        //GameModel starts
         while(!quit){
             currentPlayer = players.get(this.position);
             System.out.println("\n---------------------------------------------------------");
@@ -368,8 +367,8 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        Game game = new Game();
-        game.play();
+        GameModel gameModel = new GameModel();
+        gameModel.play();
     }
 
 }
