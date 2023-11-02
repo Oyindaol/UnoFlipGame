@@ -1,6 +1,8 @@
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class GameFrame extends JFrame {
@@ -8,26 +10,28 @@ public class GameFrame extends JFrame {
     private final GameModel model;
     public GameFrame(GameModel model) {
         super("UNO Flip");
+        this.setLayout(new BorderLayout(10, 10));
         this.model = model;
         init();
-//        this.pack();
+        this.setMinimumSize(new Dimension(1000, 700));
+        this.pack();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
     public void init(){
-        this.setLayout(new BorderLayout());
-        this.setSize(500, 500);
         JPanel northPanel = new JPanel(new FlowLayout());
-        JPanel centerPanel = new JPanel(new FlowLayout());
-        JPanel eastPanel = new JPanel();
-        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.PAGE_AXIS));
-        JPanel westPanel = new JPanel();
-        westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.PAGE_AXIS));
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+        JPanel eastPanel = new JPanel(new GridBagLayout());
+//        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.X_AXIS));
+        eastPanel.setMaximumSize(new Dimension(30,30));
+        JPanel westPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+//        westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.PAGE_AXIS));
         JPanel southPanel = new JPanel(new FlowLayout());
         JButton nextButton = new JButton("Next");
         Random rand = new Random();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 20; i++) {
             int lightInt = rand.nextInt(9) + 1;
             int lightColor = rand.nextInt(4);
             int darkInt = rand.nextInt(9) + 1;
@@ -35,39 +39,66 @@ public class GameFrame extends JFrame {
             Card card = new NumberCard(Card.type.REGULAR, lightInt, Colors.LIGHTCOLORS.values()[lightColor], darkInt, Colors.DARKCOLORS.values()[darkColour]);
             southPanel.add(createCard(card)[0], BorderLayout.SOUTH);
         }
-        southPanel.add(nextButton);
+        this.pack();
+        southPanel.add(nextButton, FlowLayout.LEFT);
+
+        southPanel.setBackground(Color.GRAY);
+
+        Border raisedEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+
+        //Items that go in the North Panel
+        JLabel UNOFLIPLabel = new JLabel(new ImageIcon(getClass().getResource("UNO Flip.jpeg")));
+        UNOFLIPLabel.setHorizontalAlignment(JLabel.CENTER);
+//        northPanel.add(UNOFLIPLabel);
+
+        //Items that go in the Center Panel
+        JLabel Game = new JLabel("This is where the Game will be played");
+        JButton temp = new JButton("Temporary Label");
+        Game.setSize(new Dimension(1000,1000));
+        c.fill = GridBagConstraints.VERTICAL;
+        c.gridx = 2;
+        c.gridy = 0;
+        centerPanel.add(Game, c);
+        c.fill = GridBagConstraints.VERTICAL;
+        c.anchor = GridBagConstraints.PAGE_START;
+        c.gridx = 2;
+        c.gridy = 2;
+        centerPanel.add(temp, c);
+        centerPanel.setBackground(Color.DARK_GRAY);
+        centerPanel.setBorder(raisedEtched);
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
+        centerPanel.setSize(new Dimension(500, 500));
+
+
+
+        //Items that go in the South Panel
+//        southPanel.setBorder(raisedEtched);
+
+        //Items that go in the East Panel
+        JLabel playersInfo = new JLabel("<html>Players Names & Scores: <br/>Osas Iyamu<br/>Oyinda<br/>Vishesh<br/>Jay</html>\"");
+        playersInfo.setBorder(raisedEtched);
+//        eastPanel.setBorder(raisedEtched);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        eastPanel.add(playersInfo, c);
+
+
+        //Items that go in the East Panel
+        JLabel currentPlayerInfo = new JLabel("<html>Current Player: Osas Iyamu                 <br/>Score: 80</html>");
+        currentPlayerInfo.setBorder(raisedEtched);
+        c.anchor = GridBagConstraints.PAGE_START;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        westPanel.add(currentPlayerInfo, c);
+//        westPanel.setBorder(raisedEtched);
+
         this.add(northPanel, BorderLayout.NORTH);
         this.add(centerPanel, BorderLayout.CENTER);
         this.add(eastPanel, BorderLayout.EAST);
         this.add(westPanel, BorderLayout.WEST);
         this.add(southPanel, BorderLayout.SOUTH);
-
-        Border blackLine = BorderFactory.createLineBorder(Color.black);
-
-        //Items that go in the North Panel
-        JLabel UNOFLIPLabel = new JLabel("UNO FLIP");
-        northPanel.add(UNOFLIPLabel);
-
-        //Items that go in the Center Panel
-        JTextField Game = new JTextField("This is where the Game will be played");
-        Game.setBorder(blackLine);
-        Game.setSize(1000,1000);
-        centerPanel.add(Game);
-        centerPanel.setBackground(Color.RED);
-        centerPanel.setBorder(blackLine);
-
-
-
-        //Items that go in the South Panel
-//        southPanel.setBorder(blackLine);
-
-        //Items that go in the East Panel
-        JTextField textFieldEast = new JTextField("Temp for List of players");
-        eastPanel.add(textFieldEast);
-
-        //Items that go in the East Panel
-        JTextField textFieldWest = new JTextField("Temp for Current Player Info");
-        westPanel.add(textFieldWest);
     }
 
     private JPanel[] createCard(Card card){
