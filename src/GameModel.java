@@ -105,6 +105,20 @@ public class GameModel {
     public HashMap<Player, Integer> calculateScore(){
         return null;
     }
+    public HashMap<Player, Integer> getScores() {
+        return scores;
+    }
+
+    public ArrayList<Card> getPlayingDeck() {
+        return playingDeck;
+    }
+
+    public void setCurrentPlayer(Player p) {
+        this.currentPlayer = p;
+    }
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 
     /**
      * A method to get the mode of the game
