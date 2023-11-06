@@ -12,6 +12,19 @@ public class UNOController implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(e.getActionCommand() == "Play"){
+            view.handlePlay();
 
+        }
+
+        if(e.getActionCommand() == "Next Player"){
+            view.handleNextPlayer();
+
+        }
+
+        if(e.getActionCommand() == "Draw Card"){
+            view.handleDrawCard();
+
+        }
     }
 }

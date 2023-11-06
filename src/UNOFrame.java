@@ -40,7 +40,10 @@ public class UNOFrame extends JFrame implements UNOView {
 
 
         //For components that will go into the South Panel
-        JButton nextButton = new JButton("Next");
+        JButton nextButton = new JButton("Next Player");
+        nextButton.addActionListener(controller);
+
+
         JPanel cardsPanel = new JPanel(new GridLayout(2, 0));
         JScrollPane cardsScrollPane = new JScrollPane(cardsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -234,4 +237,23 @@ public class UNOFrame extends JFrame implements UNOView {
         }
     }
 
+    public static void main(String[] args) {
+        UNOModel model = new UNOModel();
+        new UNOFrame(model);
+    }
+
+    @Override
+    public void handlePlay() {
+
+    }
+
+    @Override
+    public void handleNextPlayer() {
+
+    }
+
+    @Override
+    public void handleDrawCard() {
+
+    }
 }
