@@ -2,13 +2,13 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.Random;
 
-public class GameFrame extends JFrame {
+public class UNOFrame extends JFrame implements UNOView {
 
-    private final GameModel model;
-    public GameFrame(GameModel model) {
+    private UNOModel model;
+    private UNOController controller;
+    public UNOFrame(UNOModel model) {
         super("UNO Flip");
         this.setLayout(new BorderLayout(5, 2));
         this.model = model;
@@ -16,7 +16,12 @@ public class GameFrame extends JFrame {
         this.setMinimumSize(new Dimension(1250, 700));
         this.pack();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
+
+
+        model.addUNOView(this);
+        controller = new UNOController(model, this);
     }
 
     /**
@@ -229,9 +234,4 @@ public class GameFrame extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        GameModel model = new GameModel();
-//        model.setCurrentPlayer();
-        GameFrame frame = new GameFrame(model);
-    }
 }

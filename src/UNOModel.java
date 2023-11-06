@@ -1,14 +1,14 @@
 import java.util.*;
 
 /**
- * The GameModel class.
+ * The UNOModel class.
  * The Model of the game.
  * Run the Main method to play the game.
  *
  * @author Osas Iyamu
  * @author Oyindamola Taiwo-Olupeka
  */
-public class GameModel {
+public class UNOModel {
 
     enum mode {LIGHT, DARK}
     private mode currentMode;
@@ -20,13 +20,14 @@ public class GameModel {
     private Player currentPlayer;
     private boolean clockwise;
     private boolean quit;
+    private List<UNOView> views;
 
 
     /**
-     * Constructor for the GameModel (Model) class
+     * Constructor for the UNOModel (Model) class
      * Initializes the game
      */
-    public GameModel(){
+    public UNOModel(){
         this. players = new ArrayList<>();
         this.scores = new HashMap<Player, Integer>();
         this.cardDeck = new ArrayList<>();
@@ -37,6 +38,7 @@ public class GameModel {
         this.quit = false;
         currentMode = mode.LIGHT;
         this.init();
+        views = new ArrayList<>();
     }
 
     /**
@@ -257,7 +259,7 @@ public class GameModel {
                             this.clockwise = !this.clockwise;
                             playingDeck.add(currentPlayerCards.get(chosen - 1));
                             currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-                            System.out.println("\nGameModel order has been reversed");
+                            System.out.println("\nUNOModel order has been reversed");
                             break;
 
                         case "WILD":
@@ -363,7 +365,7 @@ public class GameModel {
 
         distributeToAll(7);
 
-        //GameModel starts
+        //UNOModel starts
         while(!quit){
             currentPlayer = players.get(this.position);
             System.out.println("\n---------------------------------------------------------");
@@ -380,9 +382,20 @@ public class GameModel {
 
     }
 
-    public static void main(String[] args) {
-        GameModel gameModel = new GameModel();
-        gameModel.play();
+    /**
+     * Adds a view from the Uno game
+     * @param v
+     */
+    public void addUNOView(UNOView v) {
+        views.add(v);
+    }
+
+    /**
+     * Removes a view from the Uno game
+     * @param v
+     */
+    public void removeUNOView(UNOView v) {
+        views.remove(v);
     }
 
 }

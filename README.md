@@ -1,8 +1,8 @@
 # UnoFlipGame
-A simplified version of the classic card gameModel with a flip twist, Uno Flip, built using Java and Java.util packages.
+A simplified version of the classic card UNOModel with a flip twist, Uno Flip, built using Java and Java.util packages.
 
 ## Milestone 1 Deliverables
-A Text-based version of Uno Flip where players use a mouse and keyboard input to play the gameModel. Players have the capability to:
+A Text-based version of Uno Flip where players use a mouse and keyboard input to play the UNOModel. Players have the capability to:
 1. View their drawn cards.
 2. Place cards using the official notation detailed in the Wikipedia link.
 3. Draw one card.
@@ -11,7 +11,7 @@ A Text-based version of Uno Flip where players use a mouse and keyboard input to
 
 ## Authors
 #### Osas Iyamu 
-- Worked on the implementation of the gameModel model, player, and card class.
+- Worked on the implementation of the UNOModel model, player, and card class.
 - Refactored the card interface and special card classes and separated  it into two classes (NumberCard and SpecialCard).
 - Added Java Doc comments to classes and methods.
 
@@ -22,7 +22,7 @@ A Text-based version of Uno Flip where players use a mouse and keyboard input to
 
 #### Daniel Esenwa
 - Worked on the UML class diagram and sequence diagram.
-- Tested the UNO Flip gameModel.
+- Tested the UNO Flip UNOModel.
 
 ## Known Issues
 - Issues with tallying the scores after playing any special card.
@@ -33,20 +33,20 @@ First implementation. No changes so far.
 
 ## Milestone Roadmap
 ### M1 - October 22, 2023
-- Text-based version of the gameModel played with the keyboard.
+- Text-based version of the UNOModel played with the keyboard.
 - Implementation of the gameplay logic and the primary challenge of ensuring the correctness of card placement, validating cards and adding to the score after each card placement.
 
 ### M2 - November 12, 2023
-- GUI-based version of the gameModel.
+- GUI-based version of the UNOModel.
 - Unit Testing for the Model.
 
 ### M3 - November 23, 2023
-- Uno Flip card implementation into the gameModel, considering their specific rules and scoring mechanisms.
+- Uno Flip card implementation into the UNOModel, considering their specific rules and scoring mechanisms.
 - Adding AI player capability.
-- Unit Testing for the GameModel.
+- Unit Testing for the UNOModel.
 
 ### M4 - December 8, 2023
 - Addition of undo and redo features.
-- Addition of Save and Load features: enable players to save their current gameModel progress and later resume it
-- Addition of Replay feature: Players will now have the ability to replay the gameModel, allowing them to restart and enjoy multiple rounds
-- Unit Testing for the GameModel.
+- Addition of Save and Load features: enable players to save their current UNOModel progress and later resume it
+- Addition of Replay feature: Players will now have the ability to replay the UNOModel, allowing them to restart and enjoy multiple rounds
+- Unit Testing for the UNOModel.
