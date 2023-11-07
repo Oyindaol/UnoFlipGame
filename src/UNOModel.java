@@ -22,6 +22,9 @@ public class UNOModel {
     private boolean quit;
     private List<UNOView> views;
 
+    public Card topCard;
+
+
 
     /**
      * Constructor for the UNOModel (Model) class
@@ -36,15 +39,14 @@ public class UNOModel {
         this.position = 0;
         this.clockwise = true;
         this.quit = false;
-        currentMode = mode.LIGHT;
-        this.init();
-        views = new ArrayList<>();
+        this.currentMode = mode.LIGHT;
+        this.views = new ArrayList<>();
     }
 
     /**
      * A method to initialize the card deck
      */
-    private void init() {
+    public void init() {
         //Initialize card deck
         Random rand = new Random();
 
@@ -72,8 +74,12 @@ public class UNOModel {
         }
 
         Collections.shuffle(cardDeck);
+
+        distributeToAll(7);
         playingDeck.add(cardDeck.get(cardDeck.size()-1));
+        topCard = cardDeck.get(cardDeck.size()-1);
         cardDeck.remove(cardDeck.get(cardDeck.size()-1));
+
 
     }
 
@@ -379,6 +385,46 @@ public class UNOModel {
             }
             this.position = ((this.position%(numberOfPlayers)) + numberOfPlayers) % numberOfPlayers; //position of the next player
         }
+
+    }
+
+
+    public void drawCard(){
+        currentPlayer.getCards().add(cardDeck.get(cardDeck.size() - 1));
+        cardDeck.remove(cardDeck.size() - 1);
+    }
+    public void changeTurn(){
+        if(clockwise) {
+            this.position = this.position + 1;
+        } else {
+            this.position = this.position - 1;
+        }
+        this.position = ((this.position%(players.size())) + players.size()) % players.size(); //position of the next player
+    }
+
+    public boolean validatePlacement(String characteristics, String color){
+        if(characteristics.equals(topCard.getLightCharacteristics().split(" ")[0]) || color.equals(topCard.getLightCharacteristics().split(" ")[1])){
+            for(Card card : currentPlayer.getCards()){
+                if (card.getLightCharacteristics().equals(characteristics + " " + color)){
+                    playingDeck.add(card);
+                    currentPlayer.getCards().remove(card);
+                    UNOEvent e = new UNOEvent(true, this);
+                    for (UNOView views: views){
+                        views.handlePlacement(e);
+                    }
+                    return true;
+                }
+            }
+        }else{
+            UNOEvent e = new UNOEvent(false, this);
+            for (UNOView views: views){
+                views.handlePlacement(e);
+            }
+        }
+        return false;
+    }
+
+    public void playGUI(){
 
     }
 

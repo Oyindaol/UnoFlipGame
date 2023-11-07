@@ -5,4 +5,6 @@ public interface UNOView {
 
     public void handleDrawCard();
 
+    void handlePlacement(UNOEvent e);
+
 }

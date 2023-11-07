@@ -2,16 +2,48 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
-import java.util.Random;
 
 public class UNOFrame extends JFrame implements UNOView {
 
     private UNOModel model;
     private UNOController controller;
+    private JButton nextButton;
+
+    JPanel northPanel;
+    JPanel centerPanel;
+    JPanel eastPanel;
+    JPanel westPanel;
+    JPanel southPanel;
+    JPanel cardsPanel;
+    JScrollPane cardsScrollPane;
+    JLabel currentPlayerInfo;
+    JButton drawButton;
+
     public UNOFrame(UNOModel model) {
         super("UNO Flip");
         this.setLayout(new BorderLayout(5, 2));
         this.model = model;
+        this.northPanel = new JPanel(new FlowLayout());
+        centerPanel = new JPanel(new GridBagLayout());
+        eastPanel = new JPanel(new BorderLayout());
+        eastPanel.setMaximumSize(new Dimension(30,30));
+        westPanel = new JPanel(new BorderLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        southPanel = new JPanel(new GridBagLayout());
+
+        currentPlayerInfo = new JLabel("Current Player: " + model.getCurrentPlayer() + "<html><br/>Score: </html>");
+
+
+        cardsPanel = new JPanel(new GridLayout(2, 0));
+        cardsScrollPane = new JScrollPane(cardsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        model.addUNOView(this);
+        controller = new UNOController(model, this);
+
+
+        nextButton = new JButton("Next Player");
+        nextButton.addActionListener(controller);
+
         init();
         this.setMinimumSize(new Dimension(1250, 700));
         this.pack();
@@ -19,46 +51,26 @@ public class UNOFrame extends JFrame implements UNOView {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
-
-        model.addUNOView(this);
-        controller = new UNOController(model, this);
     }
 
     /**
      * A method to initialize the game frame
      */
     public void init(){
-        JPanel northPanel = new JPanel(new FlowLayout());
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        JPanel eastPanel = new JPanel(new BorderLayout());
-//        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.X_AXIS));
-        eastPanel.setMaximumSize(new Dimension(30,30));
-        JPanel westPanel = new JPanel(new BorderLayout());
-        GridBagConstraints c = new GridBagConstraints();
-//        westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.PAGE_AXIS));
-        JPanel southPanel = new JPanel(new GridBagLayout());
-
-
         //For components that will go into the South Panel
-        JButton nextButton = new JButton("Next Player");
-        nextButton.addActionListener(controller);
+        int numPlayers = Integer.parseInt(JOptionPane.showInputDialog("Enter number of Players"));
+        int count = 1;
+        for(int i=0; i<numPlayers; i++){
+            String player = JOptionPane.showInputDialog("Enter Player " + count + "'s name");
+            model.addPlayer(new Player(player));
+            count++;
+        }
 
+        model.init();
+        model.setCurrentPlayer(model.getPlayers().get(0));
 
-        JPanel cardsPanel = new JPanel(new GridLayout(2, 0));
-        JScrollPane cardsScrollPane = new JScrollPane(cardsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-        Random rand = new Random();
-//        for(Card card : model.getCurrentPlayer().getCards()){
-//            southPanel.add(createCard(card)[0], BorderLayout.SOUTH);
-//        }
-        //For framework testing
-        for (int i = 0; i < 30; i++) {
-            int lightInt = rand.nextInt(9) + 1;
-            int lightColor = rand.nextInt(4);
-            int darkInt = rand.nextInt(9) + 1;
-            int darkColour = rand.nextInt(4);
-            Card card = new NumberCard(Card.type.REGULAR, lightInt, Colors.LIGHTCOLORS.values()[lightColor], darkInt, Colors.DARKCOLORS.values()[darkColour]);
-            cardsPanel.add(createCard(card)[0]);
+        for(Card card : model.getCurrentPlayer().getCards()){
+            cardsPanel.add(createCard(card)[1]);
         }
         southPanel.add(cardsScrollPane);
         this.pack();
@@ -83,47 +95,42 @@ public class UNOFrame extends JFrame implements UNOView {
         temp.setMaximumSize(new Dimension(100, 100));
         temp.setPreferredSize(new Dimension(100, 100));
         Game.setSize(new Dimension(1000,1000));
-        c.fill = GridBagConstraints.VERTICAL;
-        c.gridx = 2;
-        c.gridy = 0;
-        centerPanel.add(Game, c);
-        c.fill = GridBagConstraints.VERTICAL;
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.gridx = 2;
-        c.gridy = 2;
-        centerPanel.add(temp, c);
+        centerPanel.add(Game);
+        centerPanel.add(temp);
         centerPanel.setBackground(Color.BLACK);
         centerPanel.setBorder(raisedEtched);
         centerPanel.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
         centerPanel.setSize(new Dimension(500, 500));
 
-
-
         //Items that go in the South Panel
 //        southPanel.setBorder(raisedEtched);
 
         //Items that go in the East Panel
-        JLabel playersInfo = new JLabel("<html>Players Names & Scores: <br/>Osas Iyamu<br/>Oyinda<br/>Vishesh<br/>Jay</html>\"");
+
+        String players = "<html>";
+        for (Player player : model.getPlayers()){
+            players += player.getName() + " <br/>";
+        }
+        players = players + "</html>";
+
+
+        JLabel playersInfo = new JLabel("Players Names & Scores: " + players);
         playersInfo.setBorder(raisedEtched);
-//        eastPanel.setBorder(raisedEtched);
         eastPanel.add(playersInfo, BorderLayout.NORTH);
 
 
         //Items that go in the west Panel
-        JLabel currentPlayerInfo = new JLabel("<html>Current Player: Osas Iyamu<br/>Score: 80</html>");
         currentPlayerInfo.setBorder(raisedEtched);
-//        JPanel cardPickedFromMarket = new JPanel(new BorderLayout());
         JPanel cardPickedFromMarket = new JPanel();
         cardPickedFromMarket.setLayout(new BoxLayout(cardPickedFromMarket, BoxLayout.PAGE_AXIS));
-        JLabel text = new JLabel("Card Picked From Market");
-        JPanel button = createCard(new NumberCard(Card.type.REGULAR, 3, Colors.LIGHTCOLORS.BLUE, 6, Colors.DARKCOLORS.PURPLE))[0];
 
-        cardPickedFromMarket.add(text);
-        cardPickedFromMarket.add(button);
+        drawButton = new JButton("Draw From Market");
+        drawButton.addActionListener(controller);
 
-        westPanel.add(cardPickedFromMarket);
+        cardPickedFromMarket.add(drawButton);
+
+        westPanel.add(cardPickedFromMarket, BorderLayout.SOUTH);
         westPanel.add(currentPlayerInfo, BorderLayout.NORTH);
-//        westPanel.setBorder(raisedEtched);
 
         this.add(northPanel, BorderLayout.NORTH);
         this.add(centerPanel, BorderLayout.CENTER);
@@ -157,6 +164,9 @@ public class UNOFrame extends JFrame implements UNOView {
     private JPanel makeCardSide(String mode, Card card){
         JPanel panel = new JPanel(new BorderLayout());
         JButton button = new JButton();
+        button.setActionCommand("card");
+        button.addActionListener(controller);
+
         Border blackLine = BorderFactory.createLineBorder(Color.black);
         panel.setBorder(blackLine);
         JLabel topRight = new JLabel();
@@ -169,21 +179,25 @@ public class UNOFrame extends JFrame implements UNOView {
         if (mode.equals("light")) {
             if (card.getType().equals(Card.type.REGULAR)) {
                 topRight.setText(cardLightCharacteristics);
-                center.setText(cardLightCharacteristics);
 
                 button.setText(cardLightCharacteristics);
                 Color color = getColorEquivalence(cardLightColor);
                 panel.setBackground(color);
                 panel.add(topRight, BorderLayout.NORTH);
                 panel.add(button, BorderLayout.EAST);
-//                panel.add(button, BorderLayout.WEST);
-//                panel.add(center, BorderLayout.CENTER);
             } else if (card.getType().equals(Card.type.SPECIAL)) {
                 if (cardLightCharacteristics.equals("WILD")) {
-                    //if card characteristics is 'WILD'
+                    button.setText(cardLightCharacteristics);
+                    panel.add(topRight, BorderLayout.NORTH);
+                    panel.add(button, BorderLayout.EAST);
 
                 } else {
                     //other card types
+                    button.setText(cardLightCharacteristics);
+                    Color color = getColorEquivalence(cardLightColor);
+                    panel.setBackground(color);
+                    panel.add(topRight, BorderLayout.NORTH);
+                    panel.add(button, BorderLayout.EAST);
                 }
             }
         } else if (mode.equals("dark")){
@@ -200,9 +214,16 @@ public class UNOFrame extends JFrame implements UNOView {
             } else if (card.getType().equals(Card.type.SPECIAL)) {
                 if (cardDarkCharacteristics.equals("WILD")) {
                     //if card characteristics is 'WILD'
-
+                    button.setText(cardDarkCharacteristics);
+                    panel.add(topRight, BorderLayout.NORTH);
+                    panel.add(button, BorderLayout.EAST);
                 } else {
                     //other card types
+                    button.setText(cardDarkCharacteristics);
+                    Color color = getColorEquivalence(cardDarkColor);
+                    panel.setBackground(color);
+                    panel.add(topRight, BorderLayout.NORTH);
+                    panel.add(button, BorderLayout.EAST);
                 }
             }
         }
@@ -237,11 +258,6 @@ public class UNOFrame extends JFrame implements UNOView {
         }
     }
 
-    public static void main(String[] args) {
-        UNOModel model = new UNOModel();
-        new UNOFrame(model);
-    }
-
     @Override
     public void handlePlay() {
 
@@ -255,5 +271,16 @@ public class UNOFrame extends JFrame implements UNOView {
     @Override
     public void handleDrawCard() {
 
+    }
+
+    @Override
+    public void handlePlacement(UNOEvent e) {
+
+        nextButton.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        UNOModel model = new UNOModel();
+        new UNOFrame(model);
     }
 }
