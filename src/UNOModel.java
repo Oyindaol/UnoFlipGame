@@ -15,6 +15,7 @@ public class UNOModel {
     private ArrayList<Player> players;
     private int position;
     private HashMap<Player, Integer> scores;
+    private HashMap<String, Integer> scoreGuide;
     private ArrayList<Card> cardDeck;
     private ArrayList<Card> playingDeck;
     private Player currentPlayer;
@@ -33,6 +34,7 @@ public class UNOModel {
     public UNOModel(){
         this. players = new ArrayList<>();
         this.scores = new HashMap<Player, Integer>();
+        this.scoreGuide = new HashMap<>();
         this.cardDeck = new ArrayList<>();
         this.playingDeck = new ArrayList<>();
         this.currentPlayer = null;
@@ -75,10 +77,30 @@ public class UNOModel {
 
         Collections.shuffle(cardDeck);
 
+        //Initialize the scores
+        for (Player p : players){
+            scores.put(p, 0);
+        }
         distributeToAll(7);
         playingDeck.add(cardDeck.get(cardDeck.size()-1));
-        topCard = cardDeck.get(cardDeck.size()-1);
+        topCard = playingDeck.get(playingDeck.size()-1);
         cardDeck.remove(cardDeck.get(cardDeck.size()-1));
+
+        this.scoreGuide.put("1", 1);
+        this.scoreGuide.put("2", 2);
+        this.scoreGuide.put("3", 3);
+        this.scoreGuide.put("4", 4);
+        this.scoreGuide.put("5", 5);
+        this.scoreGuide.put("6", 6);
+        this.scoreGuide.put("7", 7);
+        this.scoreGuide.put("8", 8);
+        this.scoreGuide.put("9", 9);
+        this.scoreGuide.put("SKIP", 20);
+        this.scoreGuide.put("REVERSE", 20);
+        this.scoreGuide.put("WILD_DRAW_TWO", 50);
+        this.scoreGuide.put("WILD", 60);
+
+
 
 
     }
@@ -165,9 +187,14 @@ public class UNOModel {
     /**
      * A method to get a card from the bank
      */
-    public void getCardFromBank(){
+    public void drawFromBank(){
+        System.out.println(currentPlayer.getCards().size());
         currentPlayer.getCards().add(cardDeck.get(cardDeck.size() - 1));
         cardDeck.remove(cardDeck.size() - 1);
+        for (UNOView view : views){
+            view.handleDrawCard(this);
+        }
+        System.out.println(currentPlayer.getCards().size());
         System.out.println(currentPlayer.getName() + " picked a card");
     }
 
@@ -205,7 +232,7 @@ public class UNOModel {
         int chosen = input.nextInt();
 
         if (chosen == 0) {
-            getCardFromBank();
+            drawFromBank();
         } else {
             while ((chosen - 1) > currentPlayerCards.size() - 1) {
                 System.out.print("You don't have this card in your deck, pick something in your deck: ");
@@ -221,7 +248,7 @@ public class UNOModel {
                 System.out.print("Invalid choice; Color or numbers don't match\nPick a different option: ");
                 chosen = input.nextInt();
                 if (chosen == 0) {
-                    getCardFromBank();
+                    drawFromBank();
                     break;
                 }
                 currentPlayerLightCharacter = currentPlayerCards.get(chosen - 1).getLightCharacteristics().split(" ")[0];
@@ -400,28 +427,60 @@ public class UNOModel {
             this.position = this.position - 1;
         }
         this.position = ((this.position%(players.size())) + players.size()) % players.size(); //position of the next player
+        currentPlayer = players.get(position);
+        for (UNOView view : views){
+            view.handleNextPlayer(this);
+        }
     }
 
-    public boolean validatePlacement(String characteristics, String color){
-        if(characteristics.equals(topCard.getLightCharacteristics().split(" ")[0]) || color.equals(topCard.getLightCharacteristics().split(" ")[1])){
-            for(Card card : currentPlayer.getCards()){
-                if (card.getLightCharacteristics().equals(characteristics + " " + color)){
-                    playingDeck.add(card);
-                    currentPlayer.getCards().remove(card);
-                    UNOEvent e = new UNOEvent(true, this);
-                    for (UNOView views: views){
-                        views.handlePlacement(e);
-                    }
-                    return true;
+    public void validatePlacement(String characteristics, String color){
+        if (color.equals("unassigned")){
+            for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
+                if (this.currentPlayer.getCards().get(i).getLightCharacteristics().split(" ")[0].equals(characteristics)) {
+                    currentPlayer.getCards().size();
+                    playingDeck.add(this.currentPlayer.getCards().get(i));
+                    currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
+                    this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
+                    updateScore(currentPlayer, this.scoreGuide.get(characteristics));
+                    currentPlayer.getCards().size();
+                    break;
                 }
             }
+            for (UNOView view : views){
+                view.handleWildCard(this);
+            }
+        }
+        if(characteristics.equals(topCard.getLightCharacteristics().split(" ")[0]) || color.equals(topCard.getLightCharacteristics().split(" ")[1])){
+            if (characteristics.equals("SKIP")){
+                this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
+            } else if (characteristics.equals("WILD_DRAW_TWO")) {
+                for (int i = 0; i < 2; i++) {
+                    players.get(position + 1 % (players.size() - 1)).addCard(cardDeck.get(cardDeck.size() - 1));
+                }
+                this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
+            } else if (characteristics.equals("REVERSE")) {
+                this.clockwise = !this.clockwise;
+            }
+
+            for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
+                if (this.currentPlayer.getCards().get(i).getLightCharacteristics().equals(characteristics + " " + color)) {
+                    playingDeck.add(this.currentPlayer.getCards().get(i));
+                    currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
+                    this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
+                    updateScore(currentPlayer, this.scoreGuide.get(characteristics));
+                    UNOEvent e = new UNOEvent(true, this);
+                    for (UNOView views : this.views) {
+                        views.handlePlacement(e);
+                    }
+                }
+            }
+
         }else{
             UNOEvent e = new UNOEvent(false, this);
             for (UNOView views: views){
                 views.handlePlacement(e);
             }
         }
-        return false;
     }
 
     public void playGUI(){

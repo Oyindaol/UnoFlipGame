@@ -12,4 +12,7 @@ public class UNOEvent {
     public UNOModel getModel(){
         return this.model;
     }
+    public boolean isValid() {
+        return valid;
+    }
 }

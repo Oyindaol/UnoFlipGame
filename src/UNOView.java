@@ -1,10 +1,13 @@
+import javax.swing.*;
+
 public interface UNOView {
     public void handlePlay();
 
-    public void handleNextPlayer();
+    public void handleNextPlayer(UNOModel unoModel);
 
-    public void handleDrawCard();
+    public void handleDrawCard(UNOModel unoModel);
 
     void handlePlacement(UNOEvent e);
 
+    void handleWildCard(UNOModel unoModel);
 }
