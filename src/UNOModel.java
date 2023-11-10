@@ -24,6 +24,7 @@ public class UNOModel {
     private List<UNOView> views;
 
     public Card topCard;
+    public boolean winner;
 
 
 
@@ -437,12 +438,14 @@ public class UNOModel {
         if (color.equals("unassigned")){
             for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                 if (this.currentPlayer.getCards().get(i).getLightCharacteristics().split(" ")[0].equals(characteristics)) {
-                    currentPlayer.getCards().size();
                     playingDeck.add(this.currentPlayer.getCards().get(i));
                     currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
                     this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
                     updateScore(currentPlayer, this.scoreGuide.get(characteristics));
-                    currentPlayer.getCards().size();
+
+                    if(currentPlayer.getCards().isEmpty()){
+                        winner = true;
+                    }
                     break;
                 }
             }
@@ -455,7 +458,7 @@ public class UNOModel {
                 this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
             } else if (characteristics.equals("WILD_DRAW_TWO")) {
                 for (int i = 0; i < 2; i++) {
-                    players.get(position + 1 % (players.size() - 1)).addCard(cardDeck.get(cardDeck.size() - 1));
+                    players.get(((this.position%(players.size())) + players.size()) % players.size()).addCard(cardDeck.get(cardDeck.size() - 1));
                 }
                 this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
             } else if (characteristics.equals("REVERSE")) {
@@ -468,6 +471,11 @@ public class UNOModel {
                     currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
                     this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
                     updateScore(currentPlayer, this.scoreGuide.get(characteristics));
+
+                    if(currentPlayer.getCards().isEmpty()){
+                        winner = true;
+                    }
+
                     UNOEvent e = new UNOEvent(true, this);
                     for (UNOView views : this.views) {
                         views.handlePlacement(e);

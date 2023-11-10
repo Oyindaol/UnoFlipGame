@@ -5,6 +5,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class UNOFrame extends JFrame implements UNOView {
 
@@ -61,7 +62,10 @@ public class UNOFrame extends JFrame implements UNOView {
      */
     public void init(){
         //For components that will go into the South Panel
-        int numPlayers = Integer.parseInt(JOptionPane.showInputDialog("Enter number of Players"));
+        int numPlayers = Integer.parseInt(JOptionPane.showInputDialog("Enter number of Players (2-12)"));
+        while(numPlayers < 2 || numPlayers > 12){
+            numPlayers = Integer.parseInt(JOptionPane.showInputDialog("Number not in range. Enter number of Players (2-12)"));
+        }
         int count = 1;
         for(int i=0; i<numPlayers; i++){
             String player = JOptionPane.showInputDialog("Enter Player " + count + "'s name");
@@ -297,6 +301,9 @@ public class UNOFrame extends JFrame implements UNOView {
 
     public void handleWildCard(UNOModel unoModel){
         String wildColor = JOptionPane.showInputDialog("Choose a color (RED, GREEN, BLUE, YELLOW): ").toUpperCase();
+        while (!Arrays.toString(Colors.LIGHTCOLORS.values()).contains(wildColor)){
+            wildColor = JOptionPane.showInputDialog("Color must be one of these (RED, GREEN, BLUE, YELLOW): ").toUpperCase();
+        }
         unoModel.topCard.setLightColor(Colors.LIGHTCOLORS.valueOf(wildColor));
         centerPanel.updateUI();
         updateCurrentPlayerCards(unoModel.getCurrentPlayer());
@@ -306,12 +313,16 @@ public class UNOFrame extends JFrame implements UNOView {
             JPanel panel = (JPanel) component;
             panel.getComponents()[1].setEnabled(false);
         }
-        System.out.println(unoModel.topCard.getLightCharacteristics());
-        centerPanel.updateUI();
-        System.out.println(unoModel.topCard.getLightCharacteristics());
-        southPanel.updateUI();
-        nextButton.setEnabled(true);
-        drawButton.setEnabled(false);
+        if(!unoModel.winner) {
+            centerPanel.updateUI();
+            southPanel.updateUI();
+            nextButton.setEnabled(true);
+            drawButton.setEnabled(false);
+        }else{
+            JLabel winner = new JLabel(unoModel.getCurrentPlayer() + " has won the game! Reload game to play again");
+            eastPanel.add(winner);
+            eastPanel.updateUI();
+        }
 
     }
 
@@ -362,6 +373,14 @@ public class UNOFrame extends JFrame implements UNOView {
             southPanel.updateUI();
             nextButton.setEnabled(true);
             drawButton.setEnabled(false);
+            if (e.getModel().winner){
+                JLabel winner = new JLabel(e.getModel().getCurrentPlayer().getName() + " has won the game! Reload game to play again");
+                eastPanel.add(winner);
+                eastPanel.updateUI();
+                nextButton.setEnabled(false);
+                drawButton.setEnabled(false);
+                southPanel.updateUI();
+            }
         }
 
     }
