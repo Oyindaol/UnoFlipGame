@@ -1,5 +1,3 @@
-import jdk.swing.interop.DragSourceContextWrapper;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -7,11 +5,17 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * UNOFrame Class.
+ * GUI representation of the UNO flip game.
+ */
 public class UNOFrame extends JFrame implements UNOView {
 
     private UNOModel model;
     private UNOController controller;
     private JButton nextButton;
+    JButton drawButton;
+    private JButton UNOButton;
 
     JPanel northPanel;
     JPanel centerPanel;
@@ -21,8 +25,12 @@ public class UNOFrame extends JFrame implements UNOView {
     JPanel cardsPanel;
     JScrollPane cardsScrollPane;
     JLabel currentPlayerInfo;
-    JButton drawButton;
 
+
+    /**
+     * UNOFrame Constructor.
+     * @param model
+     */
     public UNOFrame(UNOModel model) {
         super("UNO Flip");
         this.setLayout(new BorderLayout(5, 2));
@@ -44,10 +52,6 @@ public class UNOFrame extends JFrame implements UNOView {
 
         currentPlayerInfo = new JLabel();
 
-        nextButton = new JButton("Next Player");
-        nextButton.addActionListener(controller);
-        nextButton.setEnabled(false);
-
         init();
         this.setMinimumSize(new Dimension(1250, 700));
         this.pack();
@@ -67,7 +71,7 @@ public class UNOFrame extends JFrame implements UNOView {
             numPlayers = Integer.parseInt(JOptionPane.showInputDialog("Number not in range. Enter number of Players (2-12)"));
         }
         int count = 1;
-        for(int i=0; i<numPlayers; i++){
+        for(int i = 0; i < numPlayers; i++){
             String player = JOptionPane.showInputDialog("Enter Player " + count + "'s name");
             model.addPlayer(new Player(player));
             count++;
@@ -77,14 +81,29 @@ public class UNOFrame extends JFrame implements UNOView {
         model.setCurrentPlayer(model.getPlayers().get(0));
         updateCurrentPlayerInfo(model.getCurrentPlayer());
 
+        //Items that go in the South Panel
+//      southPanel.setBorder(raisedEtched);
+
         this.updateCurrentPlayerCards(model.getCurrentPlayer());
         southPanel.add(cardsScrollPane);
         this.pack();
+
+        nextButton = new JButton("Next Player");
+        nextButton.addActionListener(controller);
+        nextButton.setEnabled(false);
         southPanel.add(nextButton, FlowLayout.LEFT);
 
         southPanel.setBackground(Color.GRAY);
 
         Border raisedEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+
+        UNOButton = new JButton("UNO");
+        UNOButton.addActionListener(controller);
+        UNOButton.setBackground(Color.GRAY);
+        UNOButton.setEnabled(false); // Disable the button initially
+
+        // Add the UNO button to the South Panel
+        southPanel.add(UNOButton);
 
         //Items that go in the North Panel
         JLabel UNOFLIPLabel = new JLabel(new ImageIcon(getClass().getResource("UNO Flip Logo.png")));
@@ -104,8 +123,6 @@ public class UNOFrame extends JFrame implements UNOView {
         centerPanel.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
         centerPanel.setSize(new Dimension(500, 500));
 
-        //Items that go in the South Panel
-//        southPanel.setBorder(raisedEtched);
 
         //Items that go in the East Panel
 
@@ -270,15 +287,30 @@ public class UNOFrame extends JFrame implements UNOView {
         }
     }
 
+    /**
+     * Method to update the top card when a new card is played.
+     * @param model
+     */
     private void updateTopCard(UNOModel model){
         centerPanel.removeAll();
         JPanel topCard = createCard(model.topCard)[1];
         centerPanel.add(topCard);
     }
+
+    /**
+     * Method to update the current player's info.
+     * @param player
+     */
     private void updateCurrentPlayerInfo(Player player) {
         currentPlayerInfo.setText("<html>Current Player: " + player.getName() + "<br/>Score: " +
                 model.getScores().get(player) + "</html>");
     }
+
+    /**
+     * Method the print all the players' info for the score board.
+     * @param players
+     * @param model
+     */
     private void printAllPlayersInfo(ArrayList<Player> players, UNOModel model){
         eastPanel.removeAll();
         JPanel jPanel = new JPanel();
@@ -292,6 +324,11 @@ public class UNOFrame extends JFrame implements UNOView {
         eastPanel.add(jPanel, BorderLayout.NORTH);
 
     }
+
+    /**
+     * Method to update the players card deck after specific action(s).
+     * @param currentPlayer
+     */
     public void updateCurrentPlayerCards(Player currentPlayer){
         cardsPanel.removeAll();
         for(Card card : currentPlayer.getCards()){
@@ -299,6 +336,7 @@ public class UNOFrame extends JFrame implements UNOView {
         }
     }
 
+    @Override
     public void handleWildCard(UNOModel unoModel){
         String wildColor = JOptionPane.showInputDialog("Choose a color (RED, GREEN, BLUE, YELLOW): ").toUpperCase();
         while (!Arrays.toString(Colors.LIGHTCOLORS.values()).contains(wildColor)){
@@ -323,11 +361,6 @@ public class UNOFrame extends JFrame implements UNOView {
             eastPanel.add(winner);
             eastPanel.updateUI();
         }
-
-    }
-
-    @Override
-    public void handlePlay() {
 
     }
 
@@ -361,11 +394,12 @@ public class UNOFrame extends JFrame implements UNOView {
             JLabel errorPanel = new JLabel("Invalid move, pick another card");
             eastPanel.add(errorPanel, BorderLayout.CENTER);
             eastPanel.updateUI();
-        }else{
+        }
+        else {
             updateCurrentPlayerCards(e.getModel().getCurrentPlayer());
             updateCurrentPlayerInfo(e.getModel().getCurrentPlayer());
             updateTopCard(e.getModel());
-            for(Component component : cardsPanel.getComponents()){
+            for (Component component : cardsPanel.getComponents()){
                 JPanel panel = (JPanel) component;
                 panel.getComponents()[1].setEnabled(false);
             }
@@ -373,6 +407,13 @@ public class UNOFrame extends JFrame implements UNOView {
             southPanel.updateUI();
             nextButton.setEnabled(true);
             drawButton.setEnabled(false);
+
+            // A condition to enable the UNO button when the player has only one card left
+            if (e.getModel().getCurrentPlayer().getCards().size() == 1) {
+                UNOButton.setEnabled(true);
+                UNOButton.setBackground(Color.GREEN); // Change the button color to green when enabled
+            }
+
             if (e.getModel().winner){
                 JLabel winner = new JLabel(e.getModel().getCurrentPlayer().getName() + " has won the game! Reload game to play again");
                 eastPanel.add(winner);
@@ -382,7 +423,6 @@ public class UNOFrame extends JFrame implements UNOView {
                 southPanel.updateUI();
             }
         }
-
     }
 
     public static void main(String[] args) {

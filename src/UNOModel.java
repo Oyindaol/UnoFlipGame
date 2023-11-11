@@ -2,8 +2,7 @@ import java.util.*;
 
 /**
  * The UNOModel class.
- * The Model of the game.
- * Run the Main method to play the game.
+ * Model part of the implementation of the MVC pattern.
  *
  * @author Osas Iyamu
  * @author Oyindamola Taiwo-Olupeka
@@ -100,9 +99,6 @@ public class UNOModel {
         this.scoreGuide.put("REVERSE", 20);
         this.scoreGuide.put("WILD_DRAW_TWO", 50);
         this.scoreGuide.put("WILD", 60);
-
-
-
 
     }
 
@@ -390,7 +386,7 @@ public class UNOModel {
         int count = 1;
         Scanner newInput = new Scanner(System.in);
 
-        for (int i=0; i<numberOfPlayers; i++){
+        for (int i = 0; i < numberOfPlayers; i++){
             System.out.print("Enter Player name " + count + ": ");
             String player = newInput.nextLine();
             this.players.add(new Player(player));
@@ -415,7 +411,6 @@ public class UNOModel {
         }
 
     }
-
 
     public void drawCard(){
         currentPlayer.getCards().add(cardDeck.get(cardDeck.size() - 1));
@@ -482,17 +477,13 @@ public class UNOModel {
                     }
                 }
             }
-
-        }else{
+        }
+        else {
             UNOEvent e = new UNOEvent(false, this);
             for (UNOView views: views){
                 views.handlePlacement(e);
             }
         }
-    }
-
-    public void playGUI(){
-
     }
 
     /**
