@@ -1,35 +1,46 @@
 # UnoFlipGame
 A simplified version of the classic card UNOModel with a flip twist, Uno Flip, built using Java and Java.util packages.
 
-## Milestone 1 Deliverables
-A Text-based version of Uno Flip where players use a mouse and keyboard input to play the UNOModel. Players have the capability to:
-1. View their drawn cards.
-2. Place cards using the official notation detailed in the Wikipedia link.
-3. Draw one card.
-4. Execute actions associated with special cards, including Reverse, Skip, Wild, and Wild Draw Two cards.
-5. Observe the resultant state of the cards, presented in text format.
+## Milestone 2 Deliverables
+A GUI-based version of Uno Flip where players use mouse and keyboard input to play the game. Players have the capability to:
+1. View and select any of the cards in their deck.
+2. Place cards using the official notation detailed in the Wikipedia link (By colour or number/type).
+3. Execute actions associated with special cards, including Reverse, Skip, Wild, and Wild Draw Two cards.
+4. Observe the resultant state of the cards, presented in GUI format.
+5. Draw a card from the market if they want/need to.
+6. End their turn by selecting the Next Player button.
+7. Declare UNO!
+8. Win by playing all the cards in their deck before any other player.
 
 ## Authors
 #### Osas Iyamu 
-- Worked on the implementation of the UNOModel model, player, and card class.
-- Refactored the card interface and special card classes and separated  it into two classes (NumberCard and SpecialCard).
+- Refactored the code to fit the MVC model.
+- Worked on the implementation of the UNOModel, UNOFrame, UNOController, UNOView, UNOEvent, Player, Colors, NumberCard, SpecialCard and Card classes and interfaces.
+- Worked on the Game flow logic.
 - Added Java Doc comments to classes and methods.
+- Updated the design decision document to reflect the refined design in the Documentation. 
 
 #### Oyindamola Taiwo-Olupeka
-- Worked on the implementation of the special cards (Skip, Reverse, Wild).
-- Updated the design decision document to reflect the refined design. 
+- Refactored the code to fit the MVC model.
+- Worked on the implementation of the UNOModel, UNOFrame, UNOController, UNOView classes and interfaces.
 - Added Java Doc comments to classes and methods.
+- Updated the User Manual for the GUI implementation in the Documentation.
 
 #### Daniel Esenwa
 - Worked on the UML class diagram and sequence diagram.
 - Tested the UNO Flip UNOModel.
 
 ## Known Issues
-- Issues with tallying the scores after playing any special card.
+- Game flow Error: If the starting top card is a Wild Card, the game will have to be restarted.
 - Occasional Out-of-bounds Error when using the special cards after multiple rounds.
 
 ## Change Log
-First implementation. No changes so far.
+- Refactored the code to fit the MVC pattern by making our Game class our Model, adding a View interface to handle the views in our game, and adding a Controller class to control the game.
+- Added many new methods to the UNOModel class to handle the GUI functionalities.
+- Added a Frame class to build the GUI.
+- Moved the main method to a Main class.
+- Added a JUNit test Class.
+- 
 
 ## Milestone Roadmap
 ### M1 - October 22, 2023
