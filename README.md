@@ -28,7 +28,7 @@ A GUI-based version of Uno Flip where players use mouse and keyboard input to pl
 
 #### Daniel Esenwa
 - Worked on the UML class diagram and sequence diagram.
-- Tested the UNO Flip UNOModel.
+- Worked on the UNOModelTest testing class.
 
 ## Known Issues
 - Game flow Error: If the starting top card is a Wild Card, the game will have to be restarted.
