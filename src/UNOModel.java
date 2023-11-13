@@ -109,6 +109,27 @@ public class UNOModel {
         return this.players;
     }
 
+
+    /**
+     * Adds a view from the Uno game
+     * @param v
+     */
+    public void addUNOView(UNOView v) {
+        views.add(v);
+    }
+
+    /**
+     * Removes a view from the Uno game
+     * @param v
+     */
+    public void removeUNOView(UNOView v) {
+        views.remove(v);
+    }
+
+    /**
+     * A method to add player to the player list
+     * @param p the player to add
+     */
     public void addPlayer(Player p) {
         this.players.add(p);
     }
@@ -132,6 +153,11 @@ public class UNOModel {
     public HashMap<Player, Integer> calculateScore(){
         return null;
     }
+
+    /**
+     * A method to get the scores
+     * @return the list of scores
+     */
     public HashMap<Player, Integer> getScores() {
         return scores;
     }
@@ -368,6 +394,8 @@ public class UNOModel {
         }
     }
 
+
+    //-------------------For the terminal version-------------------//
     /**
      * Play the game
      */
@@ -412,10 +440,20 @@ public class UNOModel {
 
     }
 
+
+    //-------------------For the UI version-------------------//
+
+    /**
+     * A method to draw card
+     */
     public void drawCard(){
         currentPlayer.getCards().add(cardDeck.get(cardDeck.size() - 1));
         cardDeck.remove(cardDeck.size() - 1);
     }
+
+    /**
+     * A method to change the turns
+     */
     public void changeTurn(){
         if(clockwise) {
             this.position = this.position + 1;
@@ -429,6 +467,11 @@ public class UNOModel {
         }
     }
 
+    /**
+     * A method to validate the placement of cards
+     * @param characteristics, the characteristics of the card
+     * @param color, the color of the card
+     */
     public void validatePlacement(String characteristics, String color){
         if (color.equals("unassigned")){
             for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
@@ -484,22 +527,6 @@ public class UNOModel {
                 views.handlePlacement(e);
             }
         }
-    }
-
-    /**
-     * Adds a view from the Uno game
-     * @param v
-     */
-    public void addUNOView(UNOView v) {
-        views.add(v);
-    }
-
-    /**
-     * Removes a view from the Uno game
-     * @param v
-     */
-    public void removeUNOView(UNOView v) {
-        views.remove(v);
     }
 
 }

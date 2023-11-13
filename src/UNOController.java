@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
  * Controller part of the implementation of the MVC pattern.
  */
 public class UNOController implements ActionListener {
-    private UNOView view;
+    private UNOFrame view;
     private UNOModel model;
 
     /**
@@ -15,7 +15,7 @@ public class UNOController implements ActionListener {
      * @param model
      * @param view
      */
-    public UNOController(UNOModel model, UNOView view) {
+    public UNOController(UNOModel model, UNOFrame view) {
         this.model = model;
         this.view = view;
     }
@@ -54,7 +54,7 @@ public class UNOController implements ActionListener {
         }
 
         else if (e.getActionCommand().equals("UNO")) {
-            System.out.println("UNO!");
+            this.view.handleUNO();
 
         }
     }
