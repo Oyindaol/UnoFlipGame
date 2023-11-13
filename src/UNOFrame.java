@@ -111,6 +111,7 @@ public class UNOFrame extends JFrame implements UNOView {
         southPanel.add(UNOButton);
 
         //Center Panel
+        updateTopCard(model);
         centerPanel.setBackground(Color.BLACK);
         centerPanel.setBorder(raisedEtched);
         centerPanel.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
