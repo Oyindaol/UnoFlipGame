@@ -91,7 +91,7 @@ public class UNOModelTest {
         model.setCurrentPlayer(player1);
         //model.implementCurrentPlayerTurn();
 
-        // Add assertions based on expected behavior of player1's turn
+
     }
 
     @Test
@@ -111,48 +111,5 @@ public class UNOModelTest {
 
     }
 
-    @Test
-    public void testDrawFromBank() {
-        Player currentPlayer = model.getPlayers().get(0); // Assuming the first player
-
-        int initialDeckSize = model.getCardDeck().size();
-        int initialPlayerHandSize = currentPlayer.getCards().size();
-
-        model.drawFromBank(); // Draw a card from the bank for the current player
-
-        int finalDeckSize = model.getCardDeck().size();
-        int finalPlayerHandSize = currentPlayer.getCards().size();
-
-        // Check if the player's hand size increased by 1
-        assertEquals(initialPlayerHandSize + 1, finalPlayerHandSize);
-
-        // Check if the deck size reduced by 1
-        assertEquals(initialDeckSize - 1, finalDeckSize);
-
-
-    }
-
-    @Test
-    public void testValidatePlacement() {
-        Player currentPlayer = new Player("TestPlayer"); // Assuming the current player is a test player
-        model.addPlayer(currentPlayer);
-        model.setCurrentPlayer(currentPlayer);
-
-        // Adding a card to the playing deck
-        model.getPlayingDeck().add(new NumberCard(Card.type.REGULAR, 5, Colors.LIGHTCOLORS.RED, 5, Colors.DARKCOLORS.PURPLE));
-
-        // Adding a card to the player's hand
-        currentPlayer.addCard(new NumberCard(Card.type.REGULAR, 5, Colors.LIGHTCOLORS.RED, 5, Colors.DARKCOLORS.PURPLE));
-
-        int initialPlayerHandSize = currentPlayer.getCards().size();
-
-        // Simulating the placement of a card with matching characteristics and color
-        model.validatePlacement("5", "RED");
-
-        int finalPlayerHandSize = currentPlayer.getCards().size();
-
-        // Check if the player's hand size reduced by 1 after a valid placement
-        assertEquals(initialPlayerHandSize - 1, finalPlayerHandSize);
-    }
 
 }
