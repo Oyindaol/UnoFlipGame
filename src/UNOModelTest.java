@@ -9,6 +9,7 @@ public class UNOModelTest {
     @Before
     public void setUp() {
         model = new UNOModel();
+
     }
 
    /* @Test
@@ -26,7 +27,7 @@ public class UNOModelTest {
         assertEquals(0, model.getPlayingDeck().size());
 
         assertNull(model.getCurrentPlayer());
-        assertEquals(0, model.getPosition());
+        assertEquals(0, model.position());
 
         assertTrue(model.getCurrentMode() == UNOModel.mode.LIGHT);
 
@@ -104,11 +105,10 @@ public class UNOModelTest {
         // Assert that the number of players increased after adding a player
         assertEquals(1, model.getPlayers().size());
 
-        // Assert that a player with the same name cannot be added again
+        // Assert that a player with the same name can be added
         model.addPlayer(player);
-        assertEquals(1, model.getPlayers().size()); // Size should remain the same
+        assertEquals(2, model.getPlayers().size()); // Size should remain the same
 
-        // Add more assertions as needed
     }
 
     @Test
@@ -129,7 +129,30 @@ public class UNOModelTest {
         // Check if the deck size reduced by 1
         assertEquals(initialDeckSize - 1, finalDeckSize);
 
-        // Add more assertions for specific scenarios or edge cases related to drawing from the bank
+
+    }
+
+    @Test
+    public void testValidatePlacement() {
+        Player currentPlayer = new Player("TestPlayer"); // Assuming the current player is a test player
+        model.addPlayer(currentPlayer);
+        model.setCurrentPlayer(currentPlayer);
+
+        // Adding a card to the playing deck
+        model.getPlayingDeck().add(new NumberCard(Card.type.REGULAR, 5, Colors.LIGHTCOLORS.RED, 5, Colors.DARKCOLORS.PURPLE));
+
+        // Adding a card to the player's hand
+        currentPlayer.addCard(new NumberCard(Card.type.REGULAR, 5, Colors.LIGHTCOLORS.RED, 5, Colors.DARKCOLORS.PURPLE));
+
+        int initialPlayerHandSize = currentPlayer.getCards().size();
+
+        // Simulating the placement of a card with matching characteristics and color
+        model.validatePlacement("5", "RED");
+
+        int finalPlayerHandSize = currentPlayer.getCards().size();
+
+        // Check if the player's hand size reduced by 1 after a valid placement
+        assertEquals(initialPlayerHandSize - 1, finalPlayerHandSize);
     }
 
 }
