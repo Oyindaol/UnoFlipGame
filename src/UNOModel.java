@@ -22,8 +22,8 @@ public class UNOModel {
     private boolean quit;
     private List<UNOView> views;
 
-    public Card topCard;
-    public boolean winner;
+    private Card topCard;
+    private boolean winner;
 
 
 
@@ -112,7 +112,7 @@ public class UNOModel {
 
     /**
      * Adds a view from the Uno game
-     * @param v
+     * @param v, the view
      */
     public void addUNOView(UNOView v) {
         views.add(v);
@@ -120,7 +120,7 @@ public class UNOModel {
 
     /**
      * Removes a view from the Uno game
-     * @param v
+     * @param v, the view
      */
     public void removeUNOView(UNOView v) {
         views.remove(v);
@@ -132,6 +132,13 @@ public class UNOModel {
      */
     public void addPlayer(Player p) {
         this.players.add(p);
+    }
+    public Card getTopCard() {
+        return topCard;
+    }
+
+    public boolean isWinner() {
+        return winner;
     }
 
     public void removePlayer(Player p){

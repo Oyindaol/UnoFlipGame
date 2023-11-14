@@ -273,7 +273,7 @@ public class UNOFrame extends JFrame implements UNOView {
      */
     private void updateTopCard(UNOModel model){
         centerPanel.removeAll();
-        JPanel topCard = createCard(model.topCard)[1];
+        JPanel topCard = createCard(model.getTopCard())[1];
         centerPanel.add(topCard);
     }
 
@@ -322,7 +322,7 @@ public class UNOFrame extends JFrame implements UNOView {
         while (!Arrays.toString(Colors.LIGHTCOLORS.values()).contains(wildColor)){
             wildColor = JOptionPane.showInputDialog("Color must be one of these (RED, GREEN, BLUE, YELLOW): ").toUpperCase();
         }
-        unoModel.topCard.setLightColor(Colors.LIGHTCOLORS.valueOf(wildColor));
+        unoModel.getTopCard().setLightColor(Colors.LIGHTCOLORS.valueOf(wildColor));
         centerPanel.updateUI();
         updateCurrentPlayerCards(unoModel.getCurrentPlayer());
         updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
@@ -331,7 +331,7 @@ public class UNOFrame extends JFrame implements UNOView {
             JPanel panel = (JPanel) component;
             panel.getComponents()[1].setEnabled(false);
         }
-        if(!unoModel.winner) {
+        if(!unoModel.isWinner()) {
             centerPanel.updateUI();
             southPanel.updateUI();
             nextButton.setEnabled(true);
@@ -385,7 +385,7 @@ public class UNOFrame extends JFrame implements UNOView {
                 JPanel panel = (JPanel) component;
                 panel.getComponents()[1].setEnabled(false);
             }
-            System.out.println(e.getModel().topCard.getLightCharacteristics());
+            System.out.println(e.getModel().getTopCard().getLightCharacteristics());
             southPanel.updateUI();
             nextButton.setEnabled(true);
             drawButton.setEnabled(false);
@@ -396,7 +396,7 @@ public class UNOFrame extends JFrame implements UNOView {
                 UNOButton.setBackground(Color.GREEN); // Change the button color to green when enabled
             }
 
-            if (e.getModel().winner){
+            if (e.getModel().isWinner()){
                 JLabel winner = new JLabel(e.getModel().getCurrentPlayer().getName() + " has won the game! Reload game to play again");
                 eastPanel.add(winner);
                 eastPanel.updateUI();
