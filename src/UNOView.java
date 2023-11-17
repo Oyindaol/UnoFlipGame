@@ -10,4 +10,5 @@ public interface UNOView {
     void handlePlacement(UNOEvent e);
 
     void handleWildCard(UNOModel unoModel);
+    void handleAITurn(UNOModel unoModel);
 }

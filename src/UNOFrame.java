@@ -81,7 +81,7 @@ public class UNOFrame extends JFrame implements UNOView {
         model.setCurrentPlayer(model.getPlayers().get(0));
         updateCurrentPlayerInfo(model.getCurrentPlayer());
 
-        this.updateCurrentPlayerCards(model.getCurrentPlayer());
+        this.updateCurrentPlayerCards(model.getCurrentPlayer(), model);
         southPanel.add(cardsScrollPane);
         this.pack();
 
@@ -273,7 +273,12 @@ public class UNOFrame extends JFrame implements UNOView {
      */
     private void updateTopCard(UNOModel model){
         centerPanel.removeAll();
-        JPanel topCard = createCard(model.getTopCard())[1];
+        JPanel topCard;
+        if(model.getCurrentMode().equals(UNOModel.mode.LIGHT)) {
+            topCard = createCard(model.getTopCard())[1];
+        }else{
+            topCard = createCard(model.getTopCard())[0];
+        }
         centerPanel.add(topCard);
     }
 
@@ -282,7 +287,7 @@ public class UNOFrame extends JFrame implements UNOView {
      * @param player
      */
     private void updateCurrentPlayerInfo(Player player) {
-        currentPlayerInfo.setText("<html>Current Player: " + player.getName() + "<br/>Score: " +
+        currentPlayerInfo.setText("<html>Current Mode: " + model.getCurrentMode()+ "<br/><hr><br/>Current Player: " + player.getName() + "<br/>Score: " +
                 model.getScores().get(player) + "</html>");
     }
 
@@ -309,22 +314,37 @@ public class UNOFrame extends JFrame implements UNOView {
      * Method to update the players card deck after specific action(s).
      * @param currentPlayer
      */
-    public void updateCurrentPlayerCards(Player currentPlayer){
+    public void updateCurrentPlayerCards(Player currentPlayer, UNOModel unoModel){
         cardsPanel.removeAll();
-        for(Card card : currentPlayer.getCards()){
-            cardsPanel.add(createCard(card)[1]);
+        if (unoModel.getCurrentMode().equals(UNOModel.mode.LIGHT)) {
+            for (Card card : currentPlayer.getCards()) {
+                cardsPanel.add(createCard(card)[1]);
+            }
+        }else{
+            for (Card card : currentPlayer.getCards()) {
+                cardsPanel.add(createCard(card)[0]);
+            }
         }
     }
 
     @Override
     public void handleWildCard(UNOModel unoModel){
-        String wildColor = JOptionPane.showInputDialog("Choose a color (RED, GREEN, BLUE, YELLOW): ").toUpperCase();
-        while (!Arrays.toString(Colors.LIGHTCOLORS.values()).contains(wildColor)){
-            wildColor = JOptionPane.showInputDialog("Color must be one of these (RED, GREEN, BLUE, YELLOW): ").toUpperCase();
+        String wildColor = "";
+        if (unoModel.getCurrentMode().equals(UNOModel.mode.LIGHT)) {
+            wildColor = JOptionPane.showInputDialog("Choose a color (RED, GREEN, BLUE, YELLOW): ").toUpperCase();
+            while (!Arrays.toString(Colors.LIGHTCOLORS.values()).contains(wildColor)) {
+                wildColor = JOptionPane.showInputDialog("Color must be one of these (RED, GREEN, BLUE, YELLOW): ").toUpperCase();
+            }
+            unoModel.getTopCard().setLightColor(Colors.LIGHTCOLORS.valueOf(wildColor));
+        }else if (unoModel.getCurrentMode().equals(UNOModel.mode.DARK)) {
+            wildColor = JOptionPane.showInputDialog("Choose a color (PINK, TEAL, PURPLE, ORANGE): ").toUpperCase();
+            while (!Arrays.toString(Colors.DARKCOLORS.values()).contains(wildColor)) {
+                wildColor = JOptionPane.showInputDialog("Color must be one of these (PINK, TEAL, PURPLE, ORANGE): ").toUpperCase();
+            }
+            unoModel.getTopCard().setDarkColor(Colors.DARKCOLORS.valueOf(wildColor));
         }
-        unoModel.getTopCard().setLightColor(Colors.LIGHTCOLORS.valueOf(wildColor));
         centerPanel.updateUI();
-        updateCurrentPlayerCards(unoModel.getCurrentPlayer());
+        updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
         updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
         updateTopCard(unoModel);
         for(Component component : cardsPanel.getComponents()){
@@ -345,8 +365,13 @@ public class UNOFrame extends JFrame implements UNOView {
     }
 
     @Override
+    public void handleAITurn(UNOModel unoModel) {
+
+    }
+
+    @Override
     public void handleNextPlayer(UNOModel unoModel) {
-        updateCurrentPlayerCards(unoModel.getCurrentPlayer());
+        updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
         updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
         printAllPlayersInfo(unoModel.getPlayers(), unoModel);
         nextButton.setEnabled(false);
@@ -358,7 +383,7 @@ public class UNOFrame extends JFrame implements UNOView {
 
     @Override
     public void handleDrawCard(UNOModel unoModel) {
-        updateCurrentPlayerCards(unoModel.getCurrentPlayer());
+        updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
         for (Component component : cardsPanel.getComponents()){
             component.getComponentAt(new Point(0,0)).setEnabled(false);
 
@@ -378,7 +403,7 @@ public class UNOFrame extends JFrame implements UNOView {
             eastPanel.updateUI();
         }
         else {
-            updateCurrentPlayerCards(e.getModel().getCurrentPlayer());
+            updateCurrentPlayerCards(e.getModel().getCurrentPlayer(), e.getModel());
             updateCurrentPlayerInfo(e.getModel().getCurrentPlayer());
             updateTopCard(e.getModel());
             for (Component component : cardsPanel.getComponents()){
