@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="UnoFlipGame">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/UnoFlipGame-main/UnoFlipGame.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
