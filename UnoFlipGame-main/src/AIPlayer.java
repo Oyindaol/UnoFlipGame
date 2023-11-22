@@ -205,6 +205,7 @@ public class AIPlayer extends Player{
      * This is for the light mode.
      * @return Colors.LIGHTCOLORS
      */
+
     public Colors.LIGHTCOLORS getRandomLightColor() {
         Colors.LIGHTCOLORS[] lightColors = Colors.LIGHTCOLORS.values();
         Random random = new Random();

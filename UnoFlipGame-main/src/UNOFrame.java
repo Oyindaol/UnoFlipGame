@@ -347,6 +347,7 @@ public class UNOFrame extends JFrame implements UNOView {
                 cardsPanel.add(createCard(card)[0]);
             }
         }
+
     }
 
     @Override

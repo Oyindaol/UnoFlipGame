@@ -650,12 +650,12 @@ public class UNOModel {
         //Checks the cards the AI has and if there's a card with the same color or the same characteristics, then place that card
         //Update the view
     }
-    public static void main(String[] args) {
+    /**public static void main(String[] args) {
             UNOModel model = new UNOModel();
             model.play();
             //new UNOFrame(model);
 
-    }
+    }*/
 
 
 
