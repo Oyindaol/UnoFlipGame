@@ -54,6 +54,7 @@ public class SpecialCard implements Card {
         }
     }
 
+
     /**
      * Get the type of the card
      * @return the type of the card

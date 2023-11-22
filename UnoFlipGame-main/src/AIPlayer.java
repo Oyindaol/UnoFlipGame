@@ -200,6 +200,7 @@ public class AIPlayer extends Player{
 
     }
 
+
     /**
      * A method which randomly selects between valid colours, which colour to ask for.
      * This is for the light mode.

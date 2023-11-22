@@ -10,7 +10,6 @@ public class UNOModelTest {
     public void setUp() {
         unoModel = new UNOModel();
     }
-
     @Test
     public void init() {
         unoModel.init();

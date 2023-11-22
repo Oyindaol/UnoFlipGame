@@ -6,8 +6,6 @@
  * @author Osas Iyamu
  */
 public class NumberCard implements Card {
-
-
     private final Card.type cardType;
     private final int lightNumber;
     private final Colors.LIGHTCOLORS lightColor;

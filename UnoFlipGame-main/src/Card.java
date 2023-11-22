@@ -4,7 +4,6 @@
  * @author Osas Iyamu
  */
 public interface Card {
-
     public enum type {REGULAR, SPECIAL}
     public enum SPECIALCARDS {SKIP, REVERSE, FLIP, SKIP_EVERYONE, WILD, WILD_DRAW_TWO}
 
