@@ -57,5 +57,8 @@ public class UNOController implements ActionListener {
             this.view.handleUNO();
 
         }
+        else if (e.getActionCommand().equals("Play AI")) {
+            model.implementAITurn();
+        }
     }
 }

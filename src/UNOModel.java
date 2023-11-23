@@ -86,6 +86,12 @@ public class UNOModel {
         distributeToAll(7);
         playingDeck.add(cardDeck.get(cardDeck.size()-1));
         topCard = playingDeck.get(playingDeck.size()-1);
+
+        //Ensure that the top card isn't a wild card
+        while(topCard.getLightCharacteristics().equals("WILD")){
+            Collections.shuffle(cardDeck);
+            topCard = playingDeck.get(playingDeck.size()-1);
+        }
         cardDeck.remove(cardDeck.get(cardDeck.size()-1));
 
         this.scoreGuide.put("1", 1);
@@ -582,6 +588,69 @@ public class UNOModel {
 
     public void implementAITurn(){
         //Check the top card
+        int cardSize = currentPlayer.getCards().size();
+        for(Card card : currentPlayer.getCards()){
+            if(currentMode.equals(mode.LIGHT)){
+                if(card.getLightCharacteristics().split(" ")[0].equals(topCard.getLightCharacteristics().split(" ")[0]) || card.getLightCharacteristics().split(" ")[1].equals(topCard.getLightCharacteristics().split(" ")[1])){
+                    if (card.getLightCharacteristics().equals("SKIP")) {
+                        this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
+                    } else if (card.getLightCharacteristics().equals("WILD_DRAW_TWO")) {
+                        for (int i = 0; i < 2; i++) {
+                            players.get(((this.position % (players.size())) + players.size()) % players.size()).addCard(cardDeck.get(cardDeck.size() - 1));
+                        }
+                        this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
+                    } else if (card.getLightCharacteristics().equals("REVERSE")) {
+                        this.clockwise = !this.clockwise;
+                    } else if (card.getLightCharacteristics().equals("FLIP")) {
+                        this.currentMode = mode.DARK;
+                    }
+                    playingDeck.add(card);
+                    currentPlayer.getCards().remove(card);
+                    this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
+                    updateScore(currentPlayer, this.scoreGuide.get(card.getLightCharacteristics().split(" ")[0]));
+
+                    UNOEvent e = new UNOEvent(true, this);
+                    for (UNOView views : this.views) {
+                        views.handleAITurn(e);
+                    }
+                    break;
+                }
+            } else if(currentMode.equals(mode.DARK)){
+                if(card.getDarkCharacteristics().split(" ")[0].equals(topCard.getDarkCharacteristics().split(" ")[0]) || card.getDarkCharacteristics().split(" ")[1].equals(topCard.getDarkCharacteristics().split(" ")[1])){
+                    if (card.getDarkCharacteristics().equals("SKIP")) {
+                        this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
+                    } else if (card.getDarkCharacteristics().equals("WILD_DRAW_TWO")) {
+                        for (int i = 0; i < 2; i++) {
+                            players.get(((this.position % (players.size())) + players.size()) % players.size()).addCard(cardDeck.get(cardDeck.size() - 1));
+                        }
+                        this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
+                    } else if (card.getDarkCharacteristics().equals("REVERSE")) {
+                        this.clockwise = !this.clockwise;
+                    } else if (card.getDarkCharacteristics().equals("FLIP")) {
+                        this.currentMode = mode.DARK;
+                    }
+                    playingDeck.add(card);
+                    currentPlayer.getCards().remove(card);
+                    this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
+                    updateScore(currentPlayer, this.scoreGuide.get(card.getDarkCharacteristics().split(" ")[0]));
+
+                    UNOEvent e = new UNOEvent(true, this);
+                    for (UNOView views : this.views) {
+                        views.handleAITurn(e);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if(cardSize == currentPlayer.getCards().size()){
+            drawFromBank();
+
+            UNOEvent e = new UNOEvent(true, this);
+            for (UNOView views : this.views) {
+                views.handleAITurn(e);
+            }
+        }
         //Checks the cards the AI has and if there's a card with the same color or the same characteristics, then place that card
         //Update the view
     }

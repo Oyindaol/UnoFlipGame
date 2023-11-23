@@ -16,6 +16,7 @@ public class UNOFrame extends JFrame implements UNOView {
     private JButton nextButton;
     JButton drawButton;
     private JButton UNOButton;
+    private JButton AI_Button;
 
     JPanel northPanel;
     JPanel centerPanel;
@@ -77,6 +78,12 @@ public class UNOFrame extends JFrame implements UNOView {
             count++;
         }
 
+        String AI = JOptionPane.showInputDialog("Do you wish to add an AI player? y/n");
+
+        if(AI.toLowerCase().equals("y")){
+            model.addPlayer(new AI());
+        }
+
         model.init();
         model.setCurrentPlayer(model.getPlayers().get(0));
         updateCurrentPlayerInfo(model.getCurrentPlayer());
@@ -89,6 +96,11 @@ public class UNOFrame extends JFrame implements UNOView {
         nextButton.addActionListener(controller);
         nextButton.setEnabled(false);
         southPanel.add(nextButton, FlowLayout.LEFT);
+
+        AI_Button = new JButton("Play AI");
+        AI_Button.addActionListener(controller);
+        AI_Button.setVisible(false);
+        southPanel.add(AI_Button);
 
         southPanel.setBackground(Color.GRAY);
 
@@ -106,6 +118,7 @@ public class UNOFrame extends JFrame implements UNOView {
         UNOFLIPLabel.setPreferredSize(new Dimension(5000, 100));
         UNOFLIPLabel.setHorizontalAlignment(JLabel.CENTER);
         northPanel.add(UNOFLIPLabel);
+        northPanel.setBackground(Color.lightGray);
 
         //South Panel
         southPanel.add(UNOButton);
@@ -120,11 +133,14 @@ public class UNOFrame extends JFrame implements UNOView {
         //East Panel
         printAllPlayersInfo(model.getPlayers(), model);
         eastPanel.setBorder(raisedEtched);
+        eastPanel.setBackground(Color.lightGray);
 
         //West Panel
+        currentPlayerInfo.setBackground(Color.WHITE);
         currentPlayerInfo.setBorder(raisedEtched);
         JPanel cardPickedFromMarket = new JPanel();
         cardPickedFromMarket.setLayout(new BoxLayout(cardPickedFromMarket, BoxLayout.PAGE_AXIS));
+        westPanel.setBackground(Color.lightGray);
 
         drawButton = new JButton("Draw From Bank");
         drawButton.addActionListener(controller);
@@ -365,20 +381,49 @@ public class UNOFrame extends JFrame implements UNOView {
     }
 
     @Override
-    public void handleAITurn(UNOModel unoModel) {
-
+    public void handleAITurn(UNOEvent e) {
+        updateCurrentPlayerCards(e.getModel().getCurrentPlayer(), e.getModel());
+        updateCurrentPlayerInfo(e.getModel().getCurrentPlayer());
+        updateTopCard(e.getModel());
+        this.AI_Button.setEnabled(false);
+        for (Component component : cardsPanel.getComponents()){
+            JPanel panel = (JPanel) component;
+            panel.getComponents()[1].setEnabled(false);
+        }
+        southPanel.updateUI();
+        nextButton.setEnabled(true);
+        drawButton.setEnabled(false);
+        westPanel.updateUI();
+        southPanel.updateUI();
     }
 
     @Override
     public void handleNextPlayer(UNOModel unoModel) {
-        updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
-        updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
-        printAllPlayersInfo(unoModel.getPlayers(), unoModel);
-        nextButton.setEnabled(false);
-        drawButton.setEnabled(true);
-        westPanel.updateUI();
-        eastPanel.updateUI();
-        southPanel.updateUI();
+        if(unoModel.getCurrentPlayer() instanceof AI){
+            updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
+            updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
+            printAllPlayersInfo(unoModel.getPlayers(), unoModel);
+            for (Component component : cardsPanel.getComponents()){
+                JPanel panel = (JPanel) component;
+                panel.getComponents()[1].setEnabled(false);
+            }
+            AI_Button.setVisible(true);
+            AI_Button.setEnabled(true);
+            nextButton.setEnabled(false);
+            drawButton.setEnabled(false);
+            southPanel.updateUI();
+            westPanel.updateUI();
+        }else{
+            AI_Button.setVisible(false);
+            updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
+            updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
+            printAllPlayersInfo(unoModel.getPlayers(), unoModel);
+            nextButton.setEnabled(false);
+            drawButton.setEnabled(true);
+            westPanel.updateUI();
+            eastPanel.updateUI();
+            southPanel.updateUI();
+        }
     }
 
     @Override
