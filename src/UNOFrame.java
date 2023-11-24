@@ -395,6 +395,15 @@ public class UNOFrame extends JFrame implements UNOView {
         drawButton.setEnabled(false);
         westPanel.updateUI();
         southPanel.updateUI();
+
+        if (e.getModel().isWinner()){
+            JLabel winner = new JLabel(e.getModel().getCurrentPlayer().getName() + " has won the game! Reload game to play again");
+            eastPanel.add(winner);
+            eastPanel.updateUI();
+            nextButton.setEnabled(false);
+            drawButton.setEnabled(false);
+            southPanel.updateUI();
+        }
     }
 
     @Override
@@ -422,6 +431,14 @@ public class UNOFrame extends JFrame implements UNOView {
             drawButton.setEnabled(true);
             westPanel.updateUI();
             eastPanel.updateUI();
+            southPanel.updateUI();
+        }
+        if (unoModel.isWinner()){
+            JLabel winner = new JLabel(unoModel.getCurrentPlayer().getName() + " has won the game! Reload game to play again");
+            eastPanel.add(winner);
+            eastPanel.updateUI();
+            nextButton.setEnabled(false);
+            drawButton.setEnabled(false);
             southPanel.updateUI();
         }
     }
