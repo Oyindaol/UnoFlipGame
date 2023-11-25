@@ -4,7 +4,6 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * UNOFrame Class.
@@ -28,7 +27,10 @@ public class UNOFrame extends JFrame implements UNOView {
     JLabel currentPlayerInfo;
     Border raisedEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 
-
+    /**
+     * Constructor for the UNOFrame
+     * @param model, the model of the game
+     */
     public UNOFrame(UNOModel model) {
         super("UNO Flip");
         this.model = model;
@@ -90,9 +92,20 @@ public class UNOFrame extends JFrame implements UNOView {
     private void setupAIPlayers() {
         String AI = JOptionPane.showInputDialog("Do you wish to add an AI player? y/n");
 
-        if (AI.toLowerCase().equals("y")) {
-            model.addPlayer(new AI());
-            Collections.shuffle(model.getPlayers());
+        while (!(AI.toLowerCase().equals("y") || AI.toLowerCase().equals("n"))) {
+            AI = JOptionPane.showInputDialog("Incorrect input, try again y/n");
+        }
+        if(AI.equals("y")) {
+            int numAIPlayers = Integer.valueOf(JOptionPane.showInputDialog("How many AI players would you like?"));
+
+            while((numAIPlayers + model.getPlayers().size()) > 12){
+                numAIPlayers = Integer.valueOf(JOptionPane.showInputDialog("Sum of AI players and human players greater than 12, try again"));
+            }
+            int count = 1;
+            for(int i=0; i<numAIPlayers; i++){
+                model.addPlayer(new AI(count));
+                count++;
+            }
         }
     }
 

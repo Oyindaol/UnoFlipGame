@@ -19,20 +19,17 @@ public class UNOModel {
     private ArrayList<Card> playingDeck;
     private Player currentPlayer;
     private boolean clockwise;
-    private boolean quit;
     private List<UNOView> views;
 
     private Card topCard;
     private boolean winner;
-
-
 
     /**
      * Constructor for the UNOModel (Model) class
      * Initializes the game
      */
     public UNOModel(){
-        this. players = new ArrayList<>();
+        this.players = new ArrayList<>();
         this.scores = new HashMap<Player, Integer>();
         this.scoreGuide = new HashMap<>();
         this.cardDeck = new ArrayList<>();
@@ -40,7 +37,6 @@ public class UNOModel {
         this.currentPlayer = null;
         this.position = 0;
         this.clockwise = true;
-        this.quit = false;
         this.currentMode = mode.LIGHT;
         this.views = new ArrayList<>();
     }
@@ -112,7 +108,8 @@ public class UNOModel {
     }
 
     /**
-     * All methods unused will be used in the further milestones
+     * A method to get all the players in the game
+     * @return players in the game
      */
     public ArrayList<Player> getPlayers() {
         return this.players;
@@ -142,32 +139,53 @@ public class UNOModel {
     public void addPlayer(Player p) {
         this.players.add(p);
     }
+
+    /**
+     * A method to get the top cad of the deck
+     * @return the top card of the playing deck
+     */
     public Card getTopCard() {
         return topCard;
     }
 
+    /**
+     * Return true if there's a winner
+     * @return boolean, isWinner?
+     */
     public boolean isWinner() {
         return winner;
     }
 
+    /**
+     * A method to remove a player from the list
+     * @param p, the player to remove
+     */
     public void removePlayer(Player p){
         this.players.remove(p);
     }
 
+    /**
+     * A method to get the card deck
+     * @return the card deck
+     */
     public ArrayList<Card> getCardDeck() {
         return cardDeck;
     }
 
+    /**
+     * A method to add a card to the card deck
+     * @param card, the card to add
+     */
     public void addToDeck(NumberCard card) {
         cardDeck.add(card);
     }
 
+    /**
+     * A method to remove from the card deck
+     * @param card, the card to remove
+     */
     public void removeFromDeck(NumberCard card) {
         this.cardDeck.remove(card);
-    }
-
-    public HashMap<Player, Integer> calculateScore(){
-        return null;
     }
 
     /**
@@ -178,13 +196,26 @@ public class UNOModel {
         return scores;
     }
 
+    /**
+     * A method to get the playing deck
+     * @return the playing deck
+     */
     public ArrayList<Card> getPlayingDeck() {
         return playingDeck;
     }
 
+    /**
+     * A method to set the current player
+     * @param p, the player to set
+     */
     public void setCurrentPlayer(Player p) {
         this.currentPlayer = p;
     }
+
+    /**
+     * A method to get the current player
+     * @return the current player
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }

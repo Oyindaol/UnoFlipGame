@@ -2,7 +2,7 @@ public class AI extends Player{
     /**
      * The constructor of the game class
      */
-    public AI() {
-        super("AI");
+    public AI(int number) {
+        super("AI" + number);
     }
 }
