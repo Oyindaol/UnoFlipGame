@@ -19,20 +19,17 @@ public class UNOModel {
     private ArrayList<Card> playingDeck;
     private Player currentPlayer;
     private boolean clockwise;
-    private boolean quit;
     private List<UNOView> views;
 
     private Card topCard;
     private boolean winner;
-
-
 
     /**
      * Constructor for the UNOModel (Model) class
      * Initializes the game
      */
     public UNOModel(){
-        this. players = new ArrayList<>();
+        this.players = new ArrayList<>();
         this.scores = new HashMap<Player, Integer>();
         this.scoreGuide = new HashMap<>();
         this.cardDeck = new ArrayList<>();
@@ -40,7 +37,6 @@ public class UNOModel {
         this.currentPlayer = null;
         this.position = 0;
         this.clockwise = true;
-        this.quit = false;
         this.currentMode = mode.LIGHT;
         this.views = new ArrayList<>();
     }
@@ -66,7 +62,7 @@ public class UNOModel {
         for (int i = 0; i < 12; i++) {
             SpecialCard skip = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.SKIP, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.WILD, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
             SpecialCard wild_draw_two = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.WILD_DRAW_TWO, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.FLIP, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
-            SpecialCard reverse = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.REVERSE, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.SKIP_EVERYONE, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
+            SpecialCard reverse = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.REVERSE, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.REVERSE, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
             SpecialCard wild = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.WILD, Colors.LIGHTCOLORS.UNASSIGNED, Card.SPECIALCARDS.WILD, Colors.DARKCOLORS.UNASSIGNED);
             SpecialCard flip = new SpecialCard(Card.type.SPECIAL, Card.SPECIALCARDS.FLIP, Colors.LIGHTCOLORS.values()[rand.nextInt(4)], Card.SPECIALCARDS.FLIP, Colors.DARKCOLORS.values()[rand.nextInt(4)]);
 
@@ -86,6 +82,12 @@ public class UNOModel {
         distributeToAll(7);
         playingDeck.add(cardDeck.get(cardDeck.size()-1));
         topCard = playingDeck.get(playingDeck.size()-1);
+
+        //Ensure that the top card isn't a wild card
+        while(topCard.getLightCharacteristics().split(" ")[0].equals("WILD")){
+            Collections.shuffle(cardDeck);
+            topCard = playingDeck.get(playingDeck.size()-1);
+        }
         cardDeck.remove(cardDeck.get(cardDeck.size()-1));
 
         this.scoreGuide.put("1", 1);
@@ -106,7 +108,8 @@ public class UNOModel {
     }
 
     /**
-     * All methods unused will be used in the further milestones
+     * A method to get all the players in the game
+     * @return players in the game
      */
     public ArrayList<Player> getPlayers() {
         return this.players;
@@ -136,32 +139,53 @@ public class UNOModel {
     public void addPlayer(Player p) {
         this.players.add(p);
     }
+
+    /**
+     * A method to get the top cad of the deck
+     * @return the top card of the playing deck
+     */
     public Card getTopCard() {
         return topCard;
     }
 
+    /**
+     * Return true if there's a winner
+     * @return boolean, isWinner?
+     */
     public boolean isWinner() {
         return winner;
     }
 
+    /**
+     * A method to remove a player from the list
+     * @param p, the player to remove
+     */
     public void removePlayer(Player p){
         this.players.remove(p);
     }
 
+    /**
+     * A method to get the card deck
+     * @return the card deck
+     */
     public ArrayList<Card> getCardDeck() {
         return cardDeck;
     }
 
+    /**
+     * A method to add a card to the card deck
+     * @param card, the card to add
+     */
     public void addToDeck(NumberCard card) {
         cardDeck.add(card);
     }
 
+    /**
+     * A method to remove from the card deck
+     * @param card, the card to remove
+     */
     public void removeFromDeck(NumberCard card) {
         this.cardDeck.remove(card);
-    }
-
-    public HashMap<Player, Integer> calculateScore(){
-        return null;
     }
 
     /**
@@ -172,13 +196,26 @@ public class UNOModel {
         return scores;
     }
 
+    /**
+     * A method to get the playing deck
+     * @return the playing deck
+     */
     public ArrayList<Card> getPlayingDeck() {
         return playingDeck;
     }
 
+    /**
+     * A method to set the current player
+     * @param p, the player to set
+     */
     public void setCurrentPlayer(Player p) {
         this.currentPlayer = p;
     }
+
+    /**
+     * A method to get the current player
+     * @return the current player
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
@@ -229,225 +266,6 @@ public class UNOModel {
         System.out.println(currentPlayer.getName() + " picked a card");
     }
 
-    /**
-     * A method to implement the current player's turn
-     */
-    private void implementCurrentPlayerTurn() {
-        System.out.println("Your available cards:");
-        ArrayList<Card> currentPlayerCards = currentPlayer.getCards();
-        if (currentMode == mode.LIGHT) {
-            for (int i = 0; i < currentPlayer.getCards().size(); i++) {
-                if (currentPlayerCards.get(i).getLightCharacteristics().split(" ")[0].equals("WILD")) {
-                    System.out.println(i + 1 + ": " + currentPlayerCards.get(i).getLightCharacteristics().split(" ")[0]);
-                } else {
-                    System.out.println(i + 1 + ": " + currentPlayerCards.get(i).getLightCharacteristics());
-                }
-            }
-        }
-        if (currentMode == mode.DARK) {
-            for (int i = 0; i < currentPlayer.getCards().size(); i++) {
-                System.out.println(i + 1 + ": " + currentPlayerCards.get(i).getDarkCharacteristics());
-            }
-        }
-        System.out.println("Current Mode : " + currentMode.toString());
-        if (this.getCurrentMode() == mode.LIGHT) {
-            System.out.println("Top Card: " + playingDeck.get(playingDeck.size() - 1).getLightCharacteristics());
-            System.out.println("");
-        } else {
-            System.out.println("Top Card: " + playingDeck.get(playingDeck.size() - 1).getDarkCharacteristics());
-            System.out.println("");
-        }
-
-        System.out.print("Pick an index of the card to place or 0 to draw from the bank: ");
-        Scanner input = new Scanner(System.in);
-        int chosen = input.nextInt();
-
-        if (chosen == 0) {
-            drawFromBank();
-        } else {
-            while ((chosen - 1) > currentPlayerCards.size() - 1) {
-                System.out.print("You don't have this card in your deck, pick something in your deck: ");
-                chosen = input.nextInt();
-            }
-
-            String currentPlayerLightCharacter = currentPlayerCards.get(chosen - 1).getLightCharacteristics().split(" ")[0];
-            String currentPlayerLightColor = currentPlayerCards.get(chosen - 1).getLightCharacteristics().split(" ")[1];
-            String playingDeckLightCharacter = playingDeck.get(playingDeck.size() - 1).getLightCharacteristics().split(" ")[0];
-            String playingDeckLightColor = playingDeck.get(playingDeck.size() - 1).getLightCharacteristics().split(" ")[1];
-
-            while (((!currentPlayerLightCharacter.equals(playingDeckLightCharacter) && !(currentPlayerLightCharacter.equals("WILD"))) && !(currentPlayerLightColor).equals(playingDeckLightColor))) {
-                System.out.print("Invalid choice; Color or numbers don't match\nPick a different option: ");
-                chosen = input.nextInt();
-                if (chosen == 0) {
-                    drawFromBank();
-                    break;
-                }
-                currentPlayerLightCharacter = currentPlayerCards.get(chosen - 1).getLightCharacteristics().split(" ")[0];
-                currentPlayerLightColor = currentPlayerCards.get(chosen - 1).getLightCharacteristics().split(" ")[1];
-            }
-
-            if (chosen == 0) {
-            } else {
-                if (currentPlayerCards.get(chosen - 1).getType() == Card.type.REGULAR) {
-                    if (chosen == 0) {
-                    } else {
-                        playingDeck.add(currentPlayerCards.get(chosen - 1));
-                        if (currentMode == mode.LIGHT) {
-                            System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getLightCharacteristics());
-                            updateScore(currentPlayer, Integer.parseInt(currentPlayerLightCharacter));
-                        } else {
-                            System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getDarkCharacteristics());
-                            updateScore(currentPlayer, Integer.parseInt(currentPlayerLightCharacter));
-                        }
-                        currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-                        System.out.print("Current player score: ");
-                        System.out.println(scores.get(currentPlayer));
-                    }
-                } else if (currentPlayerCards.get(chosen - 1).getType() == Card.type.SPECIAL) {
-                    String specialCard = "";
-                    if (currentMode == mode.LIGHT) {
-                        specialCard = currentPlayerCards.get(chosen - 1).getLightCharacteristics();
-                    } else if (currentMode == mode.DARK) {
-                        specialCard = currentPlayerCards.get(chosen - 1).getDarkCharacteristics();
-                    }
-
-                    switch (specialCard.split(" ")[0]) {
-                        case "SKIP":
-                            this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
-                            playingDeck.add(currentPlayerCards.get(chosen - 1));
-                            currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-                            System.out.println(players.get((players.indexOf(currentPlayer) + 1) % players.size()).getName() + " has been skipped");
-                            break;
-
-                        case "REVERSE":
-                            this.clockwise = !this.clockwise;
-                            playingDeck.add(currentPlayerCards.get(chosen - 1));
-                            currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-                            System.out.println("\nUNOModel order has been reversed");
-                            break;
-
-                        case "WILD":
-                            if (currentMode == mode.LIGHT) {
-                                System.out.print("Choose a color (RED, GREEN, BLUE, YELLOW): ");
-                                String chosenColor = input.next().toUpperCase();
-
-                                // Validate the chosen color
-                                boolean validColor = false;
-                                for (Colors.LIGHTCOLORS color : Colors.LIGHTCOLORS.values()) {
-                                    if (color.toString().equals(chosenColor)) {
-                                        validColor = true;
-                                        break;
-                                    }
-                                }
-
-                                if (!validColor) {
-                                    System.out.println("Invalid color choice. Please choose a valid color.");
-                                } else {
-                                    // Set the chosen color for the Wild card
-
-                                    currentPlayerCards.get(chosen - 1).setLightColor(Colors.LIGHTCOLORS.valueOf(chosenColor));
-                                    //currentPlayerCards.get(chosen - 1).setDarkColor(Colors.DARKCOLORS.valueOf(chosenColor));
-                                    playingDeck.add(currentPlayerCards.get(chosen - 1));
-                                    System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getLightCharacteristics());
-                                    currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-                                }
-                            }
-
-                            if (currentMode == mode.DARK) {
-                                System.out.print("Choose a color (PINK, TEAL, PURPLE, ORANGE): ");
-                                String chosenColor = input.next().toUpperCase();
-
-                                // Validate the chosen color
-                                boolean validColor = false;
-                                for (Colors.DARKCOLORS color : Colors.DARKCOLORS.values()) {
-                                    if (color.toString().equals(chosenColor)) {
-                                        validColor = true;
-                                        break;
-                                    }
-                                }
-
-                                if (!validColor) {
-                                    System.out.println("Invalid color choice. Please choose a valid color.");
-                                } else {
-                                    // Set the chosen color for the Wild card
-
-                                    //currentPlayerCards.get(chosen - 1).setLightColor(Colors.LIGHTCOLORS.valueOf(chosenColor));
-                                    currentPlayerCards.get(chosen - 1).setDarkColor(Colors.DARKCOLORS.valueOf(chosenColor));
-                                    playingDeck.add(currentPlayerCards.get(chosen - 1));
-                                    currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-                                    System.out.println("Played: " + currentPlayerCards.get(chosen - 1).getDarkCharacteristics());
-                                }
-                            }
-                            break;
-
-                        case "WILD_DRAW_TWO":
-                            for (int i = 0; i < 2; i++) {
-                                players.get(position + 1 % (players.size() - 1)).addCard(cardDeck.get(cardDeck.size() - 1));
-                            }
-                            this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
-                            playingDeck.add(currentPlayerCards.get(chosen - 1));
-                            currentPlayerCards.remove(currentPlayerCards.get(chosen - 1));
-                            System.out.println(players.get((players.indexOf(currentPlayer) + 1)).getName() + " picked 2 and will be skipped");
-
-                    }
-                }
-            }
-        }
-        if (currentPlayer.getCards().isEmpty()) {
-            System.out.println("Winner: " + currentPlayer.getName());
-            System.out.println("In order of scores: ");
-            scores.entrySet().stream()
-                    .sorted(Map.Entry.<Player, Integer>comparingByValue())
-                    .forEach((player) -> System.out.println(player.getKey() + ": " + player.getValue()));
-        }
-    }
-
-
-    //-------------------For the terminal version-------------------//
-    /**
-     * Play the game
-     */
-    public void play(){
-        Scanner input = new Scanner(System.in);
-        System.out.println("Welcome to the game of UNO Flip!");
-        System.out.print("Enter number of Players(minimum 2 players): ");
-        int numberOfPlayers = input.nextInt();
-
-        while(numberOfPlayers < 2){
-            System.out.println("You need at least 2 players to play this game");
-            System.out.print("Enter number of Players(minimum 2 players): ");
-            numberOfPlayers = input.nextInt();
-        }
-
-        int count = 1;
-        Scanner newInput = new Scanner(System.in);
-
-        for (int i = 0; i < numberOfPlayers; i++){
-            System.out.print("Enter Player name " + count + ": ");
-            String player = newInput.nextLine();
-            this.players.add(new Player(player));
-            count++;
-        }
-
-        distributeToAll(7);
-
-        //UNOModel starts
-        while(!quit){
-            currentPlayer = players.get(this.position);
-            System.out.println("\n---------------------------------------------------------");
-            System.out.println(currentPlayer.getName() + "'s turn");
-
-            implementCurrentPlayerTurn();
-            if(clockwise) {
-                this.position = this.position + 1;
-            } else {
-                this.position = this.position - 1;
-            }
-            this.position = ((this.position%(numberOfPlayers)) + numberOfPlayers) % numberOfPlayers; //position of the next player
-        }
-
-    }
-
 
     //-------------------For the UI version-------------------//
 
@@ -476,43 +294,103 @@ public class UNOModel {
     }
 
     /**
+     *  A method to check if the card characteristics is special, and if yes, executes a block of code
+     * @param characteristics, the characteristics to be checked
+     */
+    private void checkSpecial(String characteristics){
+        if(currentMode.equals(mode.LIGHT)){
+            if (characteristics.equals("SKIP")) {
+                this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
+            } else if (characteristics.equals("WILD_DRAW_TWO")) {
+                for (int i = 0; i < 2; i++) {
+                    players.get(((this.position + 1 % (players.size())) + players.size()) % players.size()).addCard(cardDeck.get(cardDeck.size() - 1));
+                    cardDeck.remove(cardDeck.size() - 1);
+                }
+                this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
+            } else if (characteristics.equals("REVERSE")) {
+                this.clockwise = !this.clockwise;
+            } else if (characteristics.equals("FLIP")) {
+                this.currentMode = mode.DARK;
+            }
+        }else {
+            if (characteristics.equals("SKIP")) {
+                this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
+            } else if (characteristics.equals("WILD_DRAW_TWO")) {
+                for (int i = 0; i < 2; i++) {
+                    players.get(((this.position + 1 % (players.size())) + players.size()) % players.size()).addCard(cardDeck.get(cardDeck.size() - 1));
+                }
+                this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
+            } else if (characteristics.equals("REVERSE")) {
+                this.clockwise = !this.clockwise;
+            } else if (characteristics.equals("FLIP")) {
+                this.currentMode = mode.LIGHT;
+            }
+        }
+    }
+
+    /**
+     * A method to check a wild card and perform the operation based on the result
+     * @param characteristics, the characteristics of the card
+     * @param color, the color
+     */
+    private void checkWild(String characteristics, String color){
+        if(currentMode.equals(mode.LIGHT)) {
+            if (color.equals("unassigned")) {
+                for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
+                    if (this.currentPlayer.getCards().get(i).getLightCharacteristics().split(" ")[0].equals(characteristics)) {
+                        playingDeck.add(this.currentPlayer.getCards().get(i));
+                        currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
+                        this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
+                        updateScore(currentPlayer, this.scoreGuide.get(characteristics));
+
+                        if (currentPlayer.getCards().isEmpty()) {
+                            winner = true;
+                        }
+                        break;
+                    }
+                }
+                for (UNOView view : views) {
+                    view.handleWildCard(this);
+                }
+            }
+        }else{
+            if (color.equals("unassigned")) {
+                for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
+                    if (this.currentPlayer.getCards().get(i).getDarkCharacteristics().split(" ")[0].equals(characteristics)) {
+                        playingDeck.add(this.currentPlayer.getCards().get(i));
+                        currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
+                        this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
+                        updateScore(currentPlayer, this.scoreGuide.get(characteristics));
+
+                        if (currentPlayer.getCards().isEmpty()) {
+                            winner = true;
+                        }
+                        break;
+                    }
+                }
+                for (UNOView view : views) {
+                    view.handleWildCard(this);
+                }
+            }
+        }
+    }
+
+
+
+    /**
      * A method to validate the placement of cards
      * @param characteristics, the characteristics of the card
      * @param color, the color of the card
      */
     public void validatePlacement(String characteristics, String color) {
-        if (color.equals("unassigned")) {
-            for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
-                if (this.currentPlayer.getCards().get(i).getLightCharacteristics().split(" ")[0].equals(characteristics)) {
-                    playingDeck.add(this.currentPlayer.getCards().get(i));
-                    currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
-                    this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
-                    updateScore(currentPlayer, this.scoreGuide.get(characteristics));
-
-                    if (currentPlayer.getCards().isEmpty()) {
-                        winner = true;
-                    }
-                    break;
-                }
-            }
-            for (UNOView view : views) {
-                view.handleWildCard(this);
-            }
-        }
         if(currentMode.equals(mode.LIGHT)){
-            if (characteristics.equals(topCard.getLightCharacteristics().split(" ")[0]) || color.equals(topCard.getLightCharacteristics().split(" ")[1])) {
-                if (characteristics.equals("SKIP")) {
-                    this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
-                } else if (characteristics.equals("WILD_DRAW_TWO")) {
-                    for (int i = 0; i < 2; i++) {
-                        players.get(((this.position % (players.size())) + players.size()) % players.size()).addCard(cardDeck.get(cardDeck.size() - 1));
-                    }
-                    this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
-                } else if (characteristics.equals("REVERSE")) {
-                    this.clockwise = !this.clockwise;
-                } else if (characteristics.equals("FLIP")) {
-                        this.currentMode = mode.DARK;
-                }
+
+            checkWild(characteristics, color);
+
+            if (characteristics.equals(topCard.getLightCharacteristics().split(" ")[0]) ||
+                    color.equals(topCard.getLightCharacteristics().split(" ")[1])) {
+
+                checkSpecial(characteristics);
 
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getLightCharacteristics().equals(characteristics + " " + color)) {
@@ -538,19 +416,11 @@ public class UNOModel {
                 }
             }
         } else if (currentMode.equals(mode.DARK)) {
-            if(characteristics.equals(topCard.getDarkCharacteristics().split(" ")[0]) || color.equals(topCard.getDarkCharacteristics().split(" ")[1])){
-                if (characteristics.equals("SKIP")){
-                    this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
-                } else if (characteristics.equals("WILD_DRAW_TWO")) {
-                    for (int i = 0; i < 2; i++) {
-                        players.get(((this.position%(players.size())) + players.size()) % players.size()).addCard(cardDeck.get(cardDeck.size() - 1));
-                    }
-                    this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
-                } else if (characteristics.equals("REVERSE")) {
-                    this.clockwise = !this.clockwise;
-                } else if (characteristics.equals("FLIP")){
-                    this.currentMode = mode.LIGHT;
-                }
+
+            checkWild(characteristics, color);
+            if(characteristics.equals(topCard.getDarkCharacteristics().split(" ")[0]) ||
+                    color.equals(topCard.getDarkCharacteristics().split(" ")[1])){
+                checkSpecial(characteristics);
 
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getDarkCharacteristics().equals(characteristics + " " + color)) {
@@ -580,10 +450,72 @@ public class UNOModel {
 
     }
 
+    /**
+     * A method to place AI card
+     * @param card, the card to place
+     */
+    private void placeAICard(Card card){
+        if(currentMode.equals(mode.LIGHT)) {
+            playingDeck.add(card);
+            currentPlayer.getCards().remove(card);
+            this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
+            updateScore(currentPlayer, this.scoreGuide.get(card.getLightCharacteristics().split(" ")[0]));
+        }else{
+            playingDeck.add(card);
+            currentPlayer.getCards().remove(card);
+            this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
+            updateScore(currentPlayer, this.scoreGuide.get(card.getDarkCharacteristics().split(" ")[0]));
+        }
+    }
+
+    /**
+     * A method to implement the AI's turn
+     */
     public void implementAITurn(){
-        //Check the top card
-        //Checks the cards the AI has and if there's a card with the same color or the same characteristics, then place that card
-        //Update the view
+        int cardSize = currentPlayer.getCards().size();
+        Random rand = new Random();
+        int colorIndex;
+        for(Card card : currentPlayer.getCards()){
+            if(currentMode.equals(mode.LIGHT)){
+                if(card.getLightCharacteristics().split(" ")[0].equals(topCard.getLightCharacteristics().split(" ")[0]) ||
+                        card.getLightCharacteristics().split(" ")[1].equals(topCard.getLightCharacteristics().split(" ")[1])){
+                    checkSpecial(card.getLightCharacteristics().split(" ")[0]);
+                    placeAICard(card);
+                    break;
+                }
+                if (card.getLightCharacteristics().split(" ")[1].equals("UNASSIGNED")) {
+                    colorIndex = rand.nextInt(4);
+                    card.setLightColor(Colors.LIGHTCOLORS.values()[colorIndex]);
+                    placeAICard(card);
+                    break;
+                }
+            } else if(currentMode.equals(mode.DARK)){
+                if(card.getDarkCharacteristics().split(" ")[0].equals(topCard.getDarkCharacteristics().split(" ")[0]) ||
+                        card.getDarkCharacteristics().split(" ")[1].equals(topCard.getDarkCharacteristics().split(" ")[1])){
+                    checkSpecial(card.getDarkCharacteristics().split(" ")[0]);
+                    placeAICard(card);
+                    break;
+                }
+                if (card.getDarkCharacteristics().split(" ")[1].equals("UNASSIGNED")) {
+                    colorIndex = rand.nextInt(4);
+                    card.setDarkColor(Colors.DARKCOLORS.values()[colorIndex]);
+
+                    placeAICard(card);
+                }
+            }
+        }
+
+        if(cardSize == currentPlayer.getCards().size()){
+            drawFromBank();
+        }
+        if(currentPlayer.getCards().isEmpty()){
+            winner = true;
+        }
+        UNOEvent e = new UNOEvent(true, this);
+        for (UNOView views : this.views) {
+            views.handleAITurn(e);
+        }
+
     }
 
 }
