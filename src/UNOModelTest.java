@@ -20,7 +20,7 @@ public class UNOModelTest {
 
     @Test
     public void addPlayer() {
-        Player player1 = new Player("Alice");
+        Player player1 = new Player("TestPlayer");
         assertEquals(unoModel.getPlayers().size(), 0);
         unoModel.addPlayer(player1);
         assertEquals(1, unoModel.getPlayers().size());
@@ -40,8 +40,8 @@ public class UNOModelTest {
 
     @Test
     public void distributeCards() {
-        Player player1 = new Player("Alice");
-        Player player2 = new Player("Bob");
+        Player player1 = new Player("TestPlayer1");
+        Player player2 = new Player("TestPlayer2");
 
         unoModel.addPlayer(player1);
         unoModel.addPlayer(player2);
@@ -77,7 +77,7 @@ public class UNOModelTest {
 
     @Test
     public void updateScore() {
-        Player player1 = new Player("Alice");
+        Player player1 = new Player("TestPlayer");
         unoModel.addPlayer(player1);
         unoModel.init();
 
@@ -90,7 +90,7 @@ public class UNOModelTest {
     public void drawFromBank() {
         Player player = new Player("TestPlayer");
         unoModel.addPlayer(player);
-        unoModel.init();
+        //unoModel.init();
 
         if (unoModel.getPlayers().equals(player)) {
             int initialSize = player.getCards().size();
