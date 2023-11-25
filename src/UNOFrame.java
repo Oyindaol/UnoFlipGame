@@ -4,6 +4,7 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * UNOFrame Class.
@@ -65,7 +66,7 @@ public class UNOFrame extends JFrame implements UNOView {
     /**
      * A method to initialize the game frame
      */
-    public void init(){
+    public void init() {
         //For components that will go into the South Panel
         int numPlayers = Integer.parseInt(JOptionPane.showInputDialog("Enter number of Players (2-12)"));
         while(numPlayers < 2 || numPlayers > 12){
@@ -82,6 +83,7 @@ public class UNOFrame extends JFrame implements UNOView {
 
         if(AI.toLowerCase().equals("y")){
             model.addPlayer(new AI());
+            Collections.shuffle(model.getPlayers());
         }
 
         model.init();
