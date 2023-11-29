@@ -57,8 +57,17 @@ public class UNOController implements ActionListener {
             this.view.handleUNO();
 
         }
+
         else if (e.getActionCommand().equals("Play AI")) {
             model.implementAITurn();
+        }
+
+        else if (e.getActionCommand().equals("Undo")) {
+            model.undo();
+        }
+
+        else if (e.getActionCommand().equals("Redo")) {
+            model.redo();
         }
     }
 }

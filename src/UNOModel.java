@@ -24,6 +24,9 @@ public class UNOModel {
     private Card topCard;
     private boolean winner;
 
+    private Stack<GameState> undoStack;
+    private Stack<GameState> redoStack;
+
     /**
      * Constructor for the UNOModel (Model) class
      * Initializes the game
@@ -39,6 +42,9 @@ public class UNOModel {
         this.clockwise = true;
         this.currentMode = mode.LIGHT;
         this.views = new ArrayList<>();
+
+        this.undoStack = new Stack<>();
+        this.redoStack = new Stack<>();
     }
 
     /**
@@ -516,6 +522,76 @@ public class UNOModel {
             views.handleAITurn(e);
         }
 
+    }
+
+    public void saveGameState() {
+        GameState currentState = new GameState(players, scores, cardDeck, playingDeck, currentPlayer,clockwise,
+                currentMode, topCard, winner);
+        undoStack.push(currentState);
+        redoStack.clear(); // Clear redo stack as a new action is performed after undo
+    }
+
+    public void undo() {
+        //saveGameState();
+        //GameState previousState = undoStack.peek(); // Get the previous state
+        if (!undoStack.isEmpty()) {
+            redoStack.push(undoStack.pop()); // Move current state to redo stack
+            GameState previousState = undoStack.peek(); // Get the previous state
+            System.out.println(previousState);
+            // Restore the game state to the previous state
+            restoreGameState(previousState);
+        }
+
+        for (UNOView view : views){
+            view.handleUndo(this);
+        }
+
+    }
+
+    public void redo() {
+        if (!redoStack.isEmpty()) {
+            undoStack.push(redoStack.pop()); // Move current state to undo stack
+            GameState nextState = undoStack.peek(); // Get the next state
+            // Restore the game state to the next state
+            restoreGameState(nextState);
+        }
+
+        for (UNOView view : views){
+            view.handleRedo(this);
+        }
+
+    }
+
+    private void restoreGameState(GameState state) {
+        this.players.clear();
+        for (Player savedPlayer : state.getPlayers()) {
+            Player player = new Player(savedPlayer.getName()); // Create new player with same name
+            player.setCards(new ArrayList<>(savedPlayer.getCards())); // Restore player's hand
+            this.players.add(player);
+        }
+
+        // Restore scores
+        this.scores = new HashMap<>(state.getScores());
+
+        // Restore card decks
+        this.cardDeck = new ArrayList<>(state.getCardDeck());
+        this.playingDeck = new ArrayList<>(state.getPlayingDeck());
+
+        // Restore current player, mode, top card, and other game state attributes
+        this.currentPlayer = findEquivalentPlayer(state.getCurrentPlayer()); // Assuming findEquivalentPlayer() finds the player object reference
+        this.clockwise = state.isClockwise();
+        this.currentMode = state.getCurrentMode();
+        this.topCard = state.getTopCard();
+        this.winner = state.isWinner();
+    }
+
+    private Player findEquivalentPlayer(Player playerToFind) {
+        for (Player player : this.players) {
+            if (player.getName().equals(playerToFind.getName())) {
+                return player;
+            }
+        }
+        return null; // Handle if the player isn't found (might need additional logic)
     }
 
 }

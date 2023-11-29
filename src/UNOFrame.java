@@ -17,6 +17,8 @@ public class UNOFrame extends JFrame implements UNOView {
     private JButton drawButton;
     private JButton UNOButton;
     private JButton AI_Button;
+    private JButton undoButton;
+    private JButton redoButton;
     JPanel northPanel;
     JPanel centerPanel;
     JPanel eastPanel;
@@ -148,6 +150,14 @@ public class UNOFrame extends JFrame implements UNOView {
         drawButton = new JButton("Draw From Bank");
         drawButton.addActionListener(controller);
 
+        // Undo button
+        undoButton = new JButton("Undo");
+        undoButton.addActionListener(controller);
+
+        // Redo button
+        redoButton = new JButton("Redo");
+        redoButton.addActionListener(controller);
+
 
         /* GAME PANELS */
 
@@ -165,6 +175,8 @@ public class UNOFrame extends JFrame implements UNOView {
         southPanel.add(AI_Button);
         southPanel.setBackground(Color.GRAY);
         southPanel.add(UNOButton);
+        southPanel.add(undoButton, FlowLayout.LEFT);
+        southPanel.add(redoButton, FlowLayout.LEFT);
 
         //Center Panel
         updateTopCard(model);
@@ -540,6 +552,50 @@ public class UNOFrame extends JFrame implements UNOView {
                 southPanel.updateUI();
             }
         }
+    }
+
+    @Override
+    public void handleUndo(UNOModel model) {
+       // model.undo();
+
+        updateTopCard(model);
+        updateCurrentPlayerInfo(model.getCurrentPlayer());
+        updateCurrentPlayerCards(model.getCurrentPlayer(), model);
+        printAllPlayersInfo(model.getPlayers(), model);
+
+        // Refresh UI components
+        centerPanel.revalidate();
+        centerPanel.repaint();
+        eastPanel.revalidate();
+        eastPanel.repaint();
+        southPanel.revalidate();
+        southPanel.repaint();
+        westPanel.revalidate();
+        westPanel.repaint();
+        this.revalidate();
+        this.repaint();
+    }
+
+    @Override
+    public void handleRedo(UNOModel model) {
+        //model.redo();
+
+        updateTopCard(model);
+        updateCurrentPlayerInfo(model.getCurrentPlayer());
+        updateCurrentPlayerCards(model.getCurrentPlayer(), model);
+        printAllPlayersInfo(model.getPlayers(), model);
+
+        // Refresh UI components
+        centerPanel.revalidate();
+        centerPanel.repaint();
+        eastPanel.revalidate();
+        eastPanel.repaint();
+        southPanel.revalidate();
+        southPanel.repaint();
+        westPanel.revalidate();
+        westPanel.repaint();
+        this.revalidate();
+        this.repaint();
     }
 
     public void handleUNO() {

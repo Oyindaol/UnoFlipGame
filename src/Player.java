@@ -67,4 +67,7 @@ public class Player {
         this.cards.add(card);
     }
 
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+    }
 }
