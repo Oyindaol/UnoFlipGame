@@ -63,4 +63,5 @@ public class GameState {
     public boolean isWinner() {
         return winner;
     }
+
 }

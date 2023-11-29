@@ -15,4 +15,5 @@ public interface UNOView {
 
     void handleUndo(UNOModel model);
     void handleRedo(UNOModel model);
+
 }

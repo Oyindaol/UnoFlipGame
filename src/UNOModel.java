@@ -528,38 +528,59 @@ public class UNOModel {
         GameState currentState = new GameState(players, scores, cardDeck, playingDeck, currentPlayer,clockwise,
                 currentMode, topCard, winner);
         undoStack.push(currentState);
+
         redoStack.clear(); // Clear redo stack as a new action is performed after undo
     }
 
     public void undo() {
-        //saveGameState();
+
+        GameState currentState = new GameState(players, scores, cardDeck, playingDeck, currentPlayer,clockwise,
+                currentMode, topCard, winner);
+        undoStack.push(currentState);
+
+        redoStack.clear(); // Clear redo stack as a new action is performed after undo
+
+
         //GameState previousState = undoStack.peek(); // Get the previous state
         if (!undoStack.isEmpty()) {
-            redoStack.push(undoStack.pop()); // Move current state to redo stack
-            GameState previousState = undoStack.peek(); // Get the previous state
+//            redoStack.push(undoStack.pop()); // Move current state to redo stack
+//            GameState previousState = undoStack.peek(); // Get the previous state
+//            System.out.println(previousState);
+//            restoreGameState(previousState);
+
+
+
+            redoStack.push(new GameState(players, scores, cardDeck, playingDeck, currentPlayer,clockwise,
+                    currentMode, topCard, winner));
+            GameState previousState = undoStack.peek();
             System.out.println(previousState);
-            // Restore the game state to the previous state
-            restoreGameState(previousState);
-        }
+            restoreGameState(previousState); // Restore the game state to the previous state
 
-        for (UNOView view : views){
-            view.handleUndo(this);
-        }
 
+            for (UNOView view : views) {
+                view.handleUndo(this);
+            }
+        }
     }
 
     public void redo() {
         if (!redoStack.isEmpty()) {
-            undoStack.push(redoStack.pop()); // Move current state to undo stack
-            GameState nextState = undoStack.peek(); // Get the next state
-            // Restore the game state to the next state
+//            undoStack.push(redoStack.pop()); // Move current state to undo stack
+//            GameState nextState = undoStack.peek(); // Get the next state
+//            // Restore the game state to the next state
+//            restoreGameState(nextState);
+
+
+
+            undoStack.push(new GameState(players, scores, cardDeck, playingDeck, currentPlayer,clockwise,
+                    currentMode, topCard, winner));
+            GameState nextState = redoStack.pop();
             restoreGameState(nextState);
-        }
 
-        for (UNOView view : views){
-            view.handleRedo(this);
+            for (UNOView view : views){
+                view.handleRedo(this);
+            }
         }
-
     }
 
     private void restoreGameState(GameState state) {
@@ -593,5 +614,4 @@ public class UNOModel {
         }
         return null; // Handle if the player isn't found (might need additional logic)
     }
-
 }
