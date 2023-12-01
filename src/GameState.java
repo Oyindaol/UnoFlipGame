@@ -12,19 +12,26 @@ public class GameState {
     private Card topCard;
     private boolean winner;
 
+
+
+    private UNOModel model;
+
     // Constructor to capture the game state
-    public GameState(ArrayList<Player> players, HashMap<Player, Integer> scores, ArrayList<Card> cardDeck,
-                     ArrayList<Card> playingDeck, Player currentPlayer, boolean clockwise,
-                     UNOModel.mode currentMode, Card topCard, boolean winner) {
-        this.players = players;
-        this.scores = scores;
-        this.cardDeck = cardDeck;
-        this.playingDeck = playingDeck;
-        this.currentPlayer = currentPlayer;
-        this.clockwise = clockwise;
-        this.currentMode = currentMode;
-        this.topCard = topCard;
-        this.winner = winner;
+    public GameState(UNOModel model) {
+//        this.players = players;
+//        this.scores = scores;
+//        this.cardDeck = cardDeck;
+//        this.playingDeck = playingDeck;
+//        this.currentPlayer = currentPlayer;
+//        this.clockwise = clockwise;
+//        this.currentMode = currentMode;
+//        this.topCard = topCard;
+//        this.winner = winner;
+        this.model = model;
+    }
+
+    public UNOModel getModel() {
+        return model;
     }
 
     // Getters for the stored game state
@@ -63,5 +70,10 @@ public class GameState {
     public boolean isWinner() {
         return winner;
     }
+
+
+    //public GameState(ArrayList<Player> players, HashMap<Player, Integer> scores, ArrayList<Card> cardDeck,
+    //                     ArrayList<Card> playingDeck, Player currentPlayer, boolean clockwise,
+    //                     UNOModel.mode currentMode, Card topCard, boolean winner) {
 
 }

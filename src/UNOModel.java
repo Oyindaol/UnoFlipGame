@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.*;
 
 /**
@@ -7,9 +8,10 @@ import java.util.*;
  * @author Osas Iyamu
  * @author Oyindamola Taiwo-Olupeka
  */
-public class UNOModel {
+public class UNOModel implements Serializable {
 
     enum mode {LIGHT, DARK}
+
     private mode currentMode;
     private ArrayList<Player> players;
     private int position;
@@ -24,14 +26,21 @@ public class UNOModel {
     private Card topCard;
     private boolean winner;
 
-    private Stack<GameState> undoStack;
-    private Stack<GameState> redoStack;
+    //private List<GameState> gameStates;
+    //private int currentStateIndex;
+    //private List<GameState> history; // Store game state history for undo
+
+    //private Stack<GameState> redoStack;
+    //private Stack<GameState> undoStack;
+
+    private GameState undo, redo;
+
 
     /**
      * Constructor for the UNOModel (Model) class
      * Initializes the game
      */
-    public UNOModel(){
+    public UNOModel() {
         this.players = new ArrayList<>();
         this.scores = new HashMap<Player, Integer>();
         this.scoreGuide = new HashMap<>();
@@ -43,8 +52,14 @@ public class UNOModel {
         this.currentMode = mode.LIGHT;
         this.views = new ArrayList<>();
 
-        this.undoStack = new Stack<>();
-        this.redoStack = new Stack<>();
+        //this.undoStack = new Stack<>();
+        //this.redoStack = new Stack<>();
+
+        //this.history = new ArrayList<>();
+        //this.currentStateIndex = -1; // No game state initially
+
+        undo = new GameState(this);
+        redo = new GameState(this);
     }
 
     /**
@@ -82,19 +97,19 @@ public class UNOModel {
         Collections.shuffle(cardDeck);
 
         //Initialize the scores
-        for (Player p : players){
+        for (Player p : players) {
             scores.put(p, 0);
         }
         distributeToAll(7);
-        playingDeck.add(cardDeck.get(cardDeck.size()-1));
-        topCard = playingDeck.get(playingDeck.size()-1);
+        playingDeck.add(cardDeck.get(cardDeck.size() - 1));
+        topCard = playingDeck.get(playingDeck.size() - 1);
 
         //Ensure that the top card isn't a wild card
-        while(topCard.getLightCharacteristics().split(" ")[0].equals("WILD")){
+        while (topCard.getLightCharacteristics().split(" ")[0].equals("WILD")) {
             Collections.shuffle(cardDeck);
-            topCard = playingDeck.get(playingDeck.size()-1);
+            topCard = playingDeck.get(playingDeck.size() - 1);
         }
-        cardDeck.remove(cardDeck.get(cardDeck.size()-1));
+        cardDeck.remove(cardDeck.get(cardDeck.size() - 1));
 
         this.scoreGuide.put("1", 1);
         this.scoreGuide.put("2", 2);
@@ -115,6 +130,7 @@ public class UNOModel {
 
     /**
      * A method to get all the players in the game
+     *
      * @return players in the game
      */
     public ArrayList<Player> getPlayers() {
@@ -124,6 +140,7 @@ public class UNOModel {
 
     /**
      * Adds a view from the Uno game
+     *
      * @param v, the view
      */
     public void addUNOView(UNOView v) {
@@ -132,6 +149,7 @@ public class UNOModel {
 
     /**
      * Removes a view from the Uno game
+     *
      * @param v, the view
      */
     public void removeUNOView(UNOView v) {
@@ -140,6 +158,7 @@ public class UNOModel {
 
     /**
      * A method to add player to the player list
+     *
      * @param p the player to add
      */
     public void addPlayer(Player p) {
@@ -148,6 +167,7 @@ public class UNOModel {
 
     /**
      * A method to get the top cad of the deck
+     *
      * @return the top card of the playing deck
      */
     public Card getTopCard() {
@@ -156,6 +176,7 @@ public class UNOModel {
 
     /**
      * Return true if there's a winner
+     *
      * @return boolean, isWinner?
      */
     public boolean isWinner() {
@@ -163,15 +184,26 @@ public class UNOModel {
     }
 
     /**
+     * Return true if game direction is clockwise
+     *
+     * @return boolean, isClockwise?
+     */
+    public boolean isClockwise() {
+        return clockwise;
+    }
+
+    /**
      * A method to remove a player from the list
+     *
      * @param p, the player to remove
      */
-    public void removePlayer(Player p){
+    public void removePlayer(Player p) {
         this.players.remove(p);
     }
 
     /**
      * A method to get the card deck
+     *
      * @return the card deck
      */
     public ArrayList<Card> getCardDeck() {
@@ -180,6 +212,7 @@ public class UNOModel {
 
     /**
      * A method to add a card to the card deck
+     *
      * @param card, the card to add
      */
     public void addToDeck(NumberCard card) {
@@ -188,6 +221,7 @@ public class UNOModel {
 
     /**
      * A method to remove from the card deck
+     *
      * @param card, the card to remove
      */
     public void removeFromDeck(NumberCard card) {
@@ -196,6 +230,7 @@ public class UNOModel {
 
     /**
      * A method to get the scores
+     *
      * @return the list of scores
      */
     public HashMap<Player, Integer> getScores() {
@@ -204,6 +239,7 @@ public class UNOModel {
 
     /**
      * A method to get the playing deck
+     *
      * @return the playing deck
      */
     public ArrayList<Card> getPlayingDeck() {
@@ -212,6 +248,7 @@ public class UNOModel {
 
     /**
      * A method to set the current player
+     *
      * @param p, the player to set
      */
     public void setCurrentPlayer(Player p) {
@@ -220,6 +257,7 @@ public class UNOModel {
 
     /**
      * A method to get the current player
+     *
      * @return the current player
      */
     public Player getCurrentPlayer() {
@@ -228,6 +266,7 @@ public class UNOModel {
 
     /**
      * A method to get the mode of the game
+     *
      * @return the mode of the game
      */
     public mode getCurrentMode() {
@@ -236,37 +275,40 @@ public class UNOModel {
 
     /**
      * A method to distribute cards to everyone
+     *
      * @param numberOfCards number of cards to distribute
      */
-    private void distributeToAll(int numberOfCards){
-        for (Player p : players){
-            for (int i=0; i<numberOfCards; i++){
-                int lastCardInDeck = cardDeck.size()-1;
+    private void distributeToAll(int numberOfCards) {
+        for (Player p : players) {
+            for (int i = 0; i < numberOfCards; i++) {
+                int lastCardInDeck = cardDeck.size() - 1;
                 p.addCard(cardDeck.get(lastCardInDeck));
                 cardDeck.remove(cardDeck.get(lastCardInDeck));
             }
         }
     }
 
-    /** A method to update the score of each player
+    /**
+     * A method to update the score of each player
+     *
      * @param player the current player
-     * @param score the score to add
+     * @param score  the score to add
      */
-    public void updateScore(Player player, int score){
-        if(!(scores.containsKey(player))){
+    public void updateScore(Player player, int score) {
+        if (!(scores.containsKey(player))) {
             scores.put(player, score);
-        }else{
-            scores.replace(player, scores.get(player)+score);
+        } else {
+            scores.replace(player, scores.get(player) + score);
         }
     }
 
     /**
      * A method to get a card from the bank
      */
-    public void drawFromBank(){
+    public void drawFromBank() {
         currentPlayer.getCards().add(cardDeck.get(cardDeck.size() - 1));
         cardDeck.remove(cardDeck.size() - 1);
-        for (UNOView view : views){
+        for (UNOView view : views) {
             view.handleDrawCard(this);
         }
         System.out.println(currentPlayer.getName() + " picked a card");
@@ -278,7 +320,7 @@ public class UNOModel {
     /**
      * A method to draw card
      */
-    public void drawCard(){
+    public void drawCard() {
         currentPlayer.getCards().add(cardDeck.get(cardDeck.size() - 1));
         cardDeck.remove(cardDeck.size() - 1);
     }
@@ -286,25 +328,26 @@ public class UNOModel {
     /**
      * A method to change the turns
      */
-    public void changeTurn(){
-        if(clockwise) {
+    public void changeTurn() {
+        if (clockwise) {
             this.position = this.position + 1;
         } else {
             this.position = this.position - 1;
         }
-        this.position = ((this.position%(players.size())) + players.size()) % players.size(); //position of the next player
+        this.position = ((this.position % (players.size())) + players.size()) % players.size(); //position of the next player
         currentPlayer = players.get(position);
-        for (UNOView view : views){
+        for (UNOView view : views) {
             view.handleNextPlayer(this);
         }
     }
 
     /**
-     *  A method to check if the card characteristics is special, and if yes, executes a block of code
+     * A method to check if the card characteristics is special, and if yes, executes a block of code
+     *
      * @param characteristics, the characteristics to be checked
      */
-    private void checkSpecial(String characteristics){
-        if(currentMode.equals(mode.LIGHT)){
+    private void checkSpecial(String characteristics) {
+        if (currentMode.equals(mode.LIGHT)) {
             if (characteristics.equals("SKIP")) {
                 this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
             } else if (characteristics.equals("WILD_DRAW_TWO")) {
@@ -318,7 +361,7 @@ public class UNOModel {
             } else if (characteristics.equals("FLIP")) {
                 this.currentMode = mode.DARK;
             }
-        }else {
+        } else {
             if (characteristics.equals("SKIP")) {
                 this.position = (clockwise ? (this.position + 1) : (this.position - 1)) % players.size();
             } else if (characteristics.equals("WILD_DRAW_TWO")) {
@@ -336,11 +379,12 @@ public class UNOModel {
 
     /**
      * A method to check a wild card and perform the operation based on the result
+     *
      * @param characteristics, the characteristics of the card
-     * @param color, the color
+     * @param color,           the color
      */
-    private void checkWild(String characteristics, String color){
-        if(currentMode.equals(mode.LIGHT)) {
+    private void checkWild(String characteristics, String color) {
+        if (currentMode.equals(mode.LIGHT)) {
             if (color.equals("unassigned")) {
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getLightCharacteristics().split(" ")[0].equals(characteristics)) {
@@ -359,7 +403,7 @@ public class UNOModel {
                     view.handleWildCard(this);
                 }
             }
-        }else{
+        } else {
             if (color.equals("unassigned")) {
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getDarkCharacteristics().split(" ")[0].equals(characteristics)) {
@@ -382,14 +426,15 @@ public class UNOModel {
     }
 
 
-
     /**
      * A method to validate the placement of cards
+     *
      * @param characteristics, the characteristics of the card
-     * @param color, the color of the card
+     * @param color,           the color of the card
      */
     public void validatePlacement(String characteristics, String color) {
-        if(currentMode.equals(mode.LIGHT)){
+        undo = new GameState(this);
+        if (currentMode.equals(mode.LIGHT)) {
 
             checkWild(characteristics, color);
 
@@ -424,8 +469,8 @@ public class UNOModel {
         } else if (currentMode.equals(mode.DARK)) {
 
             checkWild(characteristics, color);
-            if(characteristics.equals(topCard.getDarkCharacteristics().split(" ")[0]) ||
-                    color.equals(topCard.getDarkCharacteristics().split(" ")[1])){
+            if (characteristics.equals(topCard.getDarkCharacteristics().split(" ")[0]) ||
+                    color.equals(topCard.getDarkCharacteristics().split(" ")[1])) {
                 checkSpecial(characteristics);
 
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
@@ -435,7 +480,7 @@ public class UNOModel {
                         this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
                         updateScore(currentPlayer, this.scoreGuide.get(characteristics));
 
-                        if(currentPlayer.getCards().isEmpty()){
+                        if (currentPlayer.getCards().isEmpty()) {
                             winner = true;
                         }
                         break;
@@ -445,15 +490,57 @@ public class UNOModel {
                 for (UNOView views : this.views) {
                     views.handlePlacement(e);
                 }
-            }
-            else {
+            } else {
                 UNOEvent e = new UNOEvent(false, this);
-                for (UNOView views: views){
+                for (UNOView views : views) {
                     views.handlePlacement(e);
                 }
             }
         }
+        redo = new GameState(this);
+    }
 
+    public void undo() {
+        if (undo == null) {
+            this.players = undo.getModel().getPlayers();
+            this.scores = undo.getModel().getScores();
+            this.cardDeck = undo.getModel().getCardDeck();
+            this.playingDeck = undo.getModel().getPlayingDeck();
+            this.currentPlayer = undo.getModel().getCurrentPlayer();
+            this.clockwise = undo.getModel().isClockwise();
+            this.currentMode = undo.getModel().getCurrentMode();
+            this.topCard = undo.getModel().getTopCard();
+            this.winner = undo.getModel().isWinner();
+            //this.scoreGuide = undo.getModel().scoreGuide;
+            //this.position = undo.getModel().position;
+
+            for (UNOView view : views) {
+                view.handleUndo(this);
+            }
+
+        }
+
+    }
+
+    public void redo() {
+        if (redo == null) {
+            this.players = redo.getModel().getPlayers();
+            this.scores = redo.getModel().getScores();
+            this.cardDeck = redo.getModel().getCardDeck();
+            this.playingDeck = redo.getModel().getPlayingDeck();
+            this.currentPlayer = redo.getModel().getCurrentPlayer();
+            this.clockwise = redo.getModel().isClockwise();
+            this.currentMode = redo.getModel().getCurrentMode();
+            this.topCard = redo.getModel().getTopCard();
+            this.winner = redo.getModel().isWinner();
+            //this.scoreGuide = redo.getModel().scoreGuide;
+            //this.position = redo.getModel().position;
+
+
+            for (UNOView view : views) {
+                view.handleRedo(this);
+            }
+        }
     }
 
     /**
@@ -524,6 +611,9 @@ public class UNOModel {
 
     }
 
+
+/* STACK VERSION
+
     public void saveGameState() {
         GameState currentState = new GameState(players, scores, cardDeck, playingDeck, currentPlayer,clockwise,
                 currentMode, topCard, winner);
@@ -555,7 +645,6 @@ public class UNOModel {
             GameState previousState = undoStack.peek();
             System.out.println(previousState);
             restoreGameState(previousState); // Restore the game state to the previous state
-
 
             for (UNOView view : views) {
                 view.handleUndo(this);
@@ -599,19 +688,94 @@ public class UNOModel {
         this.playingDeck = new ArrayList<>(state.getPlayingDeck());
 
         // Restore current player, mode, top card, and other game state attributes
-        this.currentPlayer = findEquivalentPlayer(state.getCurrentPlayer()); // Assuming findEquivalentPlayer() finds the player object reference
+        this.currentPlayer = findPlayer(state.getCurrentPlayer()); // Assuming findEquivalentPlayer() finds the player object reference
         this.clockwise = state.isClockwise();
         this.currentMode = state.getCurrentMode();
         this.topCard = state.getTopCard();
         this.winner = state.isWinner();
     }
 
-    private Player findEquivalentPlayer(Player playerToFind) {
+    private Player findPlayer(Player p1) {
         for (Player player : this.players) {
-            if (player.getName().equals(playerToFind.getName())) {
+            if (player.getName().equals(p1.getName())) {
                 return player;
             }
         }
         return null; // Handle if the player isn't found (might need additional logic)
+    }
+
+ */
+
+
+
+ /*  ARRAYLIST VERSION
+
+    public void saveGameState() {
+        GameState currentState = new GameState(players, scores, cardDeck, playingDeck, currentPlayer,clockwise,
+                currentMode, topCard, winner);
+        history.add(currentState);
+        currentStateIndex++;
+    }
+
+    public void undo() {
+
+        if (currentStateIndex > 0) {
+            currentStateIndex--;
+            restoreGameState(history.get(currentStateIndex));
+
+            for (UNOView view : views) {
+                view.handleUndo(this);
+            }
+        }
+    }
+
+    public void redo() {
+
+        if (currentStateIndex < history.size() - 1) {
+            currentStateIndex++;
+            restoreGameState(history.get(currentStateIndex));
+
+            for (UNOView view : views) {
+                view.handleRedo(this);
+            }
+        }
+
+    }
+
+    private void restoreGameState(GameState gameState) {
+        this.players = new ArrayList<>(gameState.getPlayers());
+        this.scores = new HashMap<>(gameState.getScores());
+        this.cardDeck = new ArrayList<>(gameState.getCardDeck());
+        this.playingDeck = new ArrayList<>(gameState.getPlayingDeck());
+        this.currentPlayer = gameState.getCurrentPlayer();
+        this.clockwise = gameState.isClockwise();
+        this.currentMode = gameState.getCurrentMode();
+        this.topCard = gameState.getTopCard();
+        this.winner = gameState.isWinner();
+    }
+
+*/
+
+
+
+    // SAVE / LOAD
+    public void save(String fileName) {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            outputStream.writeObject(this);
+            System.out.println("Game saved successfully.");
+        } catch (IOException e) {
+            System.out.println("Error while saving the game: " + e.getMessage());
+        }
+    }
+
+    public static UNOModel load(String fileName) {
+        UNOModel loadedGame = null;
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(fileName))) {
+            loadedGame = (UNOModel) inputStream.readObject();
+            System.out.println("Game loaded successfully.");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error while loading the game: " + e.getMessage());
+        }
+        return loadedGame;
     }
 }

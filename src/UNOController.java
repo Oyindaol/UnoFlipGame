@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * UNOController class.
@@ -68,6 +70,39 @@ public class UNOController implements ActionListener {
 
         else if (e.getActionCommand().equals("Redo")) {
             model.redo();
+        }
+
+        else if (e.getActionCommand().equals("Save This Game")) {
+            //model.save("saved_game.txt");
+
+            String saveFileName = JOptionPane.showInputDialog(view, "Enter file name to save:");
+            if (saveFileName != null && !saveFileName.trim().isEmpty()) {
+                model.save(saveFileName);
+            }
+        }
+
+        else if (e.getActionCommand().equals("Load Previous Game")) {
+//            UNOModel loadedGame = model.load("saved_game.txt");
+//            if (loadedGame != null) {
+//                model = loadedGame;
+//                System.out.println("Game loaded successfully.");
+//            }
+
+
+            String loadFileName = JOptionPane.showInputDialog(view, "Enter file name to load:");
+            if (loadFileName != null && !loadFileName.trim().isEmpty()) {
+                UNOModel loadedGame = model.load(loadFileName);
+                if (loadedGame != null) {
+                    model = loadedGame;
+                    System.out.println("Game loaded successfully.");
+                }
+                else {
+                    System.out.println("Error loading the game. Could not load saved data.");
+                }
+            }
+            else {
+                System.out.println("Invalid file name. Please provide a valid file name.");
+            }
         }
     }
 

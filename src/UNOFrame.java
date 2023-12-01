@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -9,7 +10,7 @@ import java.util.Arrays;
  * UNOFrame Class.
  * GUI representation of the UNO flip game.
  */
-public class UNOFrame extends JFrame implements UNOView {
+public class UNOFrame extends JFrame implements UNOView, Serializable {
 
     private UNOModel model;
     private UNOController controller;
@@ -19,6 +20,10 @@ public class UNOFrame extends JFrame implements UNOView {
     private JButton AI_Button;
     private JButton undoButton;
     private JButton redoButton;
+
+    private JMenuBar menuBar;
+    private JMenu menu;
+    private JMenuItem save, load;
     JPanel northPanel;
     JPanel centerPanel;
     JPanel eastPanel;
@@ -69,6 +74,7 @@ public class UNOFrame extends JFrame implements UNOView {
         setupAIPlayers();
         setupGame();
         setupButtonsAndPanels();
+        setupMenuBar();
     }
 
     /**
@@ -205,6 +211,29 @@ public class UNOFrame extends JFrame implements UNOView {
         this.add(eastPanel, BorderLayout.EAST);
         this.add(westPanel, BorderLayout.WEST);
         this.add(southPanel, BorderLayout.SOUTH);
+    }
+
+    public void setupMenuBar() {
+
+        menuBar = new JMenuBar();
+        menu = new JMenu("Options");
+
+        // Create Save menu item
+        save = new JMenuItem("Save This Game");
+        save.addActionListener(controller);
+
+        // Create Load menu item
+        load = new JMenuItem("Load Previous Game");
+        load.addActionListener(controller);
+
+        menu.add(save);
+        menu.add(load);
+
+        // Add the menu to the menu bar
+        menuBar.add(menu);
+
+        // Set the menu bar for the frame
+        this.setJMenuBar(menuBar);
     }
 
     /**
