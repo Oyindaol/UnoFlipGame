@@ -33,7 +33,7 @@ public class UNOModel implements Serializable {
     //private Stack<GameState> redoStack;
     //private Stack<GameState> undoStack;
 
-    private GameState undo, redo;
+    private GameState undoState, redoState;
 
 
     /**
@@ -58,8 +58,8 @@ public class UNOModel implements Serializable {
         //this.history = new ArrayList<>();
         //this.currentStateIndex = -1; // No game state initially
 
-        undo = new GameState(this);
-        redo = new GameState(this);
+        undoState = new GameState(this);
+        redoState = new GameState(this);
     }
 
     /**
@@ -433,7 +433,9 @@ public class UNOModel implements Serializable {
      * @param color,           the color of the card
      */
     public void validatePlacement(String characteristics, String color) {
-        undo = new GameState(this);
+
+        undoState = new GameState(undoState.getModel()); // TRY undoState = new GameState(this)
+
         if (currentMode.equals(mode.LIGHT)) {
 
             checkWild(characteristics, color);
@@ -497,22 +499,24 @@ public class UNOModel implements Serializable {
                 }
             }
         }
-        redo = new GameState(this);
+        redoState = new GameState(redoState.getModel()); // TRY redoState = new GameState(this)
     }
 
     public void undo() {
-        if (undo == null) {
-            this.players = undo.getModel().getPlayers();
-            this.scores = undo.getModel().getScores();
-            this.cardDeck = undo.getModel().getCardDeck();
-            this.playingDeck = undo.getModel().getPlayingDeck();
-            this.currentPlayer = undo.getModel().getCurrentPlayer();
-            this.clockwise = undo.getModel().isClockwise();
-            this.currentMode = undo.getModel().getCurrentMode();
-            this.topCard = undo.getModel().getTopCard();
-            this.winner = undo.getModel().isWinner();
+        if (undoState != null) { // TRY if (undoState == null)
+            this.players = undoState.getModel().getPlayers();
+            this.scores = undoState.getModel().getScores();
+            this.cardDeck = undoState.getModel().getCardDeck();
+            this.playingDeck = undoState.getModel().getPlayingDeck();
+            this.currentPlayer = undoState.getModel().getCurrentPlayer();
+            this.clockwise = undoState.getModel().isClockwise();
+            this.currentMode = undoState.getModel().getCurrentMode();
+            this.topCard = undoState.getModel().getTopCard();
+            this.winner = undoState.getModel().isWinner();
             //this.scoreGuide = undo.getModel().scoreGuide;
             //this.position = undo.getModel().position;
+
+            System.out.println("Undo Works!"); // for testing
 
             for (UNOView view : views) {
                 view.handleUndo(this);
@@ -523,18 +527,20 @@ public class UNOModel implements Serializable {
     }
 
     public void redo() {
-        if (redo == null) {
-            this.players = redo.getModel().getPlayers();
-            this.scores = redo.getModel().getScores();
-            this.cardDeck = redo.getModel().getCardDeck();
-            this.playingDeck = redo.getModel().getPlayingDeck();
-            this.currentPlayer = redo.getModel().getCurrentPlayer();
-            this.clockwise = redo.getModel().isClockwise();
-            this.currentMode = redo.getModel().getCurrentMode();
-            this.topCard = redo.getModel().getTopCard();
-            this.winner = redo.getModel().isWinner();
+        if (redoState != null) { // TRY  if (redoState == null)
+            this.players = redoState.getModel().getPlayers();
+            this.scores = redoState.getModel().getScores();
+            this.cardDeck = redoState.getModel().getCardDeck();
+            this.playingDeck = redoState.getModel().getPlayingDeck();
+            this.currentPlayer = redoState.getModel().getCurrentPlayer();
+            this.clockwise = redoState.getModel().isClockwise();
+            this.currentMode = redoState.getModel().getCurrentMode();
+            this.topCard = redoState.getModel().getTopCard();
+            this.winner = redoState.getModel().isWinner();
             //this.scoreGuide = redo.getModel().scoreGuide;
             //this.position = redo.getModel().position;
+
+            System.out.println("Redo Works!"); // for testing
 
 
             for (UNOView view : views) {
