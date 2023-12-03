@@ -45,6 +45,22 @@ public class UNOModel implements Serializable {
         this.clockwise = true;
         this.currentMode = mode.LIGHT;
         this.views = new ArrayList<>();
+
+        this.scoreGuide.put("1", 1);
+        this.scoreGuide.put("2", 2);
+        this.scoreGuide.put("3", 3);
+        this.scoreGuide.put("4", 4);
+        this.scoreGuide.put("5", 5);
+        this.scoreGuide.put("6", 6);
+        this.scoreGuide.put("7", 7);
+        this.scoreGuide.put("8", 8);
+        this.scoreGuide.put("9", 9);
+        this.scoreGuide.put("SKIP", 20);
+        this.scoreGuide.put("FLIP", 20);
+        this.scoreGuide.put("REVERSE", 20);
+        this.scoreGuide.put("WILD_DRAW_TWO", 50);
+        this.scoreGuide.put("WILD", 60);
+
     }
 
     /**
@@ -95,21 +111,6 @@ public class UNOModel implements Serializable {
             topCard = playingDeck.get(playingDeck.size()-1);
         }
         cardDeck.remove(cardDeck.get(cardDeck.size()-1));
-
-        this.scoreGuide.put("1", 1);
-        this.scoreGuide.put("2", 2);
-        this.scoreGuide.put("3", 3);
-        this.scoreGuide.put("4", 4);
-        this.scoreGuide.put("5", 5);
-        this.scoreGuide.put("6", 6);
-        this.scoreGuide.put("7", 7);
-        this.scoreGuide.put("8", 8);
-        this.scoreGuide.put("9", 9);
-        this.scoreGuide.put("SKIP", 20);
-        this.scoreGuide.put("FLIP", 20);
-        this.scoreGuide.put("REVERSE", 20);
-        this.scoreGuide.put("WILD_DRAW_TWO", 50);
-        this.scoreGuide.put("WILD", 60);
 
     }
 
@@ -521,6 +522,31 @@ public class UNOModel implements Serializable {
         for (UNOView views : this.views) {
             views.handleAITurn(e);
         }
+
+    }
+
+    /**
+     * A method to initialize the game structure after restart command
+     */
+    public void restartGame(){
+        this.currentMode = mode.LIGHT;
+        this.position = 0;
+        this.scores.clear();
+        this.cardDeck.clear();
+        this.playingDeck.clear();
+        this.currentPlayer = this.getPlayers().get(0);
+        this.clockwise = true;
+
+        for(Player player : getPlayers()){
+            player.getCards().clear();
+        }
+
+        init();
+
+        for (UNOView view : views){
+            view.handleRestart(this);
+        }
+
 
     }
 

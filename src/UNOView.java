@@ -14,4 +14,6 @@ public interface UNOView {
     void handleAITurn(UNOEvent e);
 
     void handleSaveGame();
+
+    void handleRestart(UNOModel model);
 }
