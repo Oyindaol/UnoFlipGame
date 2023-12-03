@@ -20,6 +20,11 @@ public class UNOModel implements Serializable {
     private ArrayList<Card> playingDeck;
     private Player currentPlayer;
     private boolean clockwise;
+
+    public List<UNOView> getViews() {
+        return views;
+    }
+
     private List<UNOView> views;
 
     private Card topCard;

@@ -70,7 +70,9 @@ public class UNOFrame extends JFrame implements UNOView {
             String fileName = JOptionPane.showInputDialog("What file would you like to load? ");
             this.model = UNOModel.load(fileName);
             this.controller = new UNOController(this.model, this);
+            this.model.removeUNOView(this.model.getViews().get(0));
             this.model.addUNOView(this);
+            System.out.println(this.model.getViews().size());
         }else {
             setupPlayers();
             setupAIPlayers();
