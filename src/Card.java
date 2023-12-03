@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * The Card interface.
  *

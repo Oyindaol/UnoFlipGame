@@ -1,12 +1,14 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * UNOController class.
  * Controller part of the implementation of the MVC pattern.
  */
-public class UNOController implements ActionListener {
+public class UNOController implements ActionListener, Serializable {
     private UNOFrame view;
     private UNOModel model;
 
@@ -59,6 +61,14 @@ public class UNOController implements ActionListener {
         }
         else if (e.getActionCommand().equals("Play AI")) {
             model.implementAITurn();
+        }
+        else if (e.getActionCommand().equals("Save")) {
+            String fileNameToSave = JOptionPane.showInputDialog("Enter file name to save to");
+            try {
+                model.save(fileNameToSave);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }

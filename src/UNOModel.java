@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.*;
 
 /**
@@ -7,7 +8,7 @@ import java.util.*;
  * @author Osas Iyamu
  * @author Oyindamola Taiwo-Olupeka
  */
-public class UNOModel {
+public class UNOModel implements Serializable {
 
     enum mode {LIGHT, DARK}
     private mode currentMode;
@@ -518,4 +519,31 @@ public class UNOModel {
 
     }
 
+    public void save(String fileName) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(fileName + ".txt");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(this);
+        objectOutputStream.flush();
+        objectOutputStream.close();
+
+        for(UNOView view : views){
+            view.handleSaveGame();
+        }
+    }
+
+    public static UNOModel load(String fileName) throws IOException, ClassNotFoundException {
+        FileInputStream fileInputStream = new FileInputStream(fileName + ".txt");
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        UNOModel unoModel = (UNOModel) objectInputStream.readObject();
+        objectInputStream.close();
+        return unoModel;
+    }
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        UNOModel model = UNOModel.load("NewModel");
+        System.out.println(model.getPlayers());
+        System.out.println(model.currentMode);
+        System.out.println(model.topCard);
+        System.out.println(model.getCurrentPlayer().getCards());
+    }
 }

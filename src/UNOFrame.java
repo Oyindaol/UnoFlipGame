@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -17,6 +18,7 @@ public class UNOFrame extends JFrame implements UNOView {
     private JButton drawButton;
     private JButton UNOButton;
     private JButton AI_Button;
+    private JButton saveButton;
     JPanel northPanel;
     JPanel centerPanel;
     JPanel eastPanel;
@@ -31,7 +33,7 @@ public class UNOFrame extends JFrame implements UNOView {
      * Constructor for the UNOFrame
      * @param model, the model of the game
      */
-    public UNOFrame(UNOModel model) {
+    public UNOFrame(UNOModel model) throws IOException, ClassNotFoundException {
         super("UNO Flip");
         this.model = model;
 
@@ -62,11 +64,29 @@ public class UNOFrame extends JFrame implements UNOView {
     /**
      * A method to initialize the game components.
      */
-    public void init() {
-        setupPlayers();
-        setupAIPlayers();
-        setupGame();
+    public void init() throws IOException, ClassNotFoundException {
+        String loadGame = JOptionPane.showInputDialog("Would you like to load a previously saved game (type l) or start a new game (any other key)?");
+        if(loadGame.toLowerCase().equals("l")){
+            String fileName = JOptionPane.showInputDialog("What file would you like to load? ");
+            this.model = UNOModel.load(fileName);
+            this.controller = new UNOController(this.model, this);
+            this.model.addUNOView(this);
+        }else {
+            setupPlayers();
+            setupAIPlayers();
+            setupGame();
+        }
+        loadSetup();
         setupButtonsAndPanels();
+    }
+
+    public void loadSetup(){
+        this.updateCurrentPlayerInfo(model.getCurrentPlayer());
+        this.updateTopCard(model);
+
+        this.updateCurrentPlayerCards(model.getCurrentPlayer(), model);
+        southPanel.add(cardsScrollPane);
+        this.pack();
     }
 
     /**
@@ -115,8 +135,6 @@ public class UNOFrame extends JFrame implements UNOView {
     private void setupGame() {
         model.init();
         model.setCurrentPlayer(model.getPlayers().get(0));
-        updateCurrentPlayerInfo(model.getCurrentPlayer());
-
         this.updateCurrentPlayerCards(model.getCurrentPlayer(), model);
         southPanel.add(cardsScrollPane);
         this.pack();
@@ -148,6 +166,10 @@ public class UNOFrame extends JFrame implements UNOView {
         drawButton = new JButton("Draw From Bank");
         drawButton.addActionListener(controller);
 
+        // Save button
+        saveButton = new JButton("Save");
+        saveButton.addActionListener(controller);
+
 
         /* GAME PANELS */
 
@@ -165,6 +187,7 @@ public class UNOFrame extends JFrame implements UNOView {
         southPanel.add(AI_Button);
         southPanel.setBackground(Color.GRAY);
         southPanel.add(UNOButton);
+        southPanel.add(saveButton);
 
         //Center Panel
         updateTopCard(model);
@@ -447,8 +470,16 @@ public class UNOFrame extends JFrame implements UNOView {
             eastPanel.updateUI();
             nextButton.setEnabled(false);
             drawButton.setEnabled(false);
+            saveButton.setEnabled(false);
             southPanel.updateUI();
         }
+    }
+
+    @Override
+    public void handleSaveGame() {
+        JLabel saveMessage = new JLabel("Save successful");
+        eastPanel.add(saveMessage);
+        eastPanel.updateUI();
     }
 
     @Override
