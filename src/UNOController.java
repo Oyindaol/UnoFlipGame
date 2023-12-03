@@ -30,6 +30,7 @@ public class UNOController implements ActionListener {
 
         if (e.getActionCommand().equals("Next Player")) {
             model.changeTurn();
+            model.resetUndoRedo();
         }
 
         else if (e.getActionCommand().equals("Draw Card")) {
@@ -59,6 +60,13 @@ public class UNOController implements ActionListener {
         }
         else if (e.getActionCommand().equals("Play AI")) {
             model.implementAITurn();
+        }
+        else if (e.getActionCommand().equals("Restart")) {
+            model.restartGame();
+            JOptionPane.showMessageDialog(view,
+                    "The game has been restarted",
+                    "Restart successful",
+                    JOptionPane.PLAIN_MESSAGE);
         }
     }
 }

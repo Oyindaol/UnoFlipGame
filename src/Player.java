@@ -36,6 +36,13 @@ public class Player {
     }
 
     /**
+     * A method to set the cards of a player
+     */
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+    }
+
+    /**
      * A method to show the light cards of a Player
      * @return the current light cards of a player
      */

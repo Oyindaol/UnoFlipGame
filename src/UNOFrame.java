@@ -17,6 +17,7 @@ public class UNOFrame extends JFrame implements UNOView {
     private JButton drawButton;
     private JButton UNOButton;
     private JButton AI_Button;
+    private JButton restart;
     JPanel northPanel;
     JPanel centerPanel;
     JPanel eastPanel;
@@ -148,6 +149,10 @@ public class UNOFrame extends JFrame implements UNOView {
         drawButton = new JButton("Draw From Bank");
         drawButton.addActionListener(controller);
 
+        //Restart button
+        restart = new JButton("Restart");
+        restart.addActionListener(controller);
+
 
         /* GAME PANELS */
 
@@ -165,6 +170,7 @@ public class UNOFrame extends JFrame implements UNOView {
         southPanel.add(AI_Button);
         southPanel.setBackground(Color.GRAY);
         southPanel.add(UNOButton);
+        southPanel.add(restart);
 
         //Center Panel
         updateTopCard(model);
@@ -452,7 +458,21 @@ public class UNOFrame extends JFrame implements UNOView {
     }
 
     @Override
+    public void handleRestart(UNOModel model) {
+        this.centerPanel.removeAll();
+        this.centerPanel.updateUI();
+        updateCurrentPlayerCards(model.getCurrentPlayer(), model);
+        updateCurrentPlayerInfo(model.getCurrentPlayer());
+        updateTopCard(model);
+        printAllPlayersInfo(model.getPlayers(), model);
+        nextButton.setEnabled(false);
+        drawButton.setEnabled(true);
+//        restart.setEnabled(false);
+    }
+
+    @Override
     public void handleNextPlayer(UNOModel unoModel) {
+//        restart.setEnabled(true);
         if (unoModel.getCurrentPlayer() instanceof AI) {
             updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
             updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
