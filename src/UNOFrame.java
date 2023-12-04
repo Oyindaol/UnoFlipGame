@@ -72,7 +72,6 @@ public class UNOFrame extends JFrame implements UNOView {
             this.controller = new UNOController(this.model, this);
             this.model.removeUNOView(this.model.getViews().get(0));
             this.model.addUNOView(this);
-            System.out.println(this.model.getViews().size());
         }else {
             setupPlayers();
             setupAIPlayers();
