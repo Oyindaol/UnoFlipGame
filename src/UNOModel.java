@@ -58,8 +58,8 @@ public class UNOModel implements Serializable {
         //this.history = new ArrayList<>();
         //this.currentStateIndex = -1; // No game state initially
 
-        undoState = new GameState(this);
-        redoState = new GameState(this);
+        undoState = null;
+        redoState = null;
     }
 
     /**
@@ -434,7 +434,7 @@ public class UNOModel implements Serializable {
      */
     public void validatePlacement(String characteristics, String color) {
 
-        undoState = new GameState(undoState.getModel()); // TRY undoState = new GameState(this)
+        undoState = new GameState(this); // TRY undoState = new GameState(this)
 
         if (currentMode.equals(mode.LIGHT)) {
 
@@ -499,7 +499,7 @@ public class UNOModel implements Serializable {
                 }
             }
         }
-        redoState = new GameState(redoState.getModel()); // TRY redoState = new GameState(this)
+        redoState = new GameState(this); // TRY redoState = new GameState(this)
     }
 
     public void undo() {
