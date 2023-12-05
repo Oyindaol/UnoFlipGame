@@ -1,11 +1,13 @@
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * The Player class.
  *
  * @author Osas Iyamu
  */
-public class Player {
+public class Player implements Serializable {
 
     private String name;
     private ArrayList<Card> cards;

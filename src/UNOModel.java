@@ -432,9 +432,8 @@ public class UNOModel implements Serializable {
      * @param characteristics, the characteristics of the card
      * @param color,           the color of the card
      */
-    public void validatePlacement(String characteristics, String color) {
-
-        undoState = new GameState(this); // TRY undoState = new GameState(this)
+    public void validatePlacement(String characteristics, String color) throws IOException {
+        saveUndoState(); // TRY undoState = new GameState(this)
 
         if (currentMode.equals(mode.LIGHT)) {
 
@@ -499,22 +498,45 @@ public class UNOModel implements Serializable {
                 }
             }
         }
-        redoState = new GameState(this); // TRY redoState = new GameState(this)
+        saveRedoState(); // TRY redoState = new GameState(this)
     }
 
-    public void undo() {
-        if (undoState != null) { // TRY if (undoState == null)
-            this.players = undoState.getModel().getPlayers();
-            this.scores = undoState.getModel().getScores();
-            this.cardDeck = undoState.getModel().getCardDeck();
-            this.playingDeck = undoState.getModel().getPlayingDeck();
-            this.currentPlayer = undoState.getModel().getCurrentPlayer();
-            this.clockwise = undoState.getModel().isClockwise();
-            this.currentMode = undoState.getModel().getCurrentMode();
-            this.topCard = undoState.getModel().getTopCard();
-            this.winner = undoState.getModel().isWinner();
+    private void saveRedoState() throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream("redo.txt");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(this);
+        objectOutputStream.flush();
+        objectOutputStream.close();
+    }
+
+    private void saveUndoState() throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream("undo.txt");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(this);
+        objectOutputStream.flush();
+        objectOutputStream.close();
+    }
+
+    public void undo() throws IOException, ClassNotFoundException {
+
+//            this.players = undoState.getModel().getPlayers();
+//            this.scores = undoState.getModel().getScores();
+//            this.cardDeck = undoState.getModel().getCardDeck();
+//            this.playingDeck = undoState.getModel().getPlayingDeck();
+//            this.currentPlayer = undoState.getModel().getCurrentPlayer();
+//            this.clockwise = undoState.getModel().isClockwise();
+//            this.currentMode = undoState.getModel().getCurrentMode();
+//            this.topCard = undoState.getModel().getTopCard();
+//            this.winner = undoState.getModel().isWinner();
             //this.scoreGuide = undo.getModel().scoreGuide;
             //this.position = undo.getModel().position;
+            FileInputStream fileInputStream = new FileInputStream("undo.txt");
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            UNOModel newModel = (UNOModel) objectInputStream.readObject();
+            objectInputStream.close();
+            this.playingDeck = newModel.playingDeck;
+            this.scores = newModel.scores;
+            this.currentPlayer.setCards(newModel.currentPlayer.getCards());
 
             System.out.println("Undo Works!"); // for testing
 
@@ -522,31 +544,36 @@ public class UNOModel implements Serializable {
                 view.handleUndo(this);
             }
 
-        }
 
     }
 
-    public void redo() {
-        if (redoState != null) { // TRY  if (redoState == null)
-            this.players = redoState.getModel().getPlayers();
-            this.scores = redoState.getModel().getScores();
-            this.cardDeck = redoState.getModel().getCardDeck();
-            this.playingDeck = redoState.getModel().getPlayingDeck();
-            this.currentPlayer = redoState.getModel().getCurrentPlayer();
-            this.clockwise = redoState.getModel().isClockwise();
-            this.currentMode = redoState.getModel().getCurrentMode();
-            this.topCard = redoState.getModel().getTopCard();
-            this.winner = redoState.getModel().isWinner();
+    public void redo() throws IOException, ClassNotFoundException {
+
+//            this.players = redoState.getModel().getPlayers();
+//            this.scores = redoState.getModel().getScores();
+//            this.cardDeck = redoState.getModel().getCardDeck();
+//            this.playingDeck = redoState.getModel().getPlayingDeck();
+//            this.currentPlayer = redoState.getModel().getCurrentPlayer();
+//            this.clockwise = redoState.getModel().isClockwise();
+//            this.currentMode = redoState.getModel().getCurrentMode();
+//            this.topCard = redoState.getModel().getTopCard();
+//            this.winner = redoState.getModel().isWinner();
             //this.scoreGuide = redo.getModel().scoreGuide;
             //this.position = redo.getModel().position;
 
+            FileInputStream fileInputStream = new FileInputStream("redo.txt");
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            UNOModel newModel = (UNOModel) objectInputStream.readObject();
+            objectInputStream.close();
+            this.playingDeck = newModel.playingDeck;
+            this.scores = newModel.scores;
+            this.currentPlayer.setCards(newModel.currentPlayer.getCards());
             System.out.println("Redo Works!"); // for testing
 
 
             for (UNOView view : views) {
                 view.handleRedo(this);
             }
-        }
     }
 
     /**

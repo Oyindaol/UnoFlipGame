@@ -593,16 +593,21 @@ public class UNOFrame extends JFrame implements UNOView, Serializable {
         printAllPlayersInfo(model.getPlayers(), model);
 
         // Refresh UI components
-        centerPanel.revalidate();
-        centerPanel.repaint();
-        eastPanel.revalidate();
-        eastPanel.repaint();
-        southPanel.revalidate();
-        southPanel.repaint();
-        westPanel.revalidate();
-        westPanel.repaint();
-        this.revalidate();
-        this.repaint();
+//        centerPanel.revalidate();
+//        centerPanel.repaint();
+//        eastPanel.revalidate();
+//        eastPanel.repaint();
+//        southPanel.revalidate();
+//        southPanel.repaint();
+//        westPanel.revalidate();
+//        westPanel.repaint();
+//        this.revalidate();
+//        this.repaint();
+        nextButton.setEnabled(false);
+        drawButton.setEnabled(true);
+        southPanel.updateUI();
+        westPanel.updateUI();
+        eastPanel.updateUI();
     }
 
     @Override

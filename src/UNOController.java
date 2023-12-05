@@ -3,12 +3,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * UNOController class.
  * Controller part of the implementation of the MVC pattern.
  */
-public class UNOController implements ActionListener {
+public class UNOController implements ActionListener, Serializable {
     private UNOFrame view;
     private UNOModel model;
 
@@ -44,10 +45,18 @@ public class UNOController implements ActionListener {
             if (!characteristics.equals("WILD")) {
                 String color = button.getText().split(" ")[1];
                 System.out.println(characteristics + " " + color);
-                model.validatePlacement(characteristics, color);
+                try {
+                    model.validatePlacement(characteristics, color);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             else {
-                model.validatePlacement("WILD", "unassigned");
+                try {
+                    model.validatePlacement("WILD", "unassigned");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         }
 
@@ -65,45 +74,57 @@ public class UNOController implements ActionListener {
         }
 
         else if (e.getActionCommand().equals("Undo")) {
-            model.undo();
+            try {
+                model.undo();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
         else if (e.getActionCommand().equals("Redo")) {
-            model.redo();
-        }
-
-        else if (e.getActionCommand().equals("Save This Game")) {
-            //model.save("saved_game.txt");
-
-            String saveFileName = JOptionPane.showInputDialog(view, "Enter file name to save:");
-            if (saveFileName != null && !saveFileName.trim().isEmpty()) {
-                model.save(saveFileName);
+            try {
+                model.redo();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
             }
         }
 
-        else if (e.getActionCommand().equals("Load Previous Game")) {
-//            UNOModel loadedGame = model.load("saved_game.txt");
-//            if (loadedGame != null) {
-//                model = loadedGame;
-//                System.out.println("Game loaded successfully.");
+//        else if (e.getActionCommand().equals("Save This Game")) {
+//            //model.save("saved_game.txt");
+//
+//            String saveFileName = JOptionPane.showInputDialog(view, "Enter file name to save:");
+//            if (saveFileName != null && !saveFileName.trim().isEmpty()) {
+//                model.save(saveFileName);
 //            }
-
-
-            String loadFileName = JOptionPane.showInputDialog(view, "Enter file name to load:");
-            if (loadFileName != null && !loadFileName.trim().isEmpty()) {
-                UNOModel loadedGame = model.load(loadFileName);
-                if (loadedGame != null) {
-                    model = loadedGame;
-                    System.out.println("Game loaded successfully.");
-                }
-                else {
-                    System.out.println("Error loading the game. Could not load saved data.");
-                }
-            }
-            else {
-                System.out.println("Invalid file name. Please provide a valid file name.");
-            }
-        }
+//        }
+//
+//        else if (e.getActionCommand().equals("Load Previous Game")) {
+////            UNOModel loadedGame = model.load("saved_game.txt");
+////            if (loadedGame != null) {
+////                model = loadedGame;
+////                System.out.println("Game loaded successfully.");
+////            }
+//
+//
+//            String loadFileName = JOptionPane.showInputDialog(view, "Enter file name to load:");
+//            if (loadFileName != null && !loadFileName.trim().isEmpty()) {
+//                UNOModel loadedGame = model.load(loadFileName);
+//                if (loadedGame != null) {
+//                    model = loadedGame;
+//                    System.out.println("Game loaded successfully.");
+//                }
+//                else {
+//                    System.out.println("Error loading the game. Could not load saved data.");
+//                }
+//            }
+//            else {
+//                System.out.println("Invalid file name. Please provide a valid file name.");
+//            }
+//        }
     }
 
 }
