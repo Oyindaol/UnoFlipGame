@@ -1,4 +1,3 @@
-import java.io.*;
 import java.util.*;
 
 /**
@@ -29,6 +28,8 @@ public class UNOModel implements Serializable {
 
     private Card topCard;
     private boolean winner;
+    private Stack<GameState> undoStack;
+    private Stack<GameState> redoStack;
 
     /**
      * Constructor for the UNOModel (Model) class
@@ -45,6 +46,8 @@ public class UNOModel implements Serializable {
         this.clockwise = true;
         this.currentMode = mode.LIGHT;
         this.views = new ArrayList<>();
+        this.undoStack = new Stack<>();
+        this.redoStack = new Stack<>();
 
         this.scoreGuide.put("1", 1);
         this.scoreGuide.put("2", 2);
@@ -389,7 +392,15 @@ public class UNOModel implements Serializable {
      * @param characteristics, the characteristics of the card
      * @param color, the color of the card
      */
-    public void validatePlacement(String characteristics, String color) {
+    public void validatePlacement(String characteristics, String color) throws IOException {
+        if (!undoStack.empty()){
+            undoStack.clear();
+        }
+
+        if (!undoStack.empty()){
+            redoStack.clear();
+        }
+
         if(currentMode.equals(mode.LIGHT)){
 
             checkWild(characteristics, color);
@@ -401,6 +412,7 @@ public class UNOModel implements Serializable {
 
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getLightCharacteristics().equals(characteristics + " " + color)) {
+                        undoStack.push(getGameState());
                         playingDeck.add(this.currentPlayer.getCards().get(i));
                         currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
                         this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
@@ -427,6 +439,8 @@ public class UNOModel implements Serializable {
             checkWild(characteristics, color);
             if(characteristics.equals(topCard.getDarkCharacteristics().split(" ")[0]) ||
                     color.equals(topCard.getDarkCharacteristics().split(" ")[1])){
+
+                undoStack.push(getGameState());
                 checkSpecial(characteristics);
 
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
@@ -454,8 +468,48 @@ public class UNOModel implements Serializable {
                 }
             }
         }
-
+        redoStack.push(new GameState(this.playingDeck, this.currentPlayer.getCards(), this.scores, this.topCard));
     }
+
+    private GameState getGameState(){
+        ArrayList<Card> newPlayerCards = new ArrayList<>(this.currentPlayer.getCards());
+        HashMap<Player, Integer> newScores = new HashMap<>(this.scores);
+
+        ArrayList<Card> newPlayingDeck = new ArrayList<>(this.playingDeck);
+        Card newTopCard = this.topCard;
+
+        return new GameState(newPlayingDeck, newPlayerCards, newScores, newTopCard);
+    }
+    public void implementUndo(){
+        GameState state = undoStack.pop();
+        this.scores = state.scores;
+        this.playingDeck = state.playingDeck;
+        this.currentPlayer.setCards(state.playerCards);
+        this.topCard = state.topCard;
+
+        for(UNOView view : views){
+            view.handleUndo(this);
+        }
+        undoStack.push(state);
+    }
+
+    public void implementRedo(){
+        GameState state = redoStack.pop();
+        this.scores = state.scores;
+        this.playingDeck = state.playingDeck;
+        this.topCard = state.topCard;
+
+        for(UNOView view : views){
+            view.handleRedo(this);
+        }
+        redoStack.push(state);
+    }
+
+    public void resetUndoRedo(){
+        this.cardsForRedo = new ArrayList<>();
+        this.cardsForUndo = new ArrayList<>();
+    }
+
 
     /**
      * A method to place AI card

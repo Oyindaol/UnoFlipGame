@@ -16,4 +16,8 @@ public interface UNOView {
     void handleSaveGame();
 
     void handleRestart(UNOModel model);
+
+    void handleUndo(UNOModel unoModel);
+
+    void handleRedo(UNOModel unoModel);
 }

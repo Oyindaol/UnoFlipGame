@@ -2,7 +2,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -19,6 +18,8 @@ public class UNOFrame extends JFrame implements UNOView {
     private JButton UNOButton;
     private JButton AI_Button;
     private JButton restart;
+    private JButton undo;
+    private JButton redo;
     private JButton saveButton;
     JPanel northPanel;
     JPanel centerPanel;
@@ -172,6 +173,13 @@ public class UNOFrame extends JFrame implements UNOView {
         restart = new JButton("Restart");
         restart.addActionListener(controller);
 
+        //Undo button
+        undo = new JButton("Undo");
+        undo.addActionListener(controller);
+
+        //Undo button
+        redo = new JButton("Redo");
+        redo.addActionListener(controller);
         // Save button
         saveButton = new JButton("Save");
         saveButton.addActionListener(controller);
@@ -194,6 +202,8 @@ public class UNOFrame extends JFrame implements UNOView {
         southPanel.setBackground(Color.GRAY);
         southPanel.add(UNOButton);
         southPanel.add(restart);
+        southPanel.add(undo);
+        southPanel.add(redo);
         southPanel.add(saveButton);
 
         //Center Panel
@@ -493,6 +503,40 @@ public class UNOFrame extends JFrame implements UNOView {
         nextButton.setEnabled(false);
         drawButton.setEnabled(true);
 //        restart.setEnabled(false);
+    }
+
+    @Override
+    public void handleUndo(UNOModel unoModel) {
+        updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
+        updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
+        updateTopCard(unoModel);
+//        this.AI_Button.setEnabled(false);
+        for (Component component : cardsPanel.getComponents()) {
+            JPanel panel = (JPanel) component;
+            panel.getComponents()[1].setEnabled(true);
+        }
+        southPanel.updateUI();
+        nextButton.setEnabled(false);
+        drawButton.setEnabled(true);
+        westPanel.updateUI();
+        southPanel.updateUI();
+    }
+
+    @Override
+    public void handleRedo(UNOModel unoModel) {
+        updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
+        updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
+        updateTopCard(unoModel);
+//        this.AI_Button.setEnabled(false);
+        for (Component component : cardsPanel.getComponents()) {
+            JPanel panel = (JPanel) component;
+            panel.getComponents()[1].setEnabled(false);
+        }
+        southPanel.updateUI();
+        nextButton.setEnabled(true);
+        drawButton.setEnabled(false);
+        westPanel.updateUI();
+        southPanel.updateUI();
     }
 
     @Override
