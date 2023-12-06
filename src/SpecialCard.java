@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * The Special Card class.
  * Implements the Card interface.
@@ -5,7 +7,7 @@
  * @author Oyindamola Taiwo-Olupeka
  * @author Osas Iyamu
  */
-public class SpecialCard implements Card {
+public class SpecialCard implements Card, Serializable {
 
     private Card.type cardType;
     private SPECIALCARDS specialDark;

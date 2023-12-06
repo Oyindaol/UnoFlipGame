@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * The Number Card class.
  * Implements the Card interface.
@@ -5,7 +7,7 @@
  * @author Oyindamola Taiwo-Olupeka
  * @author Osas Iyamu
  */
-public class NumberCard implements Card {
+public class NumberCard implements Card, Serializable {
 
     private final Card.type cardType;
     private final int lightNumber;

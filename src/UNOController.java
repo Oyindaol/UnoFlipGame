@@ -1,12 +1,16 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 
 /**
  * UNOController class.
  * Controller part of the implementation of the MVC pattern.
  */
-public class UNOController implements ActionListener {
+public class UNOController implements ActionListener, Serializable {
     private UNOFrame view;
     private UNOModel model;
 
@@ -43,10 +47,18 @@ public class UNOController implements ActionListener {
             if (!characteristics.equals("WILD")) {
                 String color = button.getText().split(" ")[1];
                 System.out.println(characteristics + " " + color);
-                model.validatePlacement(characteristics, color);
+                try {
+                    model.validatePlacement(characteristics, color);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             else {
-                model.validatePlacement("WILD", "unassigned");
+                try {
+                    model.validatePlacement("WILD", "unassigned");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         }
 
@@ -60,6 +72,12 @@ public class UNOController implements ActionListener {
         }
         else if (e.getActionCommand().equals("Play AI")) {
             model.implementAITurn();
+        }
+        else if (e.getActionCommand().equals("Undo")) {
+            model.implementUndo();
+        }
+        else if (e.getActionCommand().equals("Redo")){
+            model.implementRedo();
         }
         else if (e.getActionCommand().equals("Restart")) {
             model.restartGame();

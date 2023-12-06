@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.*;
 
 /**
@@ -7,7 +8,7 @@ import java.util.*;
  * @author Osas Iyamu
  * @author Oyindamola Taiwo-Olupeka
  */
-public class UNOModel {
+public class UNOModel implements Serializable {
 
     enum mode {LIGHT, DARK}
     private mode currentMode;
@@ -24,6 +25,8 @@ public class UNOModel {
     private ArrayList<Card> cardsForRedo;
     private Card topCard;
     private boolean winner;
+    private Stack<GameState> undoStack;
+    private Stack<GameState> redoStack;
 
     /**
      * Constructor for the UNOModel (Model) class
@@ -42,6 +45,8 @@ public class UNOModel {
         this.views = new ArrayList<>();
         this.cardsForUndo = new ArrayList<>();
         this.cardsForRedo = new ArrayList<>();
+        this.undoStack = new Stack<>();
+        this.redoStack = new Stack<>();
 
         this.scoreGuide.put("1", 1);
         this.scoreGuide.put("2", 2);
@@ -386,19 +391,26 @@ public class UNOModel {
      * @param characteristics, the characteristics of the card
      * @param color, the color of the card
      */
-    public void validatePlacement(String characteristics, String color) {
-        if(currentMode.equals(mode.LIGHT)){
+    public void validatePlacement(String characteristics, String color) throws IOException {
+        if (!undoStack.empty()){
+            undoStack.clear();
+        }
 
+        if (!undoStack.empty()){
+            redoStack.clear();
+        }
+
+        if(currentMode.equals(mode.LIGHT)){
             checkWild(characteristics, color);
 
             if (characteristics.equals(topCard.getLightCharacteristics().split(" ")[0]) ||
                     color.equals(topCard.getLightCharacteristics().split(" ")[1])) {
 
-                storeStateBeforePlay(currentPlayer.getCards());
                 checkSpecial(characteristics);
 
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getLightCharacteristics().equals(characteristics + " " + color)) {
+                        undoStack.push(getGameState());
                         playingDeck.add(this.currentPlayer.getCards().get(i));
                         currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
                         this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
@@ -410,7 +422,6 @@ public class UNOModel {
                         break;
                     }
                 }
-                storeCardsAfterPlay(currentPlayer.getCards());
                 UNOEvent e = new UNOEvent(true, this);
                 for (UNOView views : this.views) {
                     views.handlePlacement(e);
@@ -427,7 +438,7 @@ public class UNOModel {
             if(characteristics.equals(topCard.getDarkCharacteristics().split(" ")[0]) ||
                     color.equals(topCard.getDarkCharacteristics().split(" ")[1])){
 
-                storeStateBeforePlay(currentPlayer.getCards());
+                undoStack.push(getGameState());
                 checkSpecial(characteristics);
 
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
@@ -443,7 +454,6 @@ public class UNOModel {
                         break;
                     }
                 }
-                storeCardsAfterPlay(currentPlayer.getCards());
                 UNOEvent e = new UNOEvent(true, this);
                 for (UNOView views : this.views) {
                     views.handlePlacement(e);
@@ -456,23 +466,41 @@ public class UNOModel {
                 }
             }
         }
-
+        redoStack.push(new GameState(this.playingDeck, this.currentPlayer.getCards(), this.scores, this.topCard));
     }
 
-    private void storeStateBeforePlay(ArrayList<Card> cards) {
-        this.cardsForUndo = cards;
+    private GameState getGameState(){
+        ArrayList<Card> newPlayerCards = new ArrayList<>(this.currentPlayer.getCards());
+        HashMap<Player, Integer> newScores = new HashMap<>(this.scores);
+
+        ArrayList<Card> newPlayingDeck = new ArrayList<>(this.playingDeck);
+        Card newTopCard = this.topCard;
+
+        return new GameState(newPlayingDeck, newPlayerCards, newScores, newTopCard);
+    }
+    public void implementUndo(){
+        GameState state = undoStack.pop();
+        this.scores = state.scores;
+        this.playingDeck = state.playingDeck;
+        this.currentPlayer.setCards(state.playerCards);
+        this.topCard = state.topCard;
+
+        for(UNOView view : views){
+            view.handleUndo(this);
+        }
+        undoStack.push(state);
     }
 
-    private void storeCardsAfterPlay(ArrayList<Card> cards){
-        this.cardsForRedo = cards;
-    }
+    public void implementRedo(){
+        GameState state = redoStack.pop();
+        this.scores = state.scores;
+        this.playingDeck = state.playingDeck;
+        this.topCard = state.topCard;
 
-    public void undo(){
-        currentPlayer.setCards(this.cardsForUndo);
-    }
-
-    public void redo(){
-        currentPlayer.setCards(this.cardsForRedo);
+        for(UNOView view : views){
+            view.handleRedo(this);
+        }
+        redoStack.push(state);
     }
 
     public void resetUndoRedo(){

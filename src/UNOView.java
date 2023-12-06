@@ -14,4 +14,8 @@ public interface UNOView {
     void handleAITurn(UNOEvent e);
 
     void handleRestart(UNOModel model);
+
+    void handleUndo(UNOModel unoModel);
+
+    void handleRedo(UNOModel unoModel);
 }
