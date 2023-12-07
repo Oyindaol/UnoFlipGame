@@ -158,10 +158,12 @@ public class UNOFrame extends JFrame implements UNOView {
         //Undo button
         undo = new JButton("Undo");
         undo.addActionListener(controller);
+        undo.setEnabled(false);
 
         //Undo button
         redo = new JButton("Redo");
         redo.addActionListener(controller);
+        redo.setEnabled(false);
 
         /* GAME PANELS */
 
@@ -210,6 +212,14 @@ public class UNOFrame extends JFrame implements UNOView {
         this.add(eastPanel, BorderLayout.EAST);
         this.add(westPanel, BorderLayout.WEST);
         this.add(southPanel, BorderLayout.SOUTH);
+    }
+
+    public JButton getUndo(){
+        return this.undo;
+    }
+
+    public JButton getRedo(){
+        return this.redo;
     }
 
     /**
@@ -478,7 +488,9 @@ public class UNOFrame extends JFrame implements UNOView {
         printAllPlayersInfo(model.getPlayers(), model);
         nextButton.setEnabled(false);
         drawButton.setEnabled(true);
-//        restart.setEnabled(false);
+        undo.setEnabled(false);
+        redo.setEnabled(false);
+        AI_Button.setVisible(false);
     }
 
     @Override
@@ -491,6 +503,8 @@ public class UNOFrame extends JFrame implements UNOView {
             JPanel panel = (JPanel) component;
             panel.getComponents()[1].setEnabled(true);
         }
+        redo.setEnabled(true);
+        undo.setEnabled(false);
         southPanel.updateUI();
         nextButton.setEnabled(false);
         drawButton.setEnabled(true);
@@ -508,6 +522,8 @@ public class UNOFrame extends JFrame implements UNOView {
             JPanel panel = (JPanel) component;
             panel.getComponents()[1].setEnabled(false);
         }
+        redo.setEnabled(false);
+        undo.setEnabled(true);
         southPanel.updateUI();
         nextButton.setEnabled(true);
         drawButton.setEnabled(false);
@@ -517,6 +533,8 @@ public class UNOFrame extends JFrame implements UNOView {
 
     @Override
     public void handleNextPlayer(UNOModel unoModel) {
+        undo.setEnabled(false);
+        redo.setEnabled(false);
 //        restart.setEnabled(true);
         if (unoModel.getCurrentPlayer() instanceof AI) {
             updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
@@ -562,6 +580,8 @@ public class UNOFrame extends JFrame implements UNOView {
             component.getComponentAt(new Point(0,0)).setEnabled(false);
         }
 
+        undo.setEnabled(true);
+        redo.setEnabled(false);
         nextButton.setEnabled(true);
         drawButton.setEnabled(false);
         southPanel.updateUI();
@@ -577,6 +597,7 @@ public class UNOFrame extends JFrame implements UNOView {
             eastPanel.updateUI();
         }
         else {
+            undo.setEnabled(true);
             updateCurrentPlayerCards(e.getModel().getCurrentPlayer(), e.getModel());
             updateCurrentPlayerInfo(e.getModel().getCurrentPlayer());
             updateTopCard(e.getModel());
