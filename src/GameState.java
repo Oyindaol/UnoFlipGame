@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GameState {
+public class GameState implements Serializable {
     public ArrayList<Card> playingDeck;
     public ArrayList<Card> playerCards;
     public HashMap<Player, Integer> scores;

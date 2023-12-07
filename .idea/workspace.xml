@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f4bdeb5b-cb6f-4fee-b584-5d994075c417" name="Changes" comment="UNO jar">
+      <change beforePath="$PROJECT_DIR$/src/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UNOController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UNOController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UNOFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UNOFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UNOModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UNOModel.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;osasiyamu&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="d45c9a9d-fc25-443c-884c-598dde1caa8c" />
+        <option name="url" value="https://github.com/Oyindaol/UnoFlipGame.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2Yomjy6fSYXUn5pxxSO65eGx6gy" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "Iyamu's-Working-Branch",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="UnoFlipGame" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UNOModel" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="UNOModel" />
+      <module name="UnoFlipGame" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.UNOModel" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.UNOModel" />
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f4bdeb5b-cb6f-4fee-b584-5d994075c417" name="Changes" comment="Added javadocs and implementation for more AI players" />
+      <created>1701200447902</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1701200447902</updated>
+      <workItem from="1701200449455" duration="3065000" />
+      <workItem from="1701241606576" duration="5639000" />
+      <workItem from="1701454545937" duration="946000" />
+      <workItem from="1701567946758" duration="13245000" />
+      <workItem from="1701733857962" duration="5167000" />
+      <workItem from="1701818943930" duration="12978000" />
+      <workItem from="1701925056084" duration="2918000" />
+    </task>
+    <task id="LOCAL-00001" summary="Added javadocs and implementation for more AI players">
+      <option name="closed" value="true" />
+      <created>1701567650215</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1701567650215</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Unchecked save/load implementation">
+      <option name="closed" value="true" />
+      <created>1701589411580</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1701589411580</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Improved Unchecked save/load implementation (Resolved thw wild card duplicate)">
+      <option name="closed" value="true" />
+      <created>1701589827572</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1701589827572</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Improved Unchecked save/load implementation (Resolved the wild card duplicate)">
+      <option name="closed" value="true" />
+      <created>1701660707179</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1701660707179</updated>
+    </task>
+    <task id="LOCAL-00005" summary="undo redo work in progress">
+      <option name="closed" value="true" />
+      <created>1701755341225</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1701755341225</updated>
+    </task>
+    <task id="LOCAL-00006" summary="undo redo work in progress">
+      <option name="closed" value="true" />
+      <created>1701821142411</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1701821142411</updated>
+    </task>
+    <task id="LOCAL-00007" summary="undo redo work in progress">
+      <option name="closed" value="true" />
+      <created>1701829439114</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1701829439114</updated>
+    </task>
+    <task id="LOCAL-00008" summary="undo redo final implementation">
+      <option name="closed" value="true" />
+      <created>1701924430173</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1701924430173</updated>
+    </task>
+    <task id="LOCAL-00009" summary="UNO jar">
+      <option name="closed" value="true" />
+      <created>1701925116799</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1701925116799</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added javadocs and implementation for more AI players" />
+    <MESSAGE value="Unchecked save/load implementation" />
+    <MESSAGE value="Improved Unchecked save/load implementation (Resolved thw wild card duplicate)" />
+    <MESSAGE value="Improved Unchecked save/load implementation (Resolved the wild card duplicate)" />
+    <MESSAGE value="undo redo work in progress" />
+    <MESSAGE value="undo redo final implementation" />
+    <MESSAGE value="UNO jar" />
+    <option name="LAST_COMMIT_MESSAGE" value="UNO jar" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/UNOModel.java</url>
+          <line>516</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/UNOFrame.java</url>
+          <line>70</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.*;
 
 /**
@@ -8,6 +9,7 @@ import java.util.*;
  * @author Oyindamola Taiwo-Olupeka
  */
 public class UNOModel implements Serializable {
+
 
     enum mode {LIGHT, DARK}
     private mode currentMode;
@@ -135,6 +137,10 @@ public class UNOModel implements Serializable {
      */
     public void removeUNOView(UNOView v) {
         views.remove(v);
+    }
+
+    public List<UNOView> getViews() {
+        return this.views;
     }
 
     /**
@@ -499,6 +505,7 @@ public class UNOModel implements Serializable {
         this.currentMode = state.mode;
         this.scores = state.scores;
         this.playingDeck = state.playingDeck;
+        this.currentPlayer.setCards(state.playerCards);
         this.topCard = state.topCard;
 
         for(UNOView view : views){
@@ -506,12 +513,6 @@ public class UNOModel implements Serializable {
         }
         redoStack.push(state);
     }
-
-    public void resetUndoRedo(){
-        this.cardsForRedo = new ArrayList<>();
-        this.cardsForUndo = new ArrayList<>();
-    }
-
 
     /**
      * A method to place AI card

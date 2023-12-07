@@ -52,14 +52,14 @@ public class UNOController implements ActionListener, Serializable {
                 System.out.println(characteristics + " " + color);
                 try {
                     model.validatePlacement(characteristics, color);
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
             }
             else {
                 try {
                     model.validatePlacement("WILD", "unassigned");
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
             }
@@ -93,21 +93,14 @@ public class UNOController implements ActionListener, Serializable {
             String fileNameToSave = JOptionPane.showInputDialog("Enter file name to save to");
             try {
                 model.save(fileNameToSave);
-            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(view,
+                        "The game has been saved to file " + fileNameToSave,
+                        "Save successful",
+                        JOptionPane.PLAIN_MESSAGE);
+            } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
-        else if (e.getActionCommand().equals("Undo")) {
-            model.implementUndo();
-        }
-        else if (e.getActionCommand().equals("Redo")){
-            model.implementRedo();
-        }
-        else if (e.getActionCommand().equals("Restart")) {
-            model.restartGame();
-            JOptionPane.showMessageDialog(view,
-                    "The game has been restarted",
-                    "Restart successful",
-                    JOptionPane.PLAIN_MESSAGE);
+
         }
     }
 }
