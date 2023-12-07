@@ -348,6 +348,7 @@ public class UNOModel implements Serializable {
             if (color.equals("unassigned")) {
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getLightCharacteristics().split(" ")[0].equals(characteristics)) {
+                        undoStack.push(getGameState());
                         playingDeck.add(this.currentPlayer.getCards().get(i));
                         currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
                         this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
@@ -362,11 +363,13 @@ public class UNOModel implements Serializable {
                 for (UNOView view : views) {
                     view.handleWildCard(this);
                 }
+                redoStack.push(new GameState(this.playingDeck, this.currentPlayer.getCards(), this.scores, this.topCard, this.currentMode));
             }
         }else{
             if (color.equals("unassigned")) {
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getDarkCharacteristics().split(" ")[0].equals(characteristics)) {
+                        undoStack.push(getGameState());
                         playingDeck.add(this.currentPlayer.getCards().get(i));
                         currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
                         this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
@@ -381,6 +384,7 @@ public class UNOModel implements Serializable {
                 for (UNOView view : views) {
                     view.handleWildCard(this);
                 }
+                redoStack.push(new GameState(this.playingDeck, this.currentPlayer.getCards(), this.scores, this.topCard, this.currentMode));
             }
         }
     }
@@ -468,7 +472,7 @@ public class UNOModel implements Serializable {
                 }
             }
         }
-        redoStack.push(new GameState(this.playingDeck, this.currentPlayer.getCards(), this.scores, this.topCard));
+        redoStack.push(new GameState(this.playingDeck, this.currentPlayer.getCards(), this.scores, this.topCard, this.currentMode));
     }
 
     private GameState getGameState(){
@@ -477,11 +481,13 @@ public class UNOModel implements Serializable {
 
         ArrayList<Card> newPlayingDeck = new ArrayList<>(this.playingDeck);
         Card newTopCard = this.topCard;
+        UNOModel.mode mode = this.currentMode;
 
-        return new GameState(newPlayingDeck, newPlayerCards, newScores, newTopCard);
+        return new GameState(newPlayingDeck, newPlayerCards, newScores, newTopCard, mode);
     }
     public void implementUndo(){
         GameState state = undoStack.pop();
+        this.currentMode = state.mode;
         this.scores = state.scores;
         this.playingDeck = state.playingDeck;
         this.currentPlayer.setCards(state.playerCards);
@@ -495,6 +501,7 @@ public class UNOModel implements Serializable {
 
     public void implementRedo(){
         GameState state = redoStack.pop();
+        this.currentMode = state.mode;
         this.scores = state.scores;
         this.playingDeck = state.playingDeck;
         this.topCard = state.topCard;
