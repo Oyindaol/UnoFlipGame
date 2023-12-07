@@ -238,14 +238,6 @@ public class UNOFrame extends JFrame implements UNOView {
         this.add(southPanel, BorderLayout.SOUTH);
     }
 
-    public JButton getUndo(){
-        return this.undo;
-    }
-
-    public JButton getRedo(){
-        return this.redo;
-    }
-
     /**
      * A method to create the card
      * @param card, the card to create
@@ -413,7 +405,7 @@ public class UNOFrame extends JFrame implements UNOView {
         JLabel label = new JLabel("Players and Scores: ");
         jPanel.add(label);
         for (Player p : players) {
-            JLabel playerInfo = new JLabel(p.getName() + ":       " + model.getScores().get(p));
+            JLabel playerInfo = new JLabel(p.getName() + ":  " + model.getScores().get(p));
             jPanel.add(playerInfo);
         }
         eastPanel.add(jPanel, BorderLayout.NORTH);
