@@ -18,10 +18,12 @@ public class UNOFrame extends JFrame implements UNOView {
     private JButton drawButton;
     private JButton UNOButton;
     private JButton AI_Button;
-    private JButton restart;
     private JButton undo;
     private JButton redo;
-    private JButton saveButton;
+    private JMenuBar menuBar;
+    private JMenu menu;
+    JMenuItem save, replay;
+
     JPanel northPanel;
     JPanel centerPanel;
     JPanel eastPanel;
@@ -82,8 +84,12 @@ public class UNOFrame extends JFrame implements UNOView {
         }
         loadSetup();
         setupButtonsAndPanels();
+        setupMenuBar();
     }
 
+    /**
+     * A method to set up the load implementation.
+     */
     public void loadSetup(){
         this.updateCurrentPlayerInfo(model.getCurrentPlayer());
         this.updateTopCard(model);
@@ -170,10 +176,6 @@ public class UNOFrame extends JFrame implements UNOView {
         drawButton = new JButton("Draw From Bank");
         drawButton.addActionListener(controller);
 
-        //Restart button
-        restart = new JButton("Restart");
-        restart.addActionListener(controller);
-
         //Undo button
         undo = new JButton("Undo");
         undo.addActionListener(controller);
@@ -183,9 +185,6 @@ public class UNOFrame extends JFrame implements UNOView {
         redo = new JButton("Redo");
         redo.addActionListener(controller);
         redo.setEnabled(false);
-        // Save button
-        saveButton = new JButton("Save");
-        saveButton.addActionListener(controller);
 
 
         /* GAME PANELS */
@@ -204,10 +203,8 @@ public class UNOFrame extends JFrame implements UNOView {
         southPanel.add(AI_Button);
         southPanel.setBackground(Color.GRAY);
         southPanel.add(UNOButton);
-        southPanel.add(restart);
-        southPanel.add(undo);
-        southPanel.add(redo);
-        southPanel.add(saveButton);
+        southPanel.add(undo, FlowLayout.LEFT);
+        southPanel.add(redo, FlowLayout.LEFT);
 
         //Center Panel
         updateTopCard(model);
@@ -236,6 +233,31 @@ public class UNOFrame extends JFrame implements UNOView {
         this.add(eastPanel, BorderLayout.EAST);
         this.add(westPanel, BorderLayout.WEST);
         this.add(southPanel, BorderLayout.SOUTH);
+    }
+
+    /**
+     * A method to set up Menu Bar for frame.
+     */
+    public void setupMenuBar() {
+        menuBar = new JMenuBar();
+        menu = new JMenu("Game Options");
+
+        // Create Load menu item
+        save = new JMenuItem("Save This Game");
+        save.addActionListener(controller);
+
+        // Create Replay menu item
+        replay = new JMenuItem("Start New Game");
+        replay.addActionListener(controller);
+
+        menu.add(save);
+        menu.add(replay);
+
+        // Add the menu to the menu bar
+        menuBar.add(menu);
+
+        // Set the menu bar for the frame
+        this.setJMenuBar(menuBar);
     }
 
     /**
@@ -498,7 +520,7 @@ public class UNOFrame extends JFrame implements UNOView {
                     JOptionPane.PLAIN_MESSAGE);
             nextButton.setEnabled(false);
             drawButton.setEnabled(false);
-            saveButton.setEnabled(false);
+            //saveButton.setEnabled(false);
             undo.setEnabled(false);
             redo.setEnabled(false);
             southPanel.updateUI();

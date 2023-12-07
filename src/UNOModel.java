@@ -139,6 +139,10 @@ public class UNOModel implements Serializable {
         views.remove(v);
     }
 
+    /**
+     * A method to get the views.
+     * @return this.views
+     */
     public List<UNOView> getViews() {
         return this.views;
     }
@@ -476,6 +480,10 @@ public class UNOModel implements Serializable {
         redoStack.push(new GameState(this.playingDeck, this.currentPlayer.getCards(), this.scores, this.topCard, this.currentMode));
     }
 
+    /**
+     * A method to get the current Game state
+     * @return new GameState()
+     */
     private GameState getGameState(){
         ArrayList<Card> newPlayerCards = new ArrayList<>(this.currentPlayer.getCards());
         HashMap<Player, Integer> newScores = new HashMap<>(this.scores);
@@ -486,6 +494,10 @@ public class UNOModel implements Serializable {
 
         return new GameState(newPlayingDeck, newPlayerCards, newScores, newTopCard, mode);
     }
+
+    /**
+     * A method to Undo a move for a player.
+     */
     public void implementUndo(){
         GameState state = undoStack.pop();
         this.currentMode = state.mode;
@@ -500,6 +512,9 @@ public class UNOModel implements Serializable {
         undoStack.push(state);
     }
 
+    /**
+     * A method to Redo a move for a player.
+     */
     public void implementRedo(){
         GameState state = redoStack.pop();
         this.currentMode = state.mode;
@@ -607,6 +622,11 @@ public class UNOModel implements Serializable {
 
     }
 
+    /**
+     * A method to Save the Game State to be loaded.
+     * @param fileName
+     * @throws IOException
+     */
     public void save(String fileName) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(fileName + ".txt");
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -619,6 +639,13 @@ public class UNOModel implements Serializable {
         }
     }
 
+    /**
+     * A method to load a saved Game State.
+     * @param fileName
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static UNOModel load(String fileName) throws IOException, ClassNotFoundException {
         FileInputStream fileInputStream = new FileInputStream(fileName + ".txt");
         ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);

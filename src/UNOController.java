@@ -82,14 +82,14 @@ public class UNOController implements ActionListener, Serializable {
         else if (e.getActionCommand().equals("Redo")){
             model.implementRedo();
         }
-        else if (e.getActionCommand().equals("Restart")) {
+        else if (e.getActionCommand().equals("Start New Game")) {
             model.restartGame();
             JOptionPane.showMessageDialog(view,
                     "The game has been restarted",
                     "Restart successful",
                     JOptionPane.PLAIN_MESSAGE);
         }
-        else if (e.getActionCommand().equals("Save")) {
+        else if (e.getActionCommand().equals("Save This Game")) {
             String fileNameToSave = JOptionPane.showInputDialog("Enter file name to save to");
             try {
                 model.save(fileNameToSave);
