@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 /**
@@ -36,7 +38,6 @@ public class UNOController implements ActionListener, Serializable {
 
         if (e.getActionCommand().equals("Next Player")) {
             model.changeTurn();
-            model.resetUndoRedo();
         }
 
         else if (e.getActionCommand().equals("Draw Card")) {
@@ -95,6 +96,18 @@ public class UNOController implements ActionListener, Serializable {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+        else if (e.getActionCommand().equals("Undo")) {
+            model.implementUndo();
+        }
+        else if (e.getActionCommand().equals("Redo")){
+            model.implementRedo();
+        }
+        else if (e.getActionCommand().equals("Restart")) {
+            model.restartGame();
+            JOptionPane.showMessageDialog(view,
+                    "The game has been restarted",
+                    "Restart successful",
+                    JOptionPane.PLAIN_MESSAGE);
         }
     }
 }
