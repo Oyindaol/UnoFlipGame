@@ -1,7 +1,13 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 /**
@@ -44,10 +50,18 @@ public class UNOController implements ActionListener, Serializable {
             if (!characteristics.equals("WILD")) {
                 String color = button.getText().split(" ")[1];
                 System.out.println(characteristics + " " + color);
-                model.validatePlacement(characteristics, color);
+                try {
+                    model.validatePlacement(characteristics, color);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             else {
-                model.validatePlacement("WILD", "unassigned");
+                try {
+                    model.validatePlacement("WILD", "unassigned");
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         }
 
@@ -62,13 +76,31 @@ public class UNOController implements ActionListener, Serializable {
         else if (e.getActionCommand().equals("Play AI")) {
             model.implementAITurn();
         }
+        else if (e.getActionCommand().equals("Undo")) {
+            model.implementUndo();
+        }
+        else if (e.getActionCommand().equals("Redo")){
+            model.implementRedo();
+        }
+        else if (e.getActionCommand().equals("Restart")) {
+            model.restartGame();
+            JOptionPane.showMessageDialog(view,
+                    "The game has been restarted",
+                    "Restart successful",
+                    JOptionPane.PLAIN_MESSAGE);
+        }
         else if (e.getActionCommand().equals("Save")) {
             String fileNameToSave = JOptionPane.showInputDialog("Enter file name to save to");
             try {
                 model.save(fileNameToSave);
-            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(view,
+                        "The game has been saved to file " + fileNameToSave,
+                        "Save successful",
+                        JOptionPane.PLAIN_MESSAGE);
+            } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
+
         }
     }
 }

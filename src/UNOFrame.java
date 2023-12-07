@@ -18,6 +18,9 @@ public class UNOFrame extends JFrame implements UNOView {
     private JButton drawButton;
     private JButton UNOButton;
     private JButton AI_Button;
+    private JButton restart;
+    private JButton undo;
+    private JButton redo;
     private JButton saveButton;
     JPanel northPanel;
     JPanel centerPanel;
@@ -65,7 +68,7 @@ public class UNOFrame extends JFrame implements UNOView {
      * A method to initialize the game components.
      */
     public void init() throws IOException, ClassNotFoundException {
-        String loadGame = JOptionPane.showInputDialog("Would you like to load a previously saved game (type l) or start a new game (any other key)?");
+        String loadGame = JOptionPane.showInputDialog("<html>Input (L) to load a previous game. <br>Any other input starts a new game </html>");
         if(loadGame.toLowerCase().equals("l")){
             String fileName = JOptionPane.showInputDialog("What file would you like to load? ");
             this.model = UNOModel.load(fileName);
@@ -167,6 +170,19 @@ public class UNOFrame extends JFrame implements UNOView {
         drawButton = new JButton("Draw From Bank");
         drawButton.addActionListener(controller);
 
+        //Restart button
+        restart = new JButton("Restart");
+        restart.addActionListener(controller);
+
+        //Undo button
+        undo = new JButton("Undo");
+        undo.addActionListener(controller);
+        undo.setEnabled(false);
+
+        //Undo button
+        redo = new JButton("Redo");
+        redo.addActionListener(controller);
+        redo.setEnabled(false);
         // Save button
         saveButton = new JButton("Save");
         saveButton.addActionListener(controller);
@@ -188,6 +204,9 @@ public class UNOFrame extends JFrame implements UNOView {
         southPanel.add(AI_Button);
         southPanel.setBackground(Color.GRAY);
         southPanel.add(UNOButton);
+        southPanel.add(restart);
+        southPanel.add(undo);
+        southPanel.add(redo);
         southPanel.add(saveButton);
 
         //Center Panel
@@ -217,6 +236,14 @@ public class UNOFrame extends JFrame implements UNOView {
         this.add(eastPanel, BorderLayout.EAST);
         this.add(westPanel, BorderLayout.WEST);
         this.add(southPanel, BorderLayout.SOUTH);
+    }
+
+    public JButton getUndo(){
+        return this.undo;
+    }
+
+    public JButton getRedo(){
+        return this.redo;
     }
 
     /**
@@ -386,7 +413,7 @@ public class UNOFrame extends JFrame implements UNOView {
         JLabel label = new JLabel("Players and Scores: ");
         jPanel.add(label);
         for (Player p : players) {
-            JLabel playerInfo = new JLabel(p.getName() + " -> " + model.getScores().get(p));
+            JLabel playerInfo = new JLabel(p.getName() + ":       " + model.getScores().get(p));
             jPanel.add(playerInfo);
         }
         eastPanel.add(jPanel, BorderLayout.NORTH);
@@ -442,9 +469,13 @@ public class UNOFrame extends JFrame implements UNOView {
             drawButton.setEnabled(false);
         }
         else {
-            JLabel winner = new JLabel(unoModel.getCurrentPlayer() + " has won the game! Reload game to play again");
-            eastPanel.add(winner);
-            eastPanel.updateUI();
+//            JLabel winner = new JLabel(unoModel.getCurrentPlayer() + " has won the game! Reload game to play again");
+            JOptionPane.showMessageDialog(this,
+                    unoModel.getCurrentPlayer() + "<html> won this round! <br>Reload game to play again </html>",
+                    "Save successful",
+                    JOptionPane.PLAIN_MESSAGE);
+//            eastPanel.add(winner);
+//            eastPanel.updateUI();
         }
     }
 
@@ -465,15 +496,73 @@ public class UNOFrame extends JFrame implements UNOView {
         southPanel.updateUI();
 
         if (e.getModel().isWinner()) {
-            JLabel winner = new JLabel(e.getModel().getCurrentPlayer().getName() +
-                    " has won the game! Reload game to play again");
-            eastPanel.add(winner);
-            eastPanel.updateUI();
+//            JLabel winner = new JLabel(e.getModel().getCurrentPlayer().getName() +
+//                    " has won the game! Reload game to play again");
+//            eastPanel.add(winner);
+//            eastPanel.updateUI();
+            JOptionPane.showMessageDialog(this,
+                    e.getModel().getCurrentPlayer() + "<html> won this round! <br>Restart game to play again </html>",
+                    "Save successful",
+                    JOptionPane.PLAIN_MESSAGE);
             nextButton.setEnabled(false);
             drawButton.setEnabled(false);
             saveButton.setEnabled(false);
+            undo.setEnabled(false);
+            redo.setEnabled(false);
             southPanel.updateUI();
         }
+    }
+
+    @Override
+    public void handleRestart(UNOModel model) {
+        this.centerPanel.removeAll();
+        this.centerPanel.updateUI();
+        updateCurrentPlayerCards(model.getCurrentPlayer(), model);
+        updateCurrentPlayerInfo(model.getCurrentPlayer());
+        updateTopCard(model);
+        printAllPlayersInfo(model.getPlayers(), model);
+        nextButton.setEnabled(false);
+        drawButton.setEnabled(true);
+        undo.setEnabled(false);
+        redo.setEnabled(false);
+        AI_Button.setVisible(false);
+    }
+
+    @Override
+    public void handleUndo(UNOModel unoModel) {
+        updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
+        updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
+        updateTopCard(unoModel);
+        for (Component component : cardsPanel.getComponents()) {
+            JPanel panel = (JPanel) component;
+            panel.getComponents()[1].setEnabled(true);
+        }
+        redo.setEnabled(true);
+        undo.setEnabled(false);
+        southPanel.updateUI();
+        nextButton.setEnabled(false);
+        drawButton.setEnabled(true);
+        westPanel.updateUI();
+        southPanel.updateUI();
+    }
+
+    @Override
+    public void handleRedo(UNOModel unoModel) {
+        updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
+        updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
+        updateTopCard(unoModel);
+//        this.AI_Button.setEnabled(false);
+        for (Component component : cardsPanel.getComponents()) {
+            JPanel panel = (JPanel) component;
+            panel.getComponents()[1].setEnabled(false);
+        }
+        redo.setEnabled(false);
+        undo.setEnabled(true);
+        southPanel.updateUI();
+        nextButton.setEnabled(true);
+        drawButton.setEnabled(false);
+        westPanel.updateUI();
+        southPanel.updateUI();
     }
 
     @Override
@@ -485,6 +574,8 @@ public class UNOFrame extends JFrame implements UNOView {
 
     @Override
     public void handleNextPlayer(UNOModel unoModel) {
+        undo.setEnabled(false);
+        redo.setEnabled(false);
         if (unoModel.getCurrentPlayer() instanceof AI) {
             updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
             updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
@@ -529,6 +620,8 @@ public class UNOFrame extends JFrame implements UNOView {
             component.getComponentAt(new Point(0,0)).setEnabled(false);
         }
 
+        undo.setEnabled(true);
+        redo.setEnabled(false);
         nextButton.setEnabled(true);
         drawButton.setEnabled(false);
         southPanel.updateUI();
@@ -544,6 +637,7 @@ public class UNOFrame extends JFrame implements UNOView {
             eastPanel.updateUI();
         }
         else {
+            undo.setEnabled(true);
             updateCurrentPlayerCards(e.getModel().getCurrentPlayer(), e.getModel());
             updateCurrentPlayerInfo(e.getModel().getCurrentPlayer());
             updateTopCard(e.getModel());

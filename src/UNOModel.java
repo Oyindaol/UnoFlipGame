@@ -10,6 +10,7 @@ import java.util.*;
  */
 public class UNOModel implements Serializable {
 
+
     enum mode {LIGHT, DARK}
     private mode currentMode;
     private ArrayList<Player> players;
@@ -20,15 +21,12 @@ public class UNOModel implements Serializable {
     private ArrayList<Card> playingDeck;
     private Player currentPlayer;
     private boolean clockwise;
-
-    public List<UNOView> getViews() {
-        return views;
-    }
-
     private List<UNOView> views;
 
     private Card topCard;
     private boolean winner;
+    private Stack<GameState> undoStack;
+    private Stack<GameState> redoStack;
 
     /**
      * Constructor for the UNOModel (Model) class
@@ -45,6 +43,24 @@ public class UNOModel implements Serializable {
         this.clockwise = true;
         this.currentMode = mode.LIGHT;
         this.views = new ArrayList<>();
+        this.undoStack = new Stack<>();
+        this.redoStack = new Stack<>();
+
+        this.scoreGuide.put("1", 1);
+        this.scoreGuide.put("2", 2);
+        this.scoreGuide.put("3", 3);
+        this.scoreGuide.put("4", 4);
+        this.scoreGuide.put("5", 5);
+        this.scoreGuide.put("6", 6);
+        this.scoreGuide.put("7", 7);
+        this.scoreGuide.put("8", 8);
+        this.scoreGuide.put("9", 9);
+        this.scoreGuide.put("SKIP", 20);
+        this.scoreGuide.put("FLIP", 20);
+        this.scoreGuide.put("REVERSE", 20);
+        this.scoreGuide.put("WILD_DRAW_TWO", 50);
+        this.scoreGuide.put("WILD", 60);
+
     }
 
     /**
@@ -96,21 +112,6 @@ public class UNOModel implements Serializable {
         }
         cardDeck.remove(cardDeck.get(cardDeck.size()-1));
 
-        this.scoreGuide.put("1", 1);
-        this.scoreGuide.put("2", 2);
-        this.scoreGuide.put("3", 3);
-        this.scoreGuide.put("4", 4);
-        this.scoreGuide.put("5", 5);
-        this.scoreGuide.put("6", 6);
-        this.scoreGuide.put("7", 7);
-        this.scoreGuide.put("8", 8);
-        this.scoreGuide.put("9", 9);
-        this.scoreGuide.put("SKIP", 20);
-        this.scoreGuide.put("FLIP", 20);
-        this.scoreGuide.put("REVERSE", 20);
-        this.scoreGuide.put("WILD_DRAW_TWO", 50);
-        this.scoreGuide.put("WILD", 60);
-
     }
 
     /**
@@ -136,6 +137,10 @@ public class UNOModel implements Serializable {
      */
     public void removeUNOView(UNOView v) {
         views.remove(v);
+    }
+
+    public List<UNOView> getViews() {
+        return this.views;
     }
 
     /**
@@ -344,6 +349,7 @@ public class UNOModel implements Serializable {
             if (color.equals("unassigned")) {
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getLightCharacteristics().split(" ")[0].equals(characteristics)) {
+                        undoStack.push(getGameState());
                         playingDeck.add(this.currentPlayer.getCards().get(i));
                         currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
                         this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
@@ -358,11 +364,13 @@ public class UNOModel implements Serializable {
                 for (UNOView view : views) {
                     view.handleWildCard(this);
                 }
+                redoStack.push(new GameState(this.playingDeck, this.currentPlayer.getCards(), this.scores, this.topCard, this.currentMode));
             }
         }else{
             if (color.equals("unassigned")) {
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getDarkCharacteristics().split(" ")[0].equals(characteristics)) {
+                        undoStack.push(getGameState());
                         playingDeck.add(this.currentPlayer.getCards().get(i));
                         currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
                         this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
@@ -377,6 +385,7 @@ public class UNOModel implements Serializable {
                 for (UNOView view : views) {
                     view.handleWildCard(this);
                 }
+                redoStack.push(new GameState(this.playingDeck, this.currentPlayer.getCards(), this.scores, this.topCard, this.currentMode));
             }
         }
     }
@@ -388,7 +397,15 @@ public class UNOModel implements Serializable {
      * @param characteristics, the characteristics of the card
      * @param color, the color of the card
      */
-    public void validatePlacement(String characteristics, String color) {
+    public void validatePlacement(String characteristics, String color) throws IOException {
+        if (!undoStack.empty()){
+            undoStack.clear();
+        }
+
+        if (!undoStack.empty()){
+            redoStack.clear();
+        }
+
         if(currentMode.equals(mode.LIGHT)){
 
             checkWild(characteristics, color);
@@ -400,6 +417,7 @@ public class UNOModel implements Serializable {
 
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getLightCharacteristics().equals(characteristics + " " + color)) {
+                        undoStack.push(getGameState());
                         playingDeck.add(this.currentPlayer.getCards().get(i));
                         currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
                         this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
@@ -426,6 +444,8 @@ public class UNOModel implements Serializable {
             checkWild(characteristics, color);
             if(characteristics.equals(topCard.getDarkCharacteristics().split(" ")[0]) ||
                     color.equals(topCard.getDarkCharacteristics().split(" ")[1])){
+
+                undoStack.push(getGameState());
                 checkSpecial(characteristics);
 
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
@@ -453,7 +473,45 @@ public class UNOModel implements Serializable {
                 }
             }
         }
+        redoStack.push(new GameState(this.playingDeck, this.currentPlayer.getCards(), this.scores, this.topCard, this.currentMode));
+    }
 
+    private GameState getGameState(){
+        ArrayList<Card> newPlayerCards = new ArrayList<>(this.currentPlayer.getCards());
+        HashMap<Player, Integer> newScores = new HashMap<>(this.scores);
+
+        ArrayList<Card> newPlayingDeck = new ArrayList<>(this.playingDeck);
+        Card newTopCard = this.topCard;
+        UNOModel.mode mode = this.currentMode;
+
+        return new GameState(newPlayingDeck, newPlayerCards, newScores, newTopCard, mode);
+    }
+    public void implementUndo(){
+        GameState state = undoStack.pop();
+        this.currentMode = state.mode;
+        this.scores = state.scores;
+        this.playingDeck = state.playingDeck;
+        this.currentPlayer.setCards(state.playerCards);
+        this.topCard = state.topCard;
+
+        for(UNOView view : views){
+            view.handleUndo(this);
+        }
+        undoStack.push(state);
+    }
+
+    public void implementRedo(){
+        GameState state = redoStack.pop();
+        this.currentMode = state.mode;
+        this.scores = state.scores;
+        this.playingDeck = state.playingDeck;
+        this.currentPlayer.setCards(state.playerCards);
+        this.topCard = state.topCard;
+
+        for(UNOView view : views){
+            view.handleRedo(this);
+        }
+        redoStack.push(state);
     }
 
     /**
@@ -521,6 +579,31 @@ public class UNOModel implements Serializable {
         for (UNOView views : this.views) {
             views.handleAITurn(e);
         }
+
+    }
+
+    /**
+     * A method to initialize the game structure after restart command
+     */
+    public void restartGame(){
+        this.currentMode = mode.LIGHT;
+        this.position = 0;
+        this.scores.clear();
+        this.cardDeck.clear();
+        this.playingDeck.clear();
+        this.currentPlayer = this.getPlayers().get(0);
+        this.clockwise = true;
+
+        for(Player player : getPlayers()){
+            player.getCards().clear();
+        }
+
+        init();
+
+        for (UNOView view : views){
+            view.handleRestart(this);
+        }
+
 
     }
 

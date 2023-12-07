@@ -1,9 +1,7 @@
-import java.io.Serializable;
-
 /**
  * UNOEvent class.
  */
-public class UNOEvent implements Serializable {
+public class UNOEvent {
     public boolean valid;
     public UNOModel model;
 
