@@ -1,7 +1,9 @@
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
+import java.io.IOException;
+
+import static org.junit.Assert.*;
 
 public class UNOModelTest {
     private UNOModel unoModel;
@@ -121,6 +123,19 @@ public class UNOModelTest {
         unoModel.init();
         unoModel.changeTurn();
         assertEquals(player2, unoModel.getCurrentPlayer());
+    }
+
+    @Test
+    public void testSaveAndLoad() {
+        // Test save and load methods
+        try {
+            unoModel.save("testSave"); // Save the game state
+            UNOModel loadedModel = UNOModel.load("testSave"); // Load the saved game state
+            assertNotNull(loadedModel);
+            // Add assertions to compare attributes of unoModel and loadedModel to ensure they match
+        } catch (ClassNotFoundException | IOException e) {
+            fail("Exception occurred: " + e.getMessage());
+        }
     }
 
 }

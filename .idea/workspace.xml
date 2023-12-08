@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f4bdeb5b-cb6f-4fee-b584-5d994075c417" name="Changes" comment="">
+    <list default="true" id="f4bdeb5b-cb6f-4fee-b584-5d994075c417" name="Changes" comment="Added a Menu Bar to frame and javadoc updates">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/UnoFlipGame/UNOController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UnoFlipGame/UNOController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/UnoFlipGame/UNOFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UnoFlipGame/UNOFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UNOController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UNOController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UNOFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UNOFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/UnoFlipGame/UNOModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UnoFlipGame/UNOModel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/UnoFlipGame/UNOModelTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UnoFlipGame/UNOModelTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UNOModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UNOModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UNOModelTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UNOModelTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +74,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="JUnit.UNOModelTest.testSaveAndLoad">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="UnoFlipGame" />
@@ -90,13 +89,23 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="UNOModelTest.testSaveAndLoad" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="UnoFlipGame" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="UNOModelTest" />
+      <option name="METHOD_NAME" value="testSaveAndLoad" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.UNOModelTest.testSaveAndLoad" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.UNOModel" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.UNOModel" />
-        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
@@ -188,7 +197,14 @@
       <option name="project" value="LOCAL" />
       <updated>1701925116799</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Added a Menu Bar to frame and javadoc updates">
+      <created>1701933042860</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1701933042861</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -213,6 +229,7 @@
     <MESSAGE value="undo redo work in progress" />
     <MESSAGE value="undo redo final implementation" />
     <MESSAGE value="UNO jar" />
-    <option name="LAST_COMMIT_MESSAGE" value="UNO jar" />
+    <MESSAGE value="Added a Menu Bar to frame and javadoc updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a Menu Bar to frame and javadoc updates" />
   </component>
 </project>

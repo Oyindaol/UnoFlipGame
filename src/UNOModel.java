@@ -394,8 +394,6 @@ public class UNOModel implements Serializable {
         }
     }
 
-
-
     /**
      * A method to validate the placement of cards
      * @param characteristics, the characteristics of the card
