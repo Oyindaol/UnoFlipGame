@@ -47,11 +47,8 @@ A GUI-based version of Uno Flip where players use mouse and keyboard input to pl
 - Worked on the UML class diagram.
 - Updated the Design Decisions section in the Documentation.
 
-## Known Issues
-- Game flow Error: If the starting top card is a Wild Card, the game must be restarted.
+## Known Issue(s)
 - Occasional Inconsistencies with the load feature.
-- Occasional problem when AI Player plays a special card (e.g. Wild).
-- Issues with Undo/Redo for the Wild card.
 
 ## Change Log
 - Refactored the code to fit the MVC pattern by making our Game class our Model, adding a View interface to handle the views in our game, and adding a Controller class to control the game.
