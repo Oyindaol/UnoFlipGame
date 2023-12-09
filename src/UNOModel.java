@@ -404,7 +404,7 @@ public class UNOModel implements Serializable {
             undoStack.clear();
         }
 
-        if (!undoStack.empty()){
+        if (!redoStack.empty()){
             redoStack.clear();
         }
 
@@ -415,11 +415,14 @@ public class UNOModel implements Serializable {
             if (characteristics.equals(topCard.getLightCharacteristics().split(" ")[0]) ||
                     color.equals(topCard.getLightCharacteristics().split(" ")[1])) {
 
+                undoStack.push(getGameState());
                 checkSpecial(characteristics);
 
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getLightCharacteristics().equals(characteristics + " " + color)) {
-                        undoStack.push(getGameState());
+//                        if(undoStack.isEmpty()) {
+//                            undoStack.push(getGameState());
+//                        }
                         playingDeck.add(this.currentPlayer.getCards().get(i));
                         currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
                         this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
@@ -453,6 +456,7 @@ public class UNOModel implements Serializable {
                 for (int i = 0; i < this.currentPlayer.getCards().size(); i++) {
                     if (this.currentPlayer.getCards().get(i).getDarkCharacteristics().equals(characteristics + " " + color)) {
                         playingDeck.add(this.currentPlayer.getCards().get(i));
+
                         currentPlayer.getCards().remove(this.currentPlayer.getCards().get(i));
                         this.topCard = this.playingDeck.get(this.playingDeck.size() - 1);
                         updateScore(currentPlayer, this.scoreGuide.get(characteristics));
@@ -476,6 +480,7 @@ public class UNOModel implements Serializable {
             }
         }
         redoStack.push(new GameState(this.playingDeck, this.currentPlayer.getCards(), this.scores, this.topCard, this.currentMode));
+
     }
 
     /**

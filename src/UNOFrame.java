@@ -565,7 +565,6 @@ public class UNOFrame extends JFrame implements UNOView {
         updateCurrentPlayerCards(unoModel.getCurrentPlayer(), unoModel);
         updateCurrentPlayerInfo(unoModel.getCurrentPlayer());
         updateTopCard(unoModel);
-//        this.AI_Button.setEnabled(false);
         for (Component component : cardsPanel.getComponents()) {
             JPanel panel = (JPanel) component;
             panel.getComponents()[1].setEnabled(false);
