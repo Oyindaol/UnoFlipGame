@@ -616,10 +616,14 @@ public class UNOFrame extends JFrame implements UNOView {
             southPanel.updateUI();
         }
         if (unoModel.isWinner()) {
-            JLabel winner = new JLabel(unoModel.getCurrentPlayer().getName() +
-                    " has won the game! Reload game to play again");
-            eastPanel.add(winner);
-            eastPanel.updateUI();
+            JOptionPane.showMessageDialog(this,
+                    model.getCurrentPlayer() + "<html> won this round! <br>Restart game to play again </html>",
+                    "Save successful",
+                    JOptionPane.PLAIN_MESSAGE);
+//            JLabel winner = new JLabel(unoModel.getCurrentPlayer().getName() +
+//                    " has won the game! Reload game to play again");
+//            eastPanel.add(winner);
+//            eastPanel.updateUI();
             nextButton.setEnabled(false);
             drawButton.setEnabled(false);
             southPanel.updateUI();

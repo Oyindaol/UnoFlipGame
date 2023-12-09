@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f4bdeb5b-cb6f-4fee-b584-5d994075c417" name="Changes" comment="UNO jar">
+    <list default="true" id="f4bdeb5b-cb6f-4fee-b584-5d994075c417" name="Changes" comment="final implementation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/UnoFlipGame/UNOFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UnoFlipGame/UNOFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/UnoFlipGame/UNOModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UnoFlipGame/UNOModel.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UNOFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UNOFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UNOModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UNOModel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -187,7 +184,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701925116799</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="final implementation">
+      <option name="closed" value="true" />
+      <created>1702087408751</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1702087408751</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -212,7 +217,8 @@
     <MESSAGE value="undo redo work in progress" />
     <MESSAGE value="undo redo final implementation" />
     <MESSAGE value="UNO jar" />
-    <option name="LAST_COMMIT_MESSAGE" value="UNO jar" />
+    <MESSAGE value="final implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="final implementation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
